@@ -130,6 +130,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="DropItem.cpp" />
     <ClCompile Include="DropManager.cpp" />
     <ClCompile Include="Enemy.cpp" />
@@ -146,9 +147,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraManager.h" />
+    <ClInclude Include="Constants.h" />
     <ClInclude Include="DropItem.h" />
     <ClInclude Include="DropManager.h" />
     <ClInclude Include="EffectManager.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameScene.h" />

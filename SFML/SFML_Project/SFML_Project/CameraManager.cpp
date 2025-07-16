@@ -1,0 +1,58 @@
+#include "CameraManager.h"
+
+CameraManager::CameraManager(sf::RenderWindow* wnd, Player* ply)
+    : window(wnd)
+    , player(ply)
+    , view(wnd->getDefaultView())
+    , rng(std::random_device{}())
+    , dist(-1.f, 1.f)
+{
+    // 기본 뷰 크기와 중심 저장
+    defaultSize = view.getSize();
+    defaultCenter = view.getCenter();
+}
+
+void CameraManager::shake(float duration, float magnitude)
+{
+    shakeTimer = duration;
+    shakeMag = magnitude;
+}
+
+void CameraManager::triggerZoom(float factor, float duration)
+{
+    // 이미 줌 중이면 덮어쓰기
+    zoomFactor = factor;
+    zoomDuration = duration;
+    zoomTimer = duration;
+    zooming = true;
+
+    // 즉시 줌인 크기로 변경
+    view.setSize(defaultSize * factor);
+}
+
+void CameraManager::update(float dt)
+{
+    // 1) 기본적으로 플레이어 위치를 뷰 중심에 맞춘다
+    sf::Vector2f center = player->getPosition();
+
+    // 2) 흔들기 효과가 남아 있으면 랜덤 오프셋을 더한다
+    if (shakeTimer > 0.f) {
+        shakeTimer -= dt;
+        float xOff = dist(rng) * shakeMag;
+        float yOff = dist(rng) * shakeMag;
+        center += { xOff, yOff };
+    }
+
+    // 3) 줌 타이머가 끝나면 원래 크기로 복원
+    if (zooming) {
+        zoomTimer -= dt;
+        if (zoomTimer <= 0.f) {
+            zooming = false;
+            view.setSize(defaultSize);
+        }
+    }
+
+    // 4) 뷰에 최종 중심 및 크기 적용
+    view.setCenter(center);
+    window->setView(view);
+}

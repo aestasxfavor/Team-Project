@@ -7,6 +7,10 @@
 #include <time.h>
 #include <utility>
 #include <chrono>
+#include <random>
+#include <istream>
+#include <cmath>
+#include <stdexcept>
 
 // 자료구조 컨테이너
 #include <string>
@@ -22,6 +26,8 @@
 #include <ranges>		// 범위기반 알고리즘 헤더
 
 using namespace std;
+using namespace sf;
+
 
 // 밑에 따로 해놓은 것도 네임스페이스 충돌 방지를 위해 필요한것만 선언(vector, queue 등 필요하면 추가예정)
 using std::cout;

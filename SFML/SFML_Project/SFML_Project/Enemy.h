@@ -4,14 +4,21 @@
 class Enemy
 {
 public:
-	int hp;
-	float x, y; // 지워도 됨
-	float speed;
+    sf::Sprite sprite;
+    int hp;
 
-	sf::Texture texture;
-	sf::Sprite spriteEnemy;
-public:
-	void Init();
-	void Update();
+    sf::Texture texture;
+    sf::Sprite spritePlayer;
+    enum State { IDLE, MOVE, ATTACK } state = IDLE;
+
+    Enemy() : hp(1) {}
+    virtual ~Enemy() {}
+
+    virtual void update(float dt) 
+    {
+        // 기본 이동 없음, 하위에서 구현
+    }
+
+    virtual bool isDead() const { return hp <= 0; }
 };
 
