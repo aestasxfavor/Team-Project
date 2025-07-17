@@ -12,6 +12,34 @@
 */
 class CameraManager
 {
+private:
+    sf::RenderWindow* window;
+    Player* player;
+    sf::View          view;
+
+    // 원래 뷰 정보 (복구용)
+    sf::Vector2f      defaultCenter;
+    sf::Vector2f      defaultSize;
+
+    // 흔들기 상태
+    float             shakeTimer = 0.f;
+    float             shakeMag = 0.f;
+
+    // 줌 상태
+    float             zoomTimer = 0.f;
+    float             zoomDuration = 0.f;
+    float             zoomFactor = 1.f;
+    bool              zooming = false;
+
+    // 줌 자연스럽게 확대
+    float zoomStartFactor = 1.f;
+    float zoomTargetFactor = 1.f;
+    float currentZoomFactor = 1.f;
+
+
+    // 랜덤 흔들기용 엔진
+    std::default_random_engine      rng;
+    std::uniform_real_distribution<float> dist;
 public:
     // window: 렌더링 윈도우
     // player: 카메라가 추적할 대상
@@ -33,26 +61,5 @@ public:
     // duration: 효과 지속 시간 (초)
     void triggerZoom(float factor, float duration);
 
-private:
-    sf::RenderWindow* window;
-    Player* player;
-    sf::View          view;
 
-    // 원래 뷰 정보 (복구용)
-    sf::Vector2f      defaultCenter;
-    sf::Vector2f      defaultSize;
-
-    // 흔들기 상태
-    float             shakeTimer = 0.f;
-    float             shakeMag = 0.f;
-
-    // 줌 상태
-    float             zoomTimer = 0.f;
-    float             zoomDuration = 0.f;
-    float             zoomFactor = 1.f;
-    bool              zooming = false;
-
-    // 랜덤 흔들기용 엔진
-    std::default_random_engine      rng;
-    std::uniform_real_distribution<float> dist;
 };

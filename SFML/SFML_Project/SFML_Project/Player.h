@@ -3,9 +3,18 @@
 #include "Inventory.h"
 #include "Weapon.h"
 #include "Skill.h"
+#include "Item.h"
+#include "CameraManager.h"
+#include <CameraUIControl.h>
 
 class Player
 {
+private:
+	float animationTimer = 0.f;   // 누적된 애니메이션 시간
+	float frameDuration = 0.2f;   // 한 프레임당 지속 시간 (초)
+	int currentFrame = 0;
+	//추가
+	std::vector<sf::IntRect> walkFrames;
 public:
 	int hp, level, exp;
 	// 효 추가(개인적인 생각) : hp = 20(기본), level, exp = 0 기본설정하면 될거같습니당
@@ -44,11 +53,11 @@ public:
 	sf::Vector2f GetPosition() const;
 	void Render(sf::RenderWindow& window, const sf::Vector2f& position);
 
-private:
-	float animationTimer = 0.f;   // 누적된 애니메이션 시간
-	float frameDuration = 0.2f;   // 한 프레임당 지속 시간 (초)
-	int currentFrame = 0;
-	//추가
-	std::vector<sf::IntRect> walkFrames;
+	sf::Vector2f getPosition() const;        // 플레이어 위치 반환
+	void takeDamage(int dmg);                // 데미지 처리
+	void applyItem(const Item & item);        // 아이템 효과 적용
+	Inventory * getInventory();               // 인벤토리 접근
+
+
 };
 
