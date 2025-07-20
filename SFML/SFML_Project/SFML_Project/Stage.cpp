@@ -8,6 +8,11 @@ void Stage::Init()
 	}
 	map.Load("background.png");
 	player->Init();
+	if (enemyManager == nullptr)
+	{
+		enemyManager = new EnemyManager();
+		enemyManager->Init();  // 적 텍스처 등 초기화
+	}
 
 	// charTex.loadFromFile(GetrscPath("player_cat.png"));
 	// SPplayer.setTexture(charTex);
@@ -32,6 +37,7 @@ void Stage::Update(float deltaTime)
 	// uiManager.update();
 	// effectManager.update();
 	//추가
+	if (enemyManager) enemyManager->Update(deltaTime, player->GetPosition());
 	view.setCenter(player->GetPosition());
 }
 	
@@ -44,4 +50,5 @@ void Stage::Render(sf::RenderWindow& window)
 	window.setView(view);// 카메라시야를 플레이어따라
 	map.Render(window, player->GetPosition());
 	player->Render(window); 
+	if (enemyManager) enemyManager->Draw(window);
 }
