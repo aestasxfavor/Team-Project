@@ -7,6 +7,9 @@
 #include "CameraManager.h"
 #include <CameraUIControl.h>
 
+#include "PlayerStats.h"
+
+
 class Player
 {
 private:
@@ -29,9 +32,17 @@ public:
 	sf::Sprite spritePlayer;
 	enum State { IDLE, MOVE } state = IDLE;
 
-	Player()
-	{
 
+	// 미니 추가 
+	// PlayerStat관련 함수 및 변수임
+	PlayerStats stats;
+	float currentAttackCoolTime; // 현재 공격 쿨타임
+	bool canAttack; // 공격 가능한 상태인지? 체크 변수
+
+				// 이거 생성자 Cpp로 옮길 시 같이 옮겨 주세엽
+	Player(): stats(),currentAttackCoolTime(0.0f),canAttack(true)
+	{
+		
 	}
 	~Player()
 	{
@@ -43,11 +54,16 @@ public:
 	void Render(sf::RenderWindow& window);
 	void Move(float deltaTime, const sf::Vector2f& dir);
 	void PickUp();
-	void LevelUp();
+	void LevelUp(); // 미니 추가 : 이거 안써도 될 듯?? PlayerStat에서 하니까
 	void Attack();
 	void UseSkill(int slot); // 키 입력 받고 키를 매개변수로 해당하는 값에 따라 스킬 실행
 							 // update안에다가 키입력 조건 걸어서 UseSkill() 해놓고 누른 버튼 변환해서 또는 enum으로
 							 // 그 인수를 int slot으로 넣기
+
+	// 미니가 추가한 함수
+	// 아이템 먹고 경험치 얻을 때 함수
+	void GainExperience(int amount);
+	void AddItemStat(const PlayerStats::StatOption itemStats);
 
 	//추가
 	sf::Vector2f GetPosition() const;
