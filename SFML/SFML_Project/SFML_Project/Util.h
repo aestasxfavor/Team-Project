@@ -7,6 +7,8 @@
 #include <time.h>
 #include <utility>
 #include <chrono>
+#include <cstdlib> // rand()
+#include <cmath>
 
 // 자료구조 컨테이너
 #include <string>
