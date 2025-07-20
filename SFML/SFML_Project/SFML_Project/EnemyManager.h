@@ -1,6 +1,8 @@
 #pragma once
 #include "Util.h"
 #include "Enemy.h"
+#include "Player.h"
+#include "CameraManager.h"
 #include <vector>
 #include <SFML/Graphics.hpp>
 

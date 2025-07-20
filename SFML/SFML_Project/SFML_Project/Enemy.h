@@ -1,4 +1,5 @@
 #pragma once
+#include "Util.h"
 #include <SFML/Graphics.hpp>
 
 class Enemy {
@@ -13,8 +14,8 @@ protected :
 public:
     Enemy(sf::Texture& texture, sf::Vector2f spawnPos);
     // 생성자: 텍스처와 스폰 위치를 받아 스프라이트 초기화
-	float speed;
-	float speed;
+	//float speed;
+	//float speed;
 	float speed;
     virtual void Update(float dt, sf::Vector2f playerPos);
     // 매 프레임 호출, 플레이어 위치를 참고해 적 움직임 및 상태 갱신

@@ -11,6 +11,7 @@
 #include <istream>
 #include <cmath>
 #include <stdexcept>
+#include <cstdlib> // rand()
 
 // 자료구조 컨테이너
 #include <string>

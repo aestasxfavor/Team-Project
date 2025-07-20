@@ -26,7 +26,7 @@ public:
 
 	Inventory* inven;
 	std::vector<Weapon*> weapons;
-	Skill* skillSlots[4]; // qwer 또는 1234
+	//Skill* skillSlots[4]; // qwer 또는 1234
 
 	sf::Texture texture;
 	sf::Sprite spritePlayer;
