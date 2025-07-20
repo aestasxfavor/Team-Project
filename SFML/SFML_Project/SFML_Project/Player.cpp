@@ -56,6 +56,17 @@ void Player::Update(float deltaTime)
 		animationTimer = 0.f;
 		currentFrame = 0;
 	}
+
+	// 미니가 추가한 함수.
+	if (!canAttack)
+	{
+		currentAttackCoolTime += deltaTime;
+		if (currentAttackCoolTime >= stats.GetFinalAttackCooldown())
+		{
+			canAttack = true;
+			currentAttackCoolTime = 0.0f;
+		}
+	}
 }
 
 void Player::Render(sf::RenderWindow& window)
@@ -87,10 +98,31 @@ void Player::LevelUp()
 
 void Player::Attack()
 {
+	// 미니가 추가한 함수.
+	if (canAttack)
+	{
+		// 공격 구현 하면 됨.
+	}
+	else
+	{
+		// 공격 불가능 상태구현.
+	}
+
 }
 
 void Player::UseSkill(int slot)
 {
+}
+
+void Player::GainExperience(int amount)
+{
+	stats.GainExp(amount);
+}
+
+void Player::AddItemStat(const PlayerStats::StatOption itemStats)
+{	
+	// 미래에 있을 김동민이 구현할 아이템 얻을 때 스탯 변화
+	stats.ApplyStat(itemStats);
 }
 
 sf::Vector2f Player::GetPosition() const
