@@ -4,10 +4,10 @@
 class Inventory
 
 {
-public:
-	int gold;
-
-	void AddGold(int amount);
-	void SpendGold(int amount);
+//public:
+//	int gold;
+//
+//	void AddGold(int amount);
+//	void SpendGold(int amount);
 };
 

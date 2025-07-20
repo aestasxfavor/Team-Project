@@ -3,10 +3,10 @@
 #include "DropItem.h"
 class DropManager
 {
-public:
-	std::vector<DropItem*> drops;
-
-	void Init();
-	void Update();
+//public:
+//	std::vector<DropItem*> drops;
+//
+//	void Init();
+//	void Update();
 };
 

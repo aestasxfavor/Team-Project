@@ -4,10 +4,10 @@
 // 총, 칼, 부메랑, 레이저 같은거 만들때 상속해서 쓰면 될거같다.
 class Weapon
 {
-public:
-	virtual void Update() = 0;
-	virtual void Attack() = 0;
-	virtual ~Weapon() {};
+//public:
+//	virtual void Update() = 0;
+//	virtual void Attack() = 0;
+//	virtual ~Weapon() {};
 
 };
 

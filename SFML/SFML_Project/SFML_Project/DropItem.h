@@ -2,9 +2,9 @@
 #include "Util.h"
 class DropItem
 {
-public:
-	enum class ItemType { EXP, GOLD, HEALTH };
-	ItemType type;
-	void PickUp();
+//public:
+//	enum class ItemType { EXP, GOLD, HEALTH };
+//	ItemType type;
+//	void PickUp();
 };
 

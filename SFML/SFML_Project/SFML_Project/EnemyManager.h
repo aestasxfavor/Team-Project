@@ -3,11 +3,11 @@
 #include "Enemy.h"
 class EnemyManager
 {
-public:
-	std::vector<Enemy*> enemies;
-
-	void Init();
-	void Update();
-	void SpawnEnemy();
+//public:
+//	std::vector<Enemy*> enemies;
+//
+//	void Init();
+//	void Update();
+//	void SpawnEnemy();
 };
 

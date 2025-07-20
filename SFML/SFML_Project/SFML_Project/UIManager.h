@@ -3,9 +3,9 @@
 
 class UIManager
 {
-public:
-	void Init();
-	void Update();
-	void Render();
+//public:
+//	void Init();
+//	void Update();
+//	void Render();
 };
 

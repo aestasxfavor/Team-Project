@@ -5,7 +5,5 @@
 
 class Item
 {
-private:
 
-public:
 };
