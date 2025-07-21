@@ -19,6 +19,7 @@ public:
     void Draw(sf::RenderWindow& window);
     // 모든 적을 화면에 그리기
     void Clear();                  // 적 리스트 초기화 및 동적 할당된 적 메모리 해제
+    std::vector<Enemy*>& GetEnemies();//충돌관련
 
 private:
     std::vector<Enemy*> enemies;   // 현재 게임에 존재하는 적들 포인터 리스트
@@ -29,8 +30,10 @@ private:
     int maxEnemies = 100;//몬스터 최대치
     //추가
     //enemy 스프라이트 관련 코드
-    sf::Texture slimeTexture;
     sf::Sprite spriteSlime;
     sf::Texture texture;
+    //적 개체스프라이트
+    sf::Texture slimeTexture;
+    sf::Texture enemy01Texture;
 
 };

@@ -5,6 +5,8 @@ Enemy::Enemy(sf::Texture& texture, sf::Vector2f spawnPos)
 {
     sprite.setTexture(texture);      // 적 이미지 설정
     sprite.setPosition(spawnPos);    // 적 위치 설정
+
+    
 }
 
 // 매 프레임 호출, 플레이어 위치를 받아 적을 플레이어 쪽으로 이동시킴
@@ -20,6 +22,8 @@ void Enemy::Update(float dt, sf::Vector2f playerPos)
     }
 }
 
+
+
 // 적을 화면에 그림
 void Enemy::Draw(sf::RenderWindow& window)
 {
@@ -30,8 +34,22 @@ void Enemy::Draw(sf::RenderWindow& window)
 void Enemy::TakeDamage(int amount)
 {
     hp -= amount;          // 데미지 만큼 체력 차감
+
+    std::cout << "[슬라임 피격] 현재 HP: " << hp << std::endl;
     if (hp <= 0)           // 체력 0 이하이면
         dead = true;       // 죽음 표시
+
+    
+}
+
+int Enemy::GetAtk() const
+{
+    return atk;
+}
+
+sf::FloatRect Enemy::GetGlobalBounds()
+{
+    return sprite.getGlobalBounds();
 }
 
 

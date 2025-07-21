@@ -37,7 +37,11 @@ void Stage::Update(float deltaTime)
 	// uiManager.update();
 	// effectManager.update();
 	//추가
-	if (enemyManager) enemyManager->Update(deltaTime, player->GetPosition());
+	if (enemyManager)
+	{
+		enemyManager->Update(deltaTime, player->GetPosition());
+		HandlePlayerEnemyCollision();
+	}
 	view.setCenter(player->GetPosition());
 }
 	
@@ -51,4 +55,31 @@ void Stage::Render(sf::RenderWindow& window)
 	map.Render(window, player->GetPosition());
 	player->Render(window); 
 	if (enemyManager) enemyManager->Draw(window);
+}
+
+void Stage::HandlePlayerEnemyCollision()//충돌관련
+{
+	sf::FloatRect playerBounds = player->GetGlobalBounds();
+	auto& enemies = enemyManager->GetEnemies();  
+
+	for (int i = enemies.size() - 1; i >= 0; --i)
+	{
+		Enemy* enemy = enemies[i];
+		sf::FloatRect enemyBounds = enemy->GetGlobalBounds();
+
+		if (playerBounds.intersects(enemyBounds))
+		{
+			player->TakeDamage(enemy->GetAtk());   // 플레이어가 받는 피해
+			//나중에 에너미 atk로 수정
+			enemy->TakeDamage(999);   // 플레이어가 가하는 피해
+			//테스트용이라 999로 설정했습니다.
+			//나중에 무기에 넣을거면 재횔용될듯
+
+			if (enemy->IsDead())
+			{
+				delete enemy;
+				enemies.erase(enemies.begin() + i);
+			}
+		}
+	}
 }

@@ -136,3 +136,17 @@ void Player::Render(sf::RenderWindow& window, const sf::Vector2f& position)
 	window.draw(spritePlayer);
 }
 
+//추가
+sf::FloatRect Player::GetGlobalBounds() const//충돌관련
+{
+	return spritePlayer.getGlobalBounds();
+}
+void Player::TakeDamage(int amount)
+{
+	stats.currentHp -= amount;
+	if (stats.currentHp <= 0)
+	{
+		std::cout << "플레이어가 죽었습니다!" << std::endl;
+	}
+}
+

@@ -9,6 +9,7 @@ protected :
     int atk = 10;           //공격력
     bool dead = false;      // 적이 죽었는지 여부
     float speed = 5.f;    // 적의 이동 속도 (픽셀/초 단위)
+    
 
 
 public:
@@ -26,6 +27,8 @@ public:
 
     void TakeDamage(int amount);
     // 적이 데미지를 입었을 때 체력을 깎고 죽음 여부 판단
+    sf::FloatRect GetGlobalBounds();//충돌관련
+    int GetAtk() const;//적이 유저에게 가하는 피해 
 };
 
 //적 개체 데이터
@@ -35,9 +38,9 @@ public:
     slime(sf::Texture& texture, sf::Vector2f spawnPos)
         : Enemy(texture, spawnPos)
     {
-        hp = 50;
+        hp = 1;
         speed = 60.f;
-        atk = 30;
+        atk = 300;
         sprite.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y));
 
         sprite.setOrigin(frameSize.x / 2.f, frameSize.y / 2.f);
@@ -64,4 +67,46 @@ private:
     int frameCount = 7;
 
     sf::Vector2i frameSize = { 250, 250 };
+};
+
+
+
+class enemy01 : public Enemy {
+public:
+    enemy01(sf::Texture& texture, sf::Vector2f spawnPos)
+        : Enemy(texture, spawnPos)
+    {
+        hp = 2;
+        speed = 70.f;
+        atk = 15;
+
+        frameSize = { 64, 64 };           // 실제 다람쥐 프레임 크기
+        frameCount = 3;                   // 프레임 수
+
+        sprite.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y));
+        sprite.setOrigin(frameSize.x / 2.f, frameSize.y / 2.f);
+    }
+
+    void Update(float dt, sf::Vector2f playerPos) override
+    {
+        Enemy::Update(dt, playerPos);
+
+        animationTimer += dt;
+        if (animationTimer >= frameDuration)
+        {
+            animationTimer = 0.f;
+            currentFrame = (currentFrame + 1) % frameCount;
+
+            int left = currentFrame * frameSize.x;
+            sprite.setTextureRect(sf::IntRect(left, 0, frameSize.x, frameSize.y));
+        }
+    }
+
+private:
+    int currentFrame = 0;
+    float animationTimer = 0.f;
+    float frameDuration = 0.2f;
+    int frameCount;
+    sf::Vector2i frameSize;
+
 };

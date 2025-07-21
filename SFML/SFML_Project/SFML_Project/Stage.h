@@ -40,8 +40,11 @@ public:
 	void Render(sf::RenderWindow& window);
 
 	//추가
+	void HandlePlayerEnemyCollision();//충돌 Stage.cpp
+
 private:
 	sf::View view;
 
 };
+
 

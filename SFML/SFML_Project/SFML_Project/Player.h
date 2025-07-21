@@ -59,6 +59,8 @@ public:
 	sf::Vector2f GetPosition() const;
 	void Render(sf::RenderWindow& window, const sf::Vector2f& position);
 
+	sf::FloatRect GetGlobalBounds() const;//충돌관련
+	void TakeDamage(int amount);//충돌시 받는 피해
 private:
 	float animationTimer = 0.f;   // 누적된 애니메이션 시간
 	float frameDuration = 0.2f;   // 한 프레임당 지속 시간 (초)
