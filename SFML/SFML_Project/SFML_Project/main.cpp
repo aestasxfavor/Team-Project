@@ -1,6 +1,6 @@
 #include "Stage.h"
 #include "Util.h"
-#include"EnemyManager.h"
+#include"StageManager.h"
 #include"Enemy.h"
 
 int main()

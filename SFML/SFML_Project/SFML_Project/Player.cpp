@@ -2,11 +2,19 @@
 
 void Player::Init()
 {
-	texture.loadFromFile(GetrscPath("Catcharacter.png"));
+	//texture.loadFromFile("C:\\Users\\DPC\\Desktop\\Team-Project\\SFML\\Rjpg\\Catcharacter2.png");
+
+	texture.loadFromFile(GetrscPath("Catcharacter2.png"));
+	
 	spritePlayer.setTexture(texture);
 	spritePlayer.setPosition(370.f,280.f);
 	spritePlayer.setTextureRect(sf::IntRect(0,40, 48, 48));
 	speed = 200.f;
+	/*std::string path = GetrscPath("Catcharacter2.png");
+	std::cout << "Texture Path: " << path << std::endl;
+	if (!texture.loadFromFile(path)) {
+		std::cerr << "텍스처 로드 실패: " << path << std::endl;
+	}*/
 }
 
 void Player::Update(float deltaTime)
@@ -129,14 +137,14 @@ sf::Vector2f Player::GetPosition() const
 {
 	return spritePlayer.getPosition();
 }
-//추가
+//추가(2025-07-21 준호님 추가)
 void Player::Render(sf::RenderWindow& window, const sf::Vector2f& position)
 {
 	spritePlayer.setPosition(position);
 	window.draw(spritePlayer);
 }
 
-//추가
+//추가(2025-07-21 준호님 추가)
 sf::FloatRect Player::GetGlobalBounds() const//충돌관련
 {
 	return spritePlayer.getGlobalBounds();

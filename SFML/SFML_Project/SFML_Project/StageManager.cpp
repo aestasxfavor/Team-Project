@@ -1,24 +1,27 @@
-#include "EnemyManager.h"
+#include "StageManager.h"
 
 
-EnemyManager::EnemyManager() 
+StageManager::StageManager() 
 {
     spawnInterval = 1.0f;    // 적 생성 간격을 5초로 설정
     spawnTimer = 0.f;       // 생성 타이머 초기화
+    player = nullptr;
 }
 
-EnemyManager::~EnemyManager() 
+StageManager::~StageManager() 
 {
     Clear();                // 소멸자에서 적들 메모리 정리
 }
 
-void EnemyManager::Init() 
+void StageManager::Init() 
 {
+  
+	player->Init(); // 효 추가 : 플레이어 초기화
     //enemyTexture.loadFromFile("enemy.png");  // 적 텍스처 파일 로드
     //추가
     //테스트용 슬라임 이미지
     slimeTexture.loadFromFile(GetrscPath("slime.png"));
-    spriteSlime.setTexture(texture);
+    spriteSlime.setTexture(texture);    // 효 추가 : [확인 필요] texture 변수는 slimeTexture와 역할이 겹치는 것 같음 의도가 불분명.. 상의 후 결정하기
     spriteSlime.setPosition(370.f, 280.f);
     //spriteSlime.setTextureRect(sf::IntRect(0, 227, 227 , 227));'
     
@@ -31,8 +34,9 @@ void EnemyManager::Init()
     }
 }
 
-void EnemyManager::Update(float dt, sf::Vector2f playerPos) 
+void StageManager::Update(float dt, sf::Vector2f playerPos) 
 {
+	player->Update(dt); // 효 추가 : 플레이어 업데이트
     spawnTimer += dt;       // 누적된 시간 갱신
 
     if (spawnTimer >= spawnInterval && enemies.size()< maxEnemies)   // 생성 간격이 지나면
@@ -55,7 +59,7 @@ void EnemyManager::Update(float dt, sf::Vector2f playerPos)
 }
 
 
-void EnemyManager::SpawnEnemy(sf::Vector2f playerPos)
+void StageManager::SpawnEnemy(sf::Vector2f playerPos)
 {
     float angle = static_cast<float>(rand() % 360) * 3.1415926f / 180.f;
     float distance = minSpawnDistance + static_cast<float>(rand()) / RAND_MAX * 300.f;
@@ -86,15 +90,17 @@ void EnemyManager::SpawnEnemy(sf::Vector2f playerPos)
     enemies.push_back(enemy);
 }
 
-void EnemyManager::Draw(sf::RenderWindow& window) 
+void StageManager::Draw(sf::RenderWindow& window) 
 {
+	player->Render(window); // 효 추가 : 플레이어 렌더링
+
     for (auto& enemy : enemies) 
     {
         enemy->Draw(window);        // 각 적을 화면에 그림
     }
 }
 
-void EnemyManager::Clear() 
+void StageManager::Clear() 
 {
     for (auto enemy : enemies) 
     {
@@ -103,9 +109,19 @@ void EnemyManager::Clear()
     enemies.clear();                // 리스트 비우기
 }
 
-std::vector<Enemy*>& EnemyManager::GetEnemies()
+vector<Enemy*>& StageManager::GetEnemies()
 {
     return enemies;
     // TODO: 여기에 return 문을 삽입합니다.
+}
+
+Player* StageManager::GetPlayer()
+{
+    return player;
+}
+
+void StageManager::SetPlayer(Player* _player)
+{
+    player = _player; 
 }
 

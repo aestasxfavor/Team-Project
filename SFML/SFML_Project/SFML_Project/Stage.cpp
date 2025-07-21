@@ -2,16 +2,17 @@
 
 void Stage::Init()
 {
-	if (player == nullptr)
-	{
-		player = new Player;
-	}
 	map.Load("background.png");
-	player->Init();
-	if (enemyManager == nullptr)
+
+	if (stageManager == nullptr)
 	{
-		enemyManager = new EnemyManager();
-		enemyManager->Init();  // 적 텍스처 등 초기화
+		// 효 추가 : StageManager 생성 및 초기화
+		stageManager = new StageManager();
+		// 효 추가 : Player 객체 생성 및 StageManager에 설정
+		player = new Player();
+		stageManager->SetPlayer(player);  // StageManager에 Player 설정
+		stageManager->Init();  // 적 텍스처 등 초기화
+		
 	}
 
 	// charTex.loadFromFile(GetrscPath("player_cat.png"));
@@ -25,21 +26,19 @@ void Stage::Init()
 
 	//추가
 	view.setSize(800.f, 600.f);//화면으로 보여줄 뷰 크기 
-
+	
 }
 
 void Stage::Update(float deltaTime)
 {
-
-	player->Update(deltaTime);
 	// enemyManager.update();
 	// dropManager.update();
 	// uiManager.update();
 	// effectManager.update();
 	//추가
-	if (enemyManager)
+	if (stageManager)
 	{
-		enemyManager->Update(deltaTime, player->GetPosition());
+		stageManager->Update(deltaTime, player->GetPosition());
 		HandlePlayerEnemyCollision();
 	}
 	view.setCenter(player->GetPosition());
@@ -54,13 +53,13 @@ void Stage::Render(sf::RenderWindow& window)
 	window.setView(view);// 카메라시야를 플레이어따라
 	map.Render(window, player->GetPosition());
 	player->Render(window); 
-	if (enemyManager) enemyManager->Draw(window);
+	if (stageManager) stageManager->Draw(window);
 }
 
-void Stage::HandlePlayerEnemyCollision()//충돌관련
+void Stage::HandlePlayerEnemyCollision()//충돌관련 (2025-07-21 준호님 추가)
 {
 	sf::FloatRect playerBounds = player->GetGlobalBounds();
-	auto& enemies = enemyManager->GetEnemies();  
+	auto& enemies = stageManager->GetEnemies();  
 
 	for (int i = enemies.size() - 1; i >= 0; --i)
 	{
