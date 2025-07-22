@@ -72,7 +72,7 @@ void StageManager::SpawnEnemy(sf::Vector2f playerPos)
 
     Enemy* enemy = nullptr;
 
-    int enemyType = rand() % 2;  // 현재는 2종 (0: slime, 1: enemy01)
+    int enemyType = rand() % 2;  // 현재는 2종 (0: slime, 1: enemy01)   // 2025-07-22 14:14분 효 추가 : enum으로 설계해도 될거 같음 일단 보류하기 
 
     switch (enemyType)
     {
@@ -112,7 +112,6 @@ void StageManager::Clear()
 vector<Enemy*>& StageManager::GetEnemies()
 {
     return enemies;
-    // TODO: 여기에 return 문을 삽입합니다.
 }
 
 Player* StageManager::GetPlayer()
