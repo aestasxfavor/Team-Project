@@ -40,7 +40,7 @@ void Stage::Update(float deltaTime)
 	{
 		stageManager->Update(deltaTime, player->GetPosition());
 		HandlePlayerEnemyCollision();
-		auto& bullets = enemyManager->GetBullets();
+		auto& bullets = stageManager->GetBullets();
 		sf::FloatRect playerBounds = player->GetGlobalBounds();
 
 		for (int i = bullets.size() - 1; i >= 0; --i)

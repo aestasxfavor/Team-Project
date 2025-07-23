@@ -65,7 +65,7 @@ public:
 	//피격시 무적
 	bool isInvincible = false;
 	float invincibleTimer = 0.f;
-	float invincibleDuration = 1.0f;//피격시 1초무족
+	float invincibleDuration = 1.0f;//피격시 1초 무적
 	//깜빡이기
 	float blinkTimer = 0.f;
 	float blinkInterval = 0.1f; // 0.1초마다 깜빡

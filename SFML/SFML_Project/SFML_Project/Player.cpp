@@ -2,7 +2,6 @@
 
 void Player::Init()
 {
-	//texture.loadFromFile("C:\\Users\\DPC\\Desktop\\Team-Project\\SFML\\Rjpg\\Catcharacter2.png");
 
 	texture.loadFromFile(GetrscPath("Catcharacter2.png"));
 	

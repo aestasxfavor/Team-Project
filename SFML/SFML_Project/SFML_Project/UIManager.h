@@ -2,10 +2,7 @@
 #include "Util.h"
 
 // 2025-07-22 효 추가 : 정확하지 않음 
-enum Title
-{
-	TITLE, GAMESTART, GAMEEND
-};
+
 
 class UIManager
 {

@@ -46,35 +46,7 @@ public:
         sprite.setOrigin(frameSize.x / 2.f, frameSize.y / 2.f);
     }
 
-    void Update(float dt, sf::Vector2f playerPos) override
-    {
-        Enemy::Update(dt, playerPos);  // 기존 이동 로직
-
-        animationTimer += dt;
-        if (animationTimer >= frameDuration)
-        {
-            animationTimer = 0.f;
-            currentFrame = (currentFrame + 1) % frameCount;
-
-            sprite.setTextureRect(sf::IntRect(currentFrame * frameSize.x, 0, frameSize.x, frameSize.y));
-        }
-        //투사체
-        bulletTimer += dt;
-        if (bulletTimer >= bulletCooldown)
-        {
-            bulletTimer = 0.f;
-
-            sf::Vector2f dir = playerPos - sprite.getPosition();
-            float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
-            if (len != 0)
-                dir /= len;
-
-            // EnemyManager가 발사 기능 가지고 있음
-            // → 여기서는 직접 호출할 수 없으니 EnemyManager에서 강제로 처리하는 방식 사용
-        }
-
-
-    }
+    void Update(float dt, sf::Vector2f playerPos) override;
     //투사체관련
     float bulletTimer = 0.f;
     float bulletCooldown = 2.0f;
@@ -107,20 +79,7 @@ public:
         sprite.setOrigin(frameSize.x / 2.f, frameSize.y / 2.f);
     }
 
-    void Update(float dt, sf::Vector2f playerPos) override
-    {
-        Enemy::Update(dt, playerPos);
-
-        animationTimer += dt;
-        if (animationTimer >= frameDuration)
-        {
-            animationTimer = 0.f;
-            currentFrame = (currentFrame + 1) % frameCount;
-
-            int left = currentFrame * frameSize.x;
-            sprite.setTextureRect(sf::IntRect(left, 0, frameSize.x, frameSize.y));
-        }
-    }
+    void Update(float dt, sf::Vector2f playerPos) override;
 
 private:
     int currentFrame = 0;
