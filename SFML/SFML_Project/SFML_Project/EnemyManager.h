@@ -4,6 +4,16 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 
+
+//투사체관련
+struct BulletData
+{
+    sf::Sprite sprite;
+    sf::Vector2f velocity;
+    int damage = 0;//대미지
+};
+
+
 class EnemyManager
 {
 public:
@@ -21,6 +31,15 @@ public:
     void Clear();                  // 적 리스트 초기화 및 동적 할당된 적 메모리 해제
     std::vector<Enemy*>& GetEnemies();//충돌관련
 
+    void FireBullet(sf::Vector2f start, sf::Vector2f target, int damage);//투사체관련
+    void FireBulletAtPlayer(sf::Vector2f start, sf::Vector2f playerPos, int damage);    //조준투사체
+    void FireBulletSpread(sf::Vector2f start);//원으로 쏘는 투사체
+
+    float fireTimer = 0.f;
+    float fireInterval = 1.5f; // 발사간격 초단위
+
+    std::vector<BulletData>& GetBullets();
+
 private:
     std::vector<Enemy*> enemies;   // 현재 게임에 존재하는 적들 포인터 리스트
     sf::Texture enemyTexture;      // 적 텍스처 (이미지 데이터)
@@ -35,5 +54,8 @@ private:
     //적 개체스프라이트
     sf::Texture slimeTexture;
     sf::Texture enemy01Texture;
-
+    //투사체 관련 코드
+    std::vector<BulletData> bullets;
+    sf::Texture bulletTexture;
+    float bulletSpeed = 300.f;
 };

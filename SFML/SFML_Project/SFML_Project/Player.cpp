@@ -67,11 +67,40 @@ void Player::Update(float deltaTime)
 			currentAttackCoolTime = 0.0f;
 		}
 	}
+
+	// 피격시 무적
+	if (isInvincible)
+	{
+		invincibleTimer += deltaTime;
+		blinkTimer += deltaTime;
+
+		if (blinkTimer >= blinkInterval)
+		{
+			blinkTimer = 0.f;
+			visible = !visible; // 보이기/숨기기 토글
+		}
+
+		if (invincibleTimer >= invincibleDuration)
+		{
+			isInvincible = false;
+			invincibleTimer = 0.f;
+			visible = true; // 정상 상태 복귀
+		}
+	}
+	else
+	{
+		visible = true; // 무적 아님 = 항상 보임
+	}
 }
 
+
+//무적시간 깜빡임을 위해 약간 손봤습니다.
+//원본은 주석처리!
 void Player::Render(sf::RenderWindow& window)
 {
-	window.draw(spritePlayer);
+	//window.draw(spritePlayer);
+	if (visible)
+		window.draw(spritePlayer);
 }
 
 void Player::Move(float deltaTime, const sf::Vector2f& dir)
@@ -133,7 +162,9 @@ sf::Vector2f Player::GetPosition() const
 void Player::Render(sf::RenderWindow& window, const sf::Vector2f& position)
 {
 	spritePlayer.setPosition(position);
-	window.draw(spritePlayer);
+	//window.draw(spritePlayer);
+	if (visible)
+		window.draw(spritePlayer);
 }
 
 //추가
@@ -143,7 +174,16 @@ sf::FloatRect Player::GetGlobalBounds() const//충돌관련
 }
 void Player::TakeDamage(int amount)
 {
+	if (isInvincible)
+		return;
+
 	stats.currentHp -= amount;
+	std::cout << "플레이어가 받은 피해: " << amount << std::endl;
+
+	isInvincible = true;
+	invincibleTimer = 0.f;
+	blinkTimer = 0.f;
+
 	if (stats.currentHp <= 0)
 	{
 		std::cout << "플레이어가 죽었습니다!" << std::endl;

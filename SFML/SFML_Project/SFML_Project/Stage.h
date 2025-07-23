@@ -17,6 +17,8 @@ public:
 	DropManager* dropManager;		// 적 죽이면 드랍되는 드랍아이템 관련
 	UIManager* uiManager;			// UI 관련
 	EffectManager* effectManager;	// 
+	//킬카운트
+	int killCount = 0;
 
 	
 	Stage()
