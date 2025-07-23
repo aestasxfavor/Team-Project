@@ -33,6 +33,13 @@ void Enemy::Draw(sf::RenderWindow& window)
 // 데미지를 입으면 체력 감소, 체력이 0 이하가 되면 죽음 상태로 변경
 void Enemy::TakeDamage(int amount)
 {
+    // 2025-07-23 데미지 코드 보류 
+  /*  if (amount <= 0)
+    {
+        cout << "음수 처리 안되게" << amount << endl;
+        return;
+    }*/
+
     hp -= amount;          // 데미지 만큼 체력 차감
 
     std::cout << "[슬라임 피격] 현재 HP: " << hp << std::endl;
