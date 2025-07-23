@@ -1,12 +1,16 @@
 #include "StageManager.h"
 
+// [2025.07.23 수정] 원래 EnemyManager에서 하던 적 생성/관리를 StageManager로 통합함
+// 앞으로 적 관련 함수는 StageManager에서 관리함 (ex. FireBulletAtPlayer, UpdateEnemies 등)
 
-StageManager::StageManager() 
+
+StageManager::StageManager()
 {
     spawnInterval = 1.0f;    // 적 생성 간격을 5초로 설정
     spawnTimer = 0.f;       // 생성 타이머 초기화
     player = nullptr;
 }
+
 
 StageManager::~StageManager() 
 {
@@ -32,6 +36,9 @@ void StageManager::Init()
         std::cout << "enemy01.png 로딩 실패!" << std::endl;
         std::cout << "시도된 경로: " << path << std::endl;
     }
+
+    //투사체 관련 init
+    bulletTexture.loadFromFile(GetrscPath("bullet.png"));
 }
 
 void StageManager::Update(float dt, sf::Vector2f playerPos) 
@@ -49,6 +56,20 @@ void StageManager::Update(float dt, sf::Vector2f playerPos)
     for (int i = enemies.size() - 1; i >= 0; --i) 
     {
         enemies[i]->Update(dt, playerPos);  // 적 개별 업데이트
+        slime* s = dynamic_cast<slime*>(enemies[i]);
+        if (s != nullptr)
+        {
+            s->bulletTimer += dt;
+            if (s->bulletTimer >= s->bulletCooldown)
+            {
+                s->bulletTimer = 0.f;
+
+                sf::Vector2f pos = enemies[i]->GetGlobalBounds().getPosition();
+                FireBulletAtPlayer(pos, playerPos, enemies[i]->GetAtk()); // ← 여기서 발사
+                //std::cout << "[슬라임 발사!] 총알 생성" << std::endl;
+            }                              
+        }
+
 
         if (enemies[i]->IsDead()) 
         {         // 적이 죽었으면
@@ -56,6 +77,42 @@ void StageManager::Update(float dt, sf::Vector2f playerPos)
             enemies.erase(enemies.begin() + i);  // 리스트에서 제거
         }
     }
+    //투사체관련
+    // 1초에 한 번 발사 (간단 테스트용)
+    static float fireTimer = 0.f;
+    fireTimer += dt;
+    if (fireTimer >= 1.f && !enemies.empty())
+    {
+        sf::Vector2f pos = enemies[0]->GetGlobalBounds().getPosition();
+        int damage = enemies[0]->GetAtk();
+        FireBullet(pos, playerPos, damage);  // 인자 3개로 호출
+        fireTimer = 0.f;
+    }
+
+    // 투사체 발사 뿅뿅
+    for (auto& bullet : bullets)
+    {
+        sf::Vector2f dir = playerPos - bullet.sprite.getPosition();
+        float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+        if (len != 0) dir /= len;
+        bullet.sprite.move(bullet.velocity * dt);
+    }
+
+    fireTimer += dt;
+    if (fireTimer >= fireInterval)
+    {
+        fireTimer = 0.f;
+
+        for (auto& enemy : enemies)
+        {
+            sf::Vector2f enemyPos = enemy->GetGlobalBounds().getPosition();// 혹은 enemy->GetPosition() 있으면 사용
+            FireBulletAtPlayer(enemyPos, playerPos, enemy->GetAtk()); // 패턴1: 유저를 향해 쏘기
+            //FireBulletsSpread(enemyPos);   // 패턴2: 6방향 퍼짐
+        }
+    }
+
+
+
 }
 
 
@@ -80,8 +137,11 @@ void StageManager::SpawnEnemy(sf::Vector2f playerPos)
         enemy = new slime(slimeTexture, spawnPos);
         break;
     case 1:
-        enemy = new enemy01(texture, spawnPos);
+        enemy = new enemy01(enemy01Texture, spawnPos);
         break;
+    //case 2:
+    //    enemy = new enemy02(enemy01Texture, spawnPos);
+    //    break;
     default:
         enemy = new slime(slimeTexture, spawnPos); // 기본값
         break;
@@ -97,6 +157,10 @@ void StageManager::Draw(sf::RenderWindow& window)
     for (auto& enemy : enemies) 
     {
         enemy->Draw(window);        // 각 적을 화면에 그림
+    }
+    for (auto& bullet : bullets)
+    {
+        window.draw(bullet.sprite);
     }
 }
 
@@ -124,3 +188,56 @@ void StageManager::SetPlayer(Player* _player)
     player = _player; 
 }
 
+
+//(2025-07-23) 준호님 : 투사체 패턴관련 + 효 추가 : 적이 플레이어를 향해 쏘는 투사체
+void StageManager::FireBulletAtPlayer(sf::Vector2f start, sf::Vector2f playerPos, int damage)
+{
+    sf::Sprite bullet;
+    bullet.setTexture(bulletTexture);
+
+    sf::Vector2f dir = playerPos - start;
+    float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+    if (len != 0) dir /= len;
+
+    int frame = rand() % 6;
+    bullet.setTextureRect(sf::IntRect(frame * 17, 0, 17, 17));
+    bullet.setOrigin(8.5f, 8.5f);
+    bullet.setPosition(start);
+
+    BulletData b;
+    b.sprite = bullet;
+    b.velocity = dir * bulletSpeed;
+    b.damage = damage;
+    bullets.push_back(b);
+}
+
+
+
+std::vector<BulletData>& StageManager::GetBullets()
+{
+    return bullets;
+}
+
+
+void StageManager::FireBullet(sf::Vector2f start, sf::Vector2f target, int damage)
+{
+    sf::Sprite bullet;
+    bullet.setTexture(bulletTexture);
+
+    int frame = rand() % 6;
+    bullet.setTextureRect(sf::IntRect(frame * 17, 0, 17, 17));
+    bullet.setOrigin(8.5f, 8.5f);
+    bullet.setPosition(start);
+    bullet.setScale(2.0f, 2.0f);
+
+    sf::Vector2f dir = target - start;
+    float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+    if (len != 0) dir /= len;
+
+    BulletData b;
+    b.sprite = bullet;
+    b.velocity = dir * bulletSpeed;
+    b.damage = damage;  
+
+    bullets.push_back(b);
+}

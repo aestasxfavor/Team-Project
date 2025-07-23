@@ -40,7 +40,7 @@ public:
     {
         hp = 1;
         speed = 60.f;
-        atk = 300;
+        atk = 90;
         sprite.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y));
 
         sprite.setOrigin(frameSize.x / 2.f, frameSize.y / 2.f);
@@ -58,7 +58,26 @@ public:
 
             sprite.setTextureRect(sf::IntRect(currentFrame * frameSize.x, 0, frameSize.x, frameSize.y));
         }
+        //투사체
+        bulletTimer += dt;
+        if (bulletTimer >= bulletCooldown)
+        {
+            bulletTimer = 0.f;
+
+            sf::Vector2f dir = playerPos - sprite.getPosition();
+            float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+            if (len != 0)
+                dir /= len;
+
+            // EnemyManager가 발사 기능 가지고 있음
+            // → 여기서는 직접 호출할 수 없으니 EnemyManager에서 강제로 처리하는 방식 사용
+        }
+
+
     }
+    //투사체관련
+    float bulletTimer = 0.f;
+    float bulletCooldown = 2.0f;
 
 private:
     int currentFrame = 0;
@@ -67,6 +86,7 @@ private:
     int frameCount = 7;
 
     sf::Vector2i frameSize = { 250, 250 };
+
 };
 
 

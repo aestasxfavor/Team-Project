@@ -35,7 +35,7 @@ void Enemy::TakeDamage(int amount)
 {
     hp -= amount;          // 데미지 만큼 체력 차감
 
-    std::cout << "[슬라임 피격] 현재 HP: " << hp << std::endl;
+    //std::cout << "[슬라임 피격] 현재 HP: " << hp << std::endl;
     if (hp <= 0)           // 체력 0 이하이면
         dead = true;       // 죽음 표시
 
