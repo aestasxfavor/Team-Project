@@ -61,6 +61,15 @@ public:
 
 	sf::FloatRect GetGlobalBounds() const;//충돌관련
 	void TakeDamage(int amount);//충돌시 받는 피해
+
+	//피격시 무적
+	bool isInvincible = false;
+	float invincibleTimer = 0.f;
+	float invincibleDuration = 1.0f;//피격시 1초 무적
+	//깜빡이기
+	float blinkTimer = 0.f;
+	float blinkInterval = 0.1f; // 0.1초마다 깜빡
+	bool visible = true; // 현재 보이는 상태
 private:
 	float animationTimer = 0.f;   // 누적된 애니메이션 시간
 	float frameDuration = 0.2f;   // 한 프레임당 지속 시간 (초)

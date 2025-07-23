@@ -40,25 +40,16 @@ public:
     {
         hp = 1;
         speed = 60.f;
-        atk = 300;
+        atk = 90;
         sprite.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y));
 
         sprite.setOrigin(frameSize.x / 2.f, frameSize.y / 2.f);
     }
 
-    void Update(float dt, sf::Vector2f playerPos) override
-    {
-        Enemy::Update(dt, playerPos);  // 기존 이동 로직
-
-        animationTimer += dt;
-        if (animationTimer >= frameDuration)
-        {
-            animationTimer = 0.f;
-            currentFrame = (currentFrame + 1) % frameCount;
-
-            sprite.setTextureRect(sf::IntRect(currentFrame * frameSize.x, 0, frameSize.x, frameSize.y));
-        }
-    }
+    void Update(float dt, sf::Vector2f playerPos) override;
+    //투사체관련
+    float bulletTimer = 0.f;
+    float bulletCooldown = 2.0f;
 
 private:
     int currentFrame = 0;
@@ -67,6 +58,7 @@ private:
     int frameCount = 7;
 
     sf::Vector2i frameSize = { 250, 250 };
+
 };
 
 
@@ -87,20 +79,7 @@ public:
         sprite.setOrigin(frameSize.x / 2.f, frameSize.y / 2.f);
     }
 
-    void Update(float dt, sf::Vector2f playerPos) override
-    {
-        Enemy::Update(dt, playerPos);
-
-        animationTimer += dt;
-        if (animationTimer >= frameDuration)
-        {
-            animationTimer = 0.f;
-            currentFrame = (currentFrame + 1) % frameCount;
-
-            int left = currentFrame * frameSize.x;
-            sprite.setTextureRect(sf::IntRect(left, 0, frameSize.x, frameSize.y));
-        }
-    }
+    void Update(float dt, sf::Vector2f playerPos) override;
 
 private:
     int currentFrame = 0;

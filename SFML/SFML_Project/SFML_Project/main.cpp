@@ -1,6 +1,7 @@
 #include "Stage.h"
 #include "Util.h"
-#include"StageManager.h"
+#include "StageManager.h"
+#include "SceneManager.h"
 #include"Enemy.h"
 
 int main()
@@ -13,7 +14,6 @@ int main()
     sf::Clock clock;
     while (window.isOpen())
     {
-     
 
         sf::Event event;
         while (window.pollEvent(event))

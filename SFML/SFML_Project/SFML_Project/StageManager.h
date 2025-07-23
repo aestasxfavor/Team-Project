@@ -3,7 +3,18 @@
 #include "Enemy.h"
 #include "Player.h"
 
+
 // 2025-07-21 효 추가 (EnemyManager->StageManager 이름 변경)
+
+//투사체관련
+struct BulletData
+{
+    sf::Sprite sprite;
+    sf::Vector2f velocity;
+    int damage = 0;//대미지
+};
+
+
 class StageManager
 {
 public:
@@ -25,6 +36,15 @@ public:
 	// 효 추가 : Player 객체를 StageManager에 설정
     void SetPlayer(Player* _player);    // 초기화 해주기
 
+    void FireBullet(sf::Vector2f start, sf::Vector2f target, int damage);//투사체관련
+    void FireBulletAtPlayer(sf::Vector2f start, sf::Vector2f playerPos, int damage);    //조준투사체
+    void FireBulletSpread(sf::Vector2f start);//원으로 쏘는 투사체
+
+    float fireTimer = 0.f;
+    float fireInterval = 1.5f; // 발사간격 초단위
+
+    std::vector<BulletData>& GetBullets();
+
 private:
    
     Player* player;                 // 효 추가, StageManager가 Player를 내부에 포함함(has - a 관계)
@@ -41,5 +61,8 @@ private:
     //적 개체스프라이트
     sf::Texture slimeTexture;
     sf::Texture enemy01Texture;
-
+    //투사체 관련 코드
+    std::vector<BulletData> bullets;
+    sf::Texture bulletTexture;
+    float bulletSpeed = 300.f;
 };

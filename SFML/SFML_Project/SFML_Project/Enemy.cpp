@@ -42,7 +42,7 @@ void Enemy::TakeDamage(int amount)
 
     hp -= amount;          // 데미지 만큼 체력 차감
 
-    std::cout << "[슬라임 피격] 현재 HP: " << hp << std::endl;
+    //std::cout << "[슬라임 피격] 현재 HP: " << hp << std::endl;
     if (hp <= 0)           // 체력 0 이하이면
         dead = true;       // 죽음 표시
 
@@ -59,4 +59,45 @@ sf::FloatRect Enemy::GetGlobalBounds()
     return sprite.getGlobalBounds();
 }
 
+void slime::Update(float dt, sf::Vector2f playerPos)
+{
+    Enemy::Update(dt, playerPos);  // 기존 이동 로직
 
+    animationTimer += dt;
+    if (animationTimer >= frameDuration)
+    {
+        animationTimer = 0.f;
+        currentFrame = (currentFrame + 1) % frameCount;
+
+        sprite.setTextureRect(sf::IntRect(currentFrame * frameSize.x, 0, frameSize.x, frameSize.y));
+    }
+    //투사체
+    bulletTimer += dt;
+    if (bulletTimer >= bulletCooldown)
+    {
+        bulletTimer = 0.f;
+
+        sf::Vector2f dir = playerPos - sprite.getPosition();
+        float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+        if (len != 0)
+            dir /= len;
+
+        // EnemyManager가 발사 기능 가지고 있음
+        // → 여기서는 직접 호출할 수 없으니 EnemyManager에서 강제로 처리하는 방식 사용
+    }
+}
+
+void enemy01::Update(float dt, sf::Vector2f playerPos)
+{
+    Enemy::Update(dt, playerPos);
+
+    animationTimer += dt;
+    if (animationTimer >= frameDuration)
+    {
+        animationTimer = 0.f;
+        currentFrame = (currentFrame + 1) % frameCount;
+
+        int left = currentFrame * frameSize.x;
+        sprite.setTextureRect(sf::IntRect(left, 0, frameSize.x, frameSize.y));
+    }
+}

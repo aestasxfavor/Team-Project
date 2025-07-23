@@ -8,7 +8,7 @@
 #include <utility>
 #include <chrono>
 #include <cstdlib> // rand()
-#include <cmath>
+#include <cmath>	// 작아졌다 커졌다 느낌을 주기위한 애니메이션 (sin 함수 사용)
 
 // 자료구조 컨테이너
 #include <string>

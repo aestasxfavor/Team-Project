@@ -40,6 +40,19 @@ void Stage::Update(float deltaTime)
 	{
 		stageManager->Update(deltaTime, player->GetPosition());
 		HandlePlayerEnemyCollision();
+		auto& bullets = stageManager->GetBullets();
+		sf::FloatRect playerBounds = player->GetGlobalBounds();
+
+		for (int i = bullets.size() - 1; i >= 0; --i)
+		{
+
+			if (playerBounds.intersects(bullets[i].sprite.getGlobalBounds()))
+			{
+				std::cout << "투사체 충돌! damage: " << bullets[i].damage << std::endl;
+				player->TakeDamage(bullets[i].damage); //직접 저장된 데미지를 사용
+				bullets.erase(bullets.begin() + i);    //투사체 제거
+			}
+		}
 	}
 	view.setCenter(player->GetPosition());
 }
@@ -76,8 +89,10 @@ void Stage::HandlePlayerEnemyCollision()//충돌관련 (2025-07-21 준호님 추가)
 
 			if (enemy->IsDead())
 			{
+				killCount++;
 				delete enemy;
 				enemies.erase(enemies.begin() + i);
+				std::cout << "Kill Count: " << killCount << std::endl;
 			}
 		}
 	}
