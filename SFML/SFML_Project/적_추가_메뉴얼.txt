@@ -1,0 +1,134 @@
+🛠️ SFML 적 클래스 추가 메뉴얼 (enemy02, enemy03 등)
+
+📦 기본 원칙
+- 모든 적은 `Enemy` 클래스를 상속한다.
+- 모든 구현은 다음 파일에 작성한다:
+  - `Enemy.h` (선언)
+  - `Enemy.cpp` (정의)
+  - `EnemyManager.h` (텍스처 변수 선언)
+  - `EnemyManager.cpp` (텍스처 로드 + 스폰 switch문)
+
+✅ 1. Enemy.h - 새 클래스 선언 추가
+
+class enemyXX : public Enemy {
+public:
+    enemyXX(sf::Texture& texture, sf::Vector2f spawnPos); // 선언만!
+
+    void Update(float dt, sf::Vector2f playerPos) override;
+    bool CanFire(float dt) override;
+    void TryFire(EnemyManager* manager, sf::Vector2f playerPos) override;
+
+private:
+    int currentFrame = 0;
+    float animationTimer = 0.f;
+    float frameDuration = 0.2f;
+    int frameCount = 3;
+    sf::Vector2i frameSize = { 64, 64 };
+
+    float bulletTimer = 0.f;
+    float bulletCooldown = 2.0f;
+};
+
+✅ 2. Enemy.cpp - 클래스 정의 추가
+
+enemyXX::enemyXX(sf::Texture& texture, sf::Vector2f spawnPos)
+    : Enemy(texture, spawnPos)
+{
+    hp = 6;
+    atk = 18;
+    speed = 50.f;
+
+    frameSize = { 64, 64 };
+    frameCount = 3;
+    frameDuration = 0.2f;
+
+    sprite.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y));
+    sprite.setOrigin(frameSize.x / 2.f, frameSize.y / 2.f);
+}
+
+void enemyXX::Update(float dt, sf::Vector2f playerPos)
+{
+    Enemy::Update(dt, playerPos);
+
+    animationTimer += dt;
+    if (animationTimer >= frameDuration)
+    {
+        animationTimer = 0.f;
+        currentFrame = (currentFrame + 1) % frameCount;
+        sprite.setTextureRect(sf::IntRect(currentFrame * frameSize.x, 0, frameSize.x, frameSize.y));
+    }
+}
+
+bool enemyXX::CanFire(float dt)
+{
+    bulletTimer += dt;
+    if (bulletTimer >= bulletCooldown)
+    {
+        bulletTimer = 0.f;
+        return true;
+    }
+    return false;
+}
+
+void enemyXX::TryFire(EnemyManager* manager, sf::Vector2f playerPos)
+{
+    manager->FireBulletAtPlayer(GetPosition(), playerPos, atk);
+    // 또는: manager->FireBulletSpread(GetPosition());  // 확산형
+}
+
+✅ 3. EnemyManager.h - 텍스처 변수 추가
+
+sf::Texture enemyXXTexture;  // 새 텍스처
+
+✅ 4. EnemyManager.cpp
+
+🔹 Init() 함수: 텍스처 로드
+
+std::string path = GetrscPath("enemyXX.png");
+if (!enemyXXTexture.loadFromFile(path))
+{
+    std::cout << "enemyXX.png 로딩 실패!" << std::endl;
+}
+
+🔹 SpawnEnemy() 함수: 스폰 switch 추가
+
+int enemyType = rand() % 3;  // 적 개수에 따라 숫자 늘리기
+
+switch (enemyType)
+{
+case 0:
+    enemy = new enemy01(enemy01Texture, spawnPos);
+    break;
+case 1:
+    enemy = new enemy02(enemy02Texture, spawnPos);
+    break;
+case 2:
+    enemy = new enemyXX(enemyXXTexture, spawnPos);
+    break;
+}
+
+✅ 5. 텍스처 준비
+
+- `enemyXX.png`는 `/rsc` 폴더에 넣기
+- 스프라이트 시트 규칙: 가로로 이어진 프레임 (예: 3프레임이면 192x64)
+- 프레임 크기, 개수는 `frameSize`, `frameCount`로 조절
+
+🧪 테스트 체크리스트
+
+| 항목 | 체크 |
+|------|------|
+| 클래스 선언과 정의가 분리되어 있는가? | ✅ |
+| `EnemyManager`에서 텍스처 로딩했는가? | ✅ |
+| 스폰 switch문에 추가했는가? | ✅ |
+| `.png` 파일이 존재하는가? | ✅ |
+| TryFire에서 사용하는 발사 함수가 정의되어 있는가? | ✅ |
+
+⛑️ 자주 발생하는 실수
+
+| 실수 | 결과 | 해결 방법 |
+|------|------|------------|
+| `.h`에서 생성자 정의까지 작성 | 중복 정의 링커 에러 | 정의는 `.cpp`에만 작성 |
+| `FireBulletSpread()` 구현 누락 | 링커 unresolved 에러 | `.cpp`에 정의 추가 |
+| `enemyType = rand() % 1` | 항상 case 0만 실행 | `% N`에서 N을 클래스 수로 설정 |
+| 텍스처 로딩 경로 오류 | 적이 안 나옴 | `GetrscPath("파일명")` 확인 |
+| Push_back 전에 enemy==nullptr 확인 안함 | 크래시 발생 가능 | null 체크 후 push |
