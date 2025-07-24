@@ -133,7 +133,7 @@
     <ClCompile Include="DropItem.cpp" />
     <ClCompile Include="DropManager.cpp" />
     <ClCompile Include="Enemy.cpp" />
-    <ClCompile Include="EnemyManager.cpp" />
+    <ClCompile Include="StageManager.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="main.cpp" />
@@ -149,7 +149,7 @@
     <ClInclude Include="DropItem.h" />
     <ClInclude Include="DropManager.h" />
     <ClInclude Include="EffectManager.h" />
-    <ClInclude Include="EnemyManager.h" />
+    <ClInclude Include="StageManager.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="Inventory.h" />

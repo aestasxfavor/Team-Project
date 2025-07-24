@@ -1,5 +1,5 @@
-#include "Enemy.h"
-#include "EnemyManager.h"  // TryFire에서 필요
+
+#include "StageManager.h"  // TryFire에서 필요
 
 // ======================= Enemy 기본 클래스 ==========================
 

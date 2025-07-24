@@ -1,7 +1,7 @@
 #pragma once
 #include "Util.h"
 #include "Player.h"
-#include "EnemyManager.h"
+#include "StageManager.h"
 #include "DropManager.h"
 #include "UIManager.h"
 #include "EffectManager.h"
