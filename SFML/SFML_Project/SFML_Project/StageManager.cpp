@@ -4,7 +4,6 @@
 // 앞으로 적 관련 함수는 StageManager에서 관리함 (ex. FireBulletAtPlayer, UpdateEnemies 등)
 // 요거 중요해요!!!!
 
-
 StageManager::StageManager()
 {
     spawnInterval = 1.0f;    // 적 생성 간격을 5초로 설정
@@ -24,11 +23,13 @@ void StageManager::Init()
 	player->Init(); // 효 추가 : 플레이어 초기화
     //enemyTexture.loadFromFile("enemy.png");  // 적 텍스처 파일 로드
     //추가
+
     //테스트용 슬라임 이미지
     slimeTexture.loadFromFile(GetrscPath("slime.png"));
     spriteSlime.setTexture(texture);    // 효 추가 : [확인 필요] texture 변수는 slimeTexture와 역할이 겹치는 것 같음 의도가 불분명.. 상의 후 결정하기
     spriteSlime.setPosition(370.f, 280.f);
     //spriteSlime.setTextureRect(sf::IntRect(0, 227, 227 , 227));'
+
     
     //enemy01이미지
     std::string path = GetrscPath("enemy01.png");
@@ -37,6 +38,8 @@ void StageManager::Init()
         std::cout << "enemy01.png 로딩 실패!" << std::endl;
         std::cout << "시도된 경로: " << path << std::endl;
     }
+
+
 
     //투사체 관련 init
     bulletTexture.loadFromFile(GetrscPath("bullet.png"));
@@ -57,20 +60,11 @@ void StageManager::Update(float dt, sf::Vector2f playerPos)
     for (int i = enemies.size() - 1; i >= 0; --i) 
     {
         enemies[i]->Update(dt, playerPos);  // 적 개별 업데이트
-        slime* s = dynamic_cast<slime*>(enemies[i]);
-        if (s != nullptr)
-        {
-            s->bulletTimer += dt;
-            if (s->bulletTimer >= s->bulletCooldown)
-            {
-                s->bulletTimer = 0.f;
 
-                sf::Vector2f pos = enemies[i]->GetGlobalBounds().getPosition();
-                FireBulletAtPlayer(pos, playerPos, enemies[i]->GetAtk()); // ← 여기서 발사
-                //std::cout << "[슬라임 발사!] 총알 생성" << std::endl;
-            }                              
+        //나를 향해 투사체를 쏜다.
+        if (enemies[i]->CanFire(dt)) {
+            enemies[i]->TryFire(this, playerPos);
         }
-
 
         if (enemies[i]->IsDead()) 
         {         // 적이 죽었으면
@@ -80,15 +74,16 @@ void StageManager::Update(float dt, sf::Vector2f playerPos)
     }
     //투사체관련
     // 1초에 한 번 발사 (간단 테스트용)
-    static float fireTimer = 0.f;
-    fireTimer += dt;
-    if (fireTimer >= 1.f && !enemies.empty())
-    {
-        sf::Vector2f pos = enemies[0]->GetGlobalBounds().getPosition();
-        int damage = enemies[0]->GetAtk();
-        FireBullet(pos, playerPos, damage);  // 인자 3개로 호출
-        fireTimer = 0.f;
-    }
+    //static float fireTimer = 0.f;
+    //fireTimer += dt;
+    //if (fireTimer >= 1.f && !enemies.empty())
+    //{
+    //    sf::Vector2f pos = enemies[0]->GetGlobalBounds().getPosition();
+    //    int damage = enemies[0]->GetAtk();
+    //    FireBullet(pos, playerPos, damage);  // 인자 3개로 호출
+    //    fireTimer = 0.f;
+    //}
+    //투사체를 이상한데서 발사하게 되는 관계로 주석처리
 
     // 투사체 발사 뿅뿅
     for (auto& bullet : bullets)
@@ -98,22 +93,6 @@ void StageManager::Update(float dt, sf::Vector2f playerPos)
         if (len != 0) dir /= len;
         bullet.sprite.move(bullet.velocity * dt);
     }
-
-    fireTimer += dt;
-    if (fireTimer >= fireInterval)
-    {
-        fireTimer = 0.f;
-
-        for (auto& enemy : enemies)
-        {
-            sf::Vector2f enemyPos = enemy->GetGlobalBounds().getPosition();// 혹은 enemy->GetPosition() 있으면 사용
-            FireBulletAtPlayer(enemyPos, playerPos, enemy->GetAtk()); // 패턴1: 유저를 향해 쏘기
-            //FireBulletsSpread(enemyPos);   // 패턴2: 6방향 퍼짐
-        }
-    }
-
-
-
 }
 
 
@@ -130,25 +109,31 @@ void StageManager::SpawnEnemy(sf::Vector2f playerPos)
 
     Enemy* enemy = nullptr;
 
+
     int enemyType = rand() % 2;  // 현재는 2종 (0: slime, 1: enemy01)   // 2025-07-22 14:14분 효 추가 : enum으로 설계해도 될거 같음 일단 보류하기 
+
+    //int enemyType = rand() % 1;  // 현재는 1종으로 적 class 수 만큼 늘려주세요.      2025-07-24 01:10분 효 추가 : 밑에 또는 위에거 둘중 하나 사용할거같음
+
 
     switch (enemyType)
     {
     case 0:
-        enemy = new slime(slimeTexture, spawnPos);
-        break;
-    case 1:
         enemy = new enemy01(enemy01Texture, spawnPos);
         break;
+    //case 1:
+    //    break;
     //case 2:
     //    enemy = new enemy02(enemy01Texture, spawnPos);
     //    break;
     default:
-        enemy = new slime(slimeTexture, spawnPos); // 기본값
         break;
     }
 
-    enemies.push_back(enemy);
+    // 방어코드: enemy가 nullptr일 경우를 대비하여 확인 후 push_back
+    // enemyType이 예상치 못한 값이거나 switch 문에서 적절한 객체 생성이 생략되었을 때
+    // 잘못된 포인터가 enemies에 들어가는 것을 방지한다.
+    if (enemy != nullptr)
+        enemies.push_back(enemy);
 }
 
 void StageManager::Draw(sf::RenderWindow& window) 
