@@ -53,7 +53,8 @@ private:
     sf::Texture texture;
     //적 개체스프라이트
     sf::Texture slimeTexture;
-    sf::Texture enemy01Texture;
+    sf::Texture enemy01Texture;//이거 에너미 늘릴대 마다 추가
+
     //투사체 관련 코드
     std::vector<BulletData> bullets;
     sf::Texture bulletTexture;
