@@ -29,8 +29,8 @@ public:
 	float currentAttackCoolTime; // 현재 공격 쿨타임
 	bool canAttack; // 공격 가능한 상태인지? 체크 변수
 
-				// 이거 생성자 Cpp로 옮길 시 같이 옮겨 주세엽
-	Player(): stats(),currentAttackCoolTime(0.0f),canAttack(true)
+				// 이거 생성자 Cpp로 옮길 시 같이 옮겨 주세엽		// 2025-07-24 01:13분 효 추가 : 이거 옮길 필요가..있나? 일단 보류 내일 상의해서 하기 
+	Player(): stats(),currentAttackCoolTime(0.0f), canAttack(true)
 	{
 		
 	}
