@@ -3,37 +3,30 @@
 #include "Scene.h"
 #include "SceneManager.h"
 
+class Scene;
+
 // 2025-07-23 효 추가: 타이틀 씬 클래스 정의
-class TitleScene : public Scene
+class TitleScene : public Scene     // Scene 클래스를 상속받아 타이틀 씬 구현
 {
 private:
-    // 배경
+    sf::Font font;              // 폰트
+    sf::Text titleText;         // "게임 제목" 텍스트
+    sf::Text startText;         // "Enter 키를 눌러 시작하세요" 텍스트
+
     sf::Texture backgroundTexture;
-    sf::Sprite background;
+    sf::Sprite backgroundSprite;
 
-    //// 타이틀 로고 (애니메이션용)
-    //sf::Texture titleTexture;
-    //sf::Sprite title;
-    //float titleScaleTimer = 0.f;  // 커졌다 작아졌다 애니메이션 타이머
+    float scaleDirection = 1.0f;  // 커지는 방향 (1: 커짐, -1: 작아짐)
+    float scaleSpeed = 0.5f;     // 크기 변화 속도
+    float minScale = 0.9f;       // 최소 크기 배율
+    float maxScale = 1.1f;       // 최대 크기 배율
 
-    //// 버튼: 시작
-    //sf::Texture startBtnTexture;
-    //sf::Sprite startButton;
-    //float startScaleTimer = 0.f;  // 커졌다 작아졌다 애니메이션 타이머
 
-    //// 버튼: 종료
-    //sf::Texture exitBtnTexture;
-    //sf::Sprite exitButton;
-    //float exitScaleTimer = 0.f;  // 커졌다 작아졌다 애니메이션 타이머
-
-    sf::Font font;
-	sf::Text titleText;
-    sf::Text startText;
-    sf::Text exitText;
+    bool canStart = true;      // 입력 대기 상태 처리 (애니메이션용 등)
 public:
-    void Init();
-    void Update(sf::RenderWindow& window);
-    void Render(sf::RenderWindow& window);
+    void Init() override;
+    void Update(sf::RenderWindow& window) override;
+    void Render(sf::RenderWindow& window) override;
 
 
 };

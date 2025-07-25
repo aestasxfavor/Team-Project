@@ -36,3 +36,9 @@ inline std::string GetrscPath(const std::string& filename)
 {
 	return "../../Rjpg/" + filename;
 }
+
+// 폰트 전용 상대경로 
+inline std::string GetscPath(const std::string& filename)
+{
+	return "../../Rjpg/Font/" + filename;
+}
