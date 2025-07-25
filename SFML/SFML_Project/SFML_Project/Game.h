@@ -6,7 +6,7 @@
 #include "UIManager.h"
 #include "WaveManager.h"
 
-// 효 추가 : 게임의 전체적인 흐름 돌리기(필요없을수도 있음 보류)
+// 효 추가 : 게임의 전체적인 흐름 돌리기(필요없을수도 있음 보류) -> 보류가 아닌 필수 
 class Game
 {
 
