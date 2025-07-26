@@ -31,17 +31,28 @@ void StageManager::Init()
     //spriteSlime.setTextureRect(sf::IntRect(0, 227, 227 , 227));'
 
     
-    //enemy01이미지
-    std::string path = GetrscPath("enemy01.png");
-    if (!enemy01Texture.loadFromFile(path))
+     // enemy01 이미지
+    std::string path01 = GetrscPath("enemy01.png");
+    if (!enemy01Texture.loadFromFile(path01))
     {
-        std::cout << "enemy01.png 로딩 실패!" << std::endl;
-        std::cout << "시도된 경로: " << path << std::endl;
+        std::cout << "enemy01.png 로딩 실패! 경로: " << path01 << std::endl;
     }
 
+    // enemy02 이미지
+    std::string path02 = GetrscPath("enemy02.png");
+    if (!enemy02Texture.loadFromFile(path02))  
+    {
+        std::cout << "enemy02.png 로딩 실패! 경로: " << path02 << std::endl;
+    }
 
+    // enemy03 이미지
+    std::string path03 = GetrscPath("enemy03.png");
+    if (!enemy03Texture.loadFromFile(path03)) 
+    {
+        std::cout << "enemy03.png 로딩 실패! 경로: " << path03 << std::endl;
+    }
 
-    //투사체 관련 init
+    // 투사체
     bulletTexture.loadFromFile(GetrscPath("bullet.png"));
 }
 
@@ -98,6 +109,7 @@ void StageManager::Update(float dt, sf::Vector2f playerPos)
 
 void StageManager::SpawnEnemy(sf::Vector2f playerPos)
 {
+
     float angle = static_cast<float>(rand() % 360) * 3.1415926f / 180.f;
     float distance = minSpawnDistance + static_cast<float>(rand()) / RAND_MAX * 300.f;
 
@@ -109,22 +121,20 @@ void StageManager::SpawnEnemy(sf::Vector2f playerPos)
 
     Enemy* enemy = nullptr;
 
-
-    int enemyType = rand() % 2;  // 현재는 2종 (0: slime, 1: enemy01)   // 2025-07-22 14:14분 효 추가 : enum으로 설계해도 될거 같음 일단 보류하기 
-
-    //int enemyType = rand() % 1;  // 현재는 1종으로 적 class 수 만큼 늘려주세요.      2025-07-24 01:10분 효 추가 : 밑에 또는 위에거 둘중 하나 사용할거같음
-
+    int enemyType = rand() % 3;  // 현재는 1종으로 적 class 수 만큼 늘려주세요.
+    std::cout << "spawn type = " << enemyType << std::endl;
 
     switch (enemyType)
     {
     case 0:
         enemy = new enemy01(enemy01Texture, spawnPos);
         break;
-    //case 1:
-    //    break;
-    //case 2:
-    //    enemy = new enemy02(enemy01Texture, spawnPos);
-    //    break;
+    case 1:
+        enemy = new enemy02(enemy02Texture, spawnPos);
+        break;
+    case 2:
+        enemy = new enemy03(enemy03Texture, spawnPos);
+        break;
     default:
         break;
     }
