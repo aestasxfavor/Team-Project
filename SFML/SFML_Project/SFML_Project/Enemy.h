@@ -17,6 +17,8 @@ protected:
     float speed = 50.f;
     bool dead = false;
 
+    sf::Vector2f scale = { 1.0f, 1.0f };//이미지크기
+
 public:
     Enemy(sf::Texture& texture, sf::Vector2f spawnPos);
 
@@ -32,6 +34,8 @@ public:
 
     virtual bool CanFire(float dt);
     virtual void TryFire(EnemyManager* manager, sf::Vector2f playerPos);
+
+    void SetScale(sf::Vector2f s); //이미지 크기 조절
 };
 
 // ======================= enemy01 클래스 ==========================
@@ -55,5 +59,42 @@ private:
 };
 
 // ======================= enemy02 클래스 ==========================
+class enemy02 : public Enemy {
+public:
+    enemy02(sf::Texture& texture, sf::Vector2f spawnPos); // 정의는 cpp에서
 
+    void Update(float dt, sf::Vector2f playerPos) override;
+    bool CanFire(float dt) override;
+    void TryFire(EnemyManager* manager, sf::Vector2f playerPos) override;
 
+private:
+    int currentFrame = 0;
+    float animationTimer = 0.f;
+    float frameDuration = 0.2f;
+    int frameCount = 3;
+    sf::Vector2i frameSize = { 64, 64 };
+
+    float bulletTimer = 0.f;
+    float bulletCooldown = 2.0f;//발사쿨타임
+};
+
+// ======================= enemy03 클래스 ==========================
+
+class enemy03 : public Enemy {
+public:
+    enemy03(sf::Texture& texture, sf::Vector2f spawnPos); // 정의는 cpp에서
+
+    void Update(float dt, sf::Vector2f playerPos) override;
+    bool CanFire(float dt) override;
+    void TryFire(EnemyManager* manager, sf::Vector2f playerPos) override;
+
+private:
+    int currentFrame = 0;
+    float animationTimer = 0.f;
+    float frameDuration = 0.2f;
+    int frameCount = 3;
+    sf::Vector2i frameSize = { 64, 64 };
+
+    float bulletTimer = 0.f;
+    float bulletCooldown = 2.0f;//발사쿨타임
+};

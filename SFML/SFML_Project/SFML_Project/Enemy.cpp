@@ -9,6 +9,7 @@ Enemy::Enemy(sf::Texture& texture, sf::Vector2f spawnPos)
     sprite.setTexture(texture);
     sprite.setPosition(spawnPos);
     sprite.setOrigin(texture.getSize().x / 2.f, texture.getSize().y / 2.f);
+    sprite.setScale(scale);  // 디폴트값
 }
 
 // 기본 이동 로직
@@ -87,6 +88,8 @@ enemy01::enemy01(sf::Texture& texture, sf::Vector2f spawnPos)
 
     sprite.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y));
     sprite.setOrigin(frameSize.x / 2.f, frameSize.y / 2.f);
+
+    sprite.setScale(2.0f, 2.0f); // 확대 동일하게해야 이쁨
 }
 
 // enemy01::Update
@@ -117,6 +120,109 @@ bool enemy01::CanFire(float dt)
 
 // enemy01::TryFire
 void enemy01::TryFire(EnemyManager* manager, sf::Vector2f playerPos)
+{
+    manager->FireBulletAtPlayer(GetPosition(), playerPos, atk);
+}
+
+// ======================= enemy01 ==========================
+
+// enemy02 생성자
+enemy02::enemy02(sf::Texture& texture, sf::Vector2f spawnPos)
+    : Enemy(texture, spawnPos)
+{
+    hp = 3;
+    atk = 12;
+    speed = 70.f;
+
+    frameSize = { 64, 64 };
+    frameCount = 3;
+    frameDuration = 0.2f;
+
+    sprite.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y));
+    sprite.setOrigin(frameSize.x / 2.f, frameSize.y / 2.f);
+    sprite.setScale(2.0f, 2.0f); // 확대 동일하게해야 이쁨
+}
+
+// enemy02::Update
+void enemy02::Update(float dt, sf::Vector2f playerPos)
+{
+    Enemy::Update(dt, playerPos);
+
+    animationTimer += dt;
+    if (animationTimer >= frameDuration)
+    {
+        animationTimer = 0.f;
+        currentFrame = (currentFrame + 1) % frameCount;
+        sprite.setTextureRect(sf::IntRect(currentFrame * frameSize.x, 0, frameSize.x, frameSize.y));
+    }
+}
+
+// enemy02::CanFire
+bool enemy02::CanFire(float dt)
+{
+    bulletTimer += dt;
+    if (bulletTimer >= bulletCooldown)
+    {
+        bulletTimer = 0.f;
+        return true;
+    }
+    return false;
+}
+
+// enemy02::TryFire
+void enemy02::TryFire(EnemyManager* manager, sf::Vector2f playerPos)
+{
+    manager->FireBulletAtPlayer(GetPosition(), playerPos, atk);
+}
+
+
+// ======================= enemy01 ==========================
+
+// enemy03 생성자
+enemy03::enemy03(sf::Texture& texture, sf::Vector2f spawnPos)
+    : Enemy(texture, spawnPos)
+{
+    hp = 3;
+    atk = 12;
+    speed = 70.f;
+
+    frameSize = { 64, 64 };
+    frameCount = 3;
+    frameDuration = 0.2f;
+
+    sprite.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y));
+    sprite.setOrigin(frameSize.x / 2.f, frameSize.y / 2.f);
+    sprite.setScale(2.0f, 2.0f); // 확대 동일하게해야 이쁨
+}
+
+// enemy03::Update
+void enemy03::Update(float dt, sf::Vector2f playerPos)
+{
+    Enemy::Update(dt, playerPos);
+
+    animationTimer += dt;
+    if (animationTimer >= frameDuration)
+    {
+        animationTimer = 0.f;
+        currentFrame = (currentFrame + 1) % frameCount;
+        sprite.setTextureRect(sf::IntRect(currentFrame * frameSize.x, 0, frameSize.x, frameSize.y));
+    }
+}
+
+// enemy03::CanFire
+bool enemy03::CanFire(float dt)
+{
+    bulletTimer += dt;
+    if (bulletTimer >= bulletCooldown)
+    {
+        bulletTimer = 0.f;
+        return true;
+    }
+    return false;
+}
+
+// enemy03::TryFire
+void enemy03::TryFire(EnemyManager* manager, sf::Vector2f playerPos)
 {
     manager->FireBulletAtPlayer(GetPosition(), playerPos, atk);
 }
