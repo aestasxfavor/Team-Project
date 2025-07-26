@@ -31,9 +31,26 @@ void Enemy::Draw(sf::RenderWindow& window)
 // 피격 처리
 void Enemy::TakeDamage(int amount)
 {
+
+    // 2025-07-23 데미지 코드 보류 
+  /*  if (amount <= 0)
+    {
+        cout << "음수 처리 안되게" << amount << endl;
+        return;
+    }*/
+
+    hp -= amount;          // 데미지 만큼 체력 차감
+
+    //std::cout << "[슬라임 피격] 현재 HP: " << hp << std::endl;
+    if (hp <= 0)           // 체력 0 이하이면
+        dead = true;       // 죽음 표시
+
+    
+
     hp -= amount;
     if (hp <= 0)
         dead = true;
+
 }
 
 // 사망 여부

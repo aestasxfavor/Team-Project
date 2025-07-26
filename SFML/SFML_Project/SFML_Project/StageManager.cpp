@@ -4,6 +4,8 @@
 // 앞으로 적 관련 함수는 StageManager에서 관리함 (ex. FireBulletAtPlayer, UpdateEnemies 등)
 // 요거 중요해요!!!!
 
+// 2025-07-24 효 추가 : 메인으로 코멘트 달기위한 주석입니다 :)
+
 StageManager::StageManager()
 {
     spawnInterval = 1.0f;    // 적 생성 간격을 5초로 설정
