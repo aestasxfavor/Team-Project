@@ -150,6 +150,13 @@ void Player::UseSkill(int slot)
 {
 }
 
+void Player::Death()
+{
+	isDead = true;
+	exit(0); // 게임 종료 처리
+	// 게임 오버 처리 등 추가 로직 필요
+}
+
 void Player::GainExperience(int amount)
 {
 	stats.GainExp(amount);
@@ -181,7 +188,7 @@ sf::FloatRect Player::GetGlobalBounds() const//충돌관련
 }
 void Player::TakeDamage(int amount)
 {
-	if (isInvincible)
+	if (isInvincible||isDead)
 		return;
 
 	stats.currentHp -= amount;
@@ -194,6 +201,7 @@ void Player::TakeDamage(int amount)
 	if (stats.currentHp <= 0)
 	{
 		std::cout << "플레이어가 죽었습니다!" << std::endl;
+		Death();
 	}
 }
 

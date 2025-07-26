@@ -92,7 +92,7 @@ float PlayerStats::GetFinalAttackCooldown() const
 PlayerStats::PlayerStats()
 {
 	maxHp = 100;
-	currentHp = 100;
+	currentHp = 100;		// 플레이어 기본 체력 
 	damage = 5;
 	attackSpeed = 1.0f;
 	defense = 0;

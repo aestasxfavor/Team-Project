@@ -7,7 +7,6 @@
 
 class Player
 {
-
 public:
 	int hp, level, exp;
 	// 효 추가(개인적인 생각) : hp = 20(기본), level, exp = 0 기본설정하면 될거같습니당
@@ -21,6 +20,8 @@ public:
 	sf::Texture texture;
 	sf::Sprite spritePlayer;
 	enum State { IDLE, MOVE } state = IDLE;
+
+	bool isDead = false; // 플레이어가 죽었는지 여부
 
 
 	// 미니 추가 
@@ -49,6 +50,7 @@ public:
 	void UseSkill(int slot); // 키 입력 받고 키를 매개변수로 해당하는 값에 따라 스킬 실행
 							 // update안에다가 키입력 조건 걸어서 UseSkill() 해놓고 누른 버튼 변환해서 또는 enum으로
 							 // 그 인수를 int slot으로 넣기
+	void Death(); // 플레이어가 죽었을 때 호출되는 함수
 
 	// 미니가 추가한 함수
 	// 아이템 먹고 경험치 얻을 때 함수

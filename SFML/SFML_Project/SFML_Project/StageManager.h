@@ -71,4 +71,9 @@ private:
     std::vector<BulletData> bullets;
     sf::Texture bulletTexture;
     float bulletSpeed = 300.f;
+
+    // 2025-07-26 효 추가 : 웨이브 설계 코드(무한확장)
+	int currentWave = 1; // 현재 웨이브 번호
+	float waveTimer = 0.f; // 웨이브 시간 누적
+    float waveDuration = 30.f;    // 웨이브 지속 시간
 };
