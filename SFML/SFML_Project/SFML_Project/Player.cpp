@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "SceneManager.h"
 
 void Player::Init()
 {
@@ -153,7 +154,8 @@ void Player::UseSkill(int slot)
 void Player::Death()
 {
 	isDead = true;
-	exit(0); // 게임 종료 처리
+	
+	SceneManager::ChangeScene("GameOver"); //  여기서 호출
 	// 게임 오버 처리 등 추가 로직 필요
 }
 
@@ -176,7 +178,7 @@ sf::Vector2f Player::GetPosition() const
 void Player::Render(sf::RenderWindow& window, const sf::Vector2f& position)
 {
 	spritePlayer.setPosition(position);
-	//window.draw(spritePlayer);
+
 	if (visible)
 		window.draw(spritePlayer);
 }
@@ -186,13 +188,29 @@ sf::FloatRect Player::GetGlobalBounds() const//충돌관련
 {
 	return spritePlayer.getGlobalBounds();
 }
-void Player::TakeDamage(int amount)
+void Player::TakeDamage(int amount)		// 2025-07-26 효 추가 : 플레이어가 데미지 입고 죽는거까지 구현완료
 {
-	if (isInvincible||isDead)
+	//if (isInvincible||isDead)
+	//	return;
+
+	//stats.currentHp -= amount;
+	//std::cout << " 현재 체력 : " << stats.currentHp << std::endl;
+
+	//isInvincible = true;
+	//invincibleTimer = 0.f;
+	//blinkTimer = 0.f;
+
+	//if (stats.currentHp <= 0)
+	//{
+	//	//std::cout << "플레이어가 죽었습니다!" << std::endl;
+	//	Death();
+	//}
+
+	if (isInvincible || isDead)
 		return;
 
 	stats.currentHp -= amount;
-	std::cout << "플레이어가 받은 피해: " << amount << std::endl;
+	cout << "[TakeDamage] 현재 체력 : " << stats.currentHp << endl;
 
 	isInvincible = true;
 	invincibleTimer = 0.f;
@@ -200,7 +218,7 @@ void Player::TakeDamage(int amount)
 
 	if (stats.currentHp <= 0)
 	{
-		std::cout << "플레이어가 죽었습니다!" << std::endl;
+		cout << "[Death 호출 조건 충족]" << endl;
 		Death();
 	}
 }

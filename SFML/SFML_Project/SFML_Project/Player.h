@@ -5,6 +5,8 @@
 #include "Skill.h"
 #include "PlayerStats.h"
 
+class SceneManager; // 전방 선언: SceneManager 클래스 필요
+
 class Player
 {
 public:

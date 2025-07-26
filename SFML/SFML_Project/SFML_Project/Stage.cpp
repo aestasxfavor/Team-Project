@@ -10,6 +10,7 @@ void Stage::Init()
 		stageManager = new StageManager();
 		// 효 추가 : Player 객체 생성 및 StageManager에 설정
 		player = new Player();
+		//player->SetUIManager(uiManager); // Player에 UI 매니저 설정 (2025-07-26 효 추가)
 		stageManager->SetPlayer(player);  // StageManager에 Player 설정
 		stageManager->Init();  // 적 텍스처 등 초기화
 		

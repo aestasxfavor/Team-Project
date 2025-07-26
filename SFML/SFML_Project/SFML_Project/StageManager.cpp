@@ -1,4 +1,5 @@
 #include "StageManager.h"
+#include "UIManager.h"
 
 // [2025.07.23 수정] 원래 EnemyManager에서 하던 적 생성/관리를 StageManager로 통합함
 // 앞으로 적 관련 함수는 StageManager에서 관리함 (ex. FireBulletAtPlayer, UpdateEnemies 등)
@@ -11,6 +12,7 @@ StageManager::StageManager()
     spawnInterval = 1.0f;    // 적 생성 간격을 5초로 설정
     spawnTimer = 0.f;       // 생성 타이머 초기화
     player = nullptr;
+	uiManager = nullptr; // UI 매니저 초기화
 }
 
 
@@ -123,8 +125,8 @@ void StageManager::SpawnEnemy(sf::Vector2f playerPos)
 
     Enemy* enemy = nullptr;
 
-    int enemyType = rand() % 3;  // 현재는 1종으로 적 class 수 만큼 늘려주세요.
-    std::cout << "spawn type = " << enemyType << std::endl;
+    int enemyType = rand() % 3;  // 2025-07-26 효 추가 : 3가지 적을 맵에 랜덤으로 생성
+    //std::cout << "spawn type = " << enemyType << std::endl;
 
     switch (enemyType)
     {
@@ -214,6 +216,21 @@ void StageManager::FireBulletAtPlayer(sf::Vector2f start, sf::Vector2f playerPos
 std::vector<BulletData>& StageManager::GetBullets()
 {
     return bullets;
+}
+
+void StageManager::SetUIManager(UIManager* _uiManager)
+{
+	uiManager = _uiManager; // StageManager에 UI 매니저 설정
+}
+
+int StageManager::GetCurrentWave() const
+{
+     return currentWave; 
+}
+
+void StageManager::NextWave()
+{
+    currentWave++;
 }
 
 

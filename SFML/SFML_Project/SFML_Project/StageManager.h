@@ -9,6 +9,8 @@
 
 // 2025-07-21 효 추가 (EnemyManager->StageManager 이름 변경)
 
+class UIManager; // 전방 선언: StageManager가 UIManager를 사용하기 때문에 (has - a 관계)
+
 //투사체관련
 struct BulletData
 {
@@ -48,6 +50,11 @@ public:
 
     std::vector<BulletData>& GetBullets();
 
+    void SetUIManager(UIManager* _uiManager); // UI 매니저 설정      // GameScene 선언에서 stage->stageManager->SetUIManager(&uiManager); 로 처리하기위해
+	int GetCurrentWave() const; // 현재 웨이브 번호 반환
+	void NextWave(); // 다음 웨이브로 넘어가기
+
+
 private:
    
     Player* player;                 // 효 추가, StageManager가 Player를 내부에 포함함(has - a 관계)
@@ -73,7 +80,10 @@ private:
     float bulletSpeed = 300.f;
 
     // 2025-07-26 효 추가 : 웨이브 설계 코드(무한확장)
-	int currentWave = 1; // 현재 웨이브 번호
+	int currentWave = 0; // 현재 웨이브 번호
 	float waveTimer = 0.f; // 웨이브 시간 누적
     float waveDuration = 30.f;    // 웨이브 지속 시간
+
+    // 30초 웨이브 추가 
+	UIManager* uiManager; // UI 매니저 객체, UI 관련 작업을 처리하기 위한 객체
 };

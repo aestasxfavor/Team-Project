@@ -5,6 +5,7 @@
 #include "TitleScene.h"
 #include "GameScene.h"
 #include"Enemy.h"
+#include "GameOverScene.h"
 
 int main()
 {
@@ -13,6 +14,7 @@ int main()
 
         SceneManager::AddScene("Title", new TitleScene());
         SceneManager::AddScene("Game", new GameScene());
+        SceneManager::AddScene("GameOver", new GameOverScene()); //  µî·Ï
         SceneManager::ChangeScene("Title");
 
         sf::Clock clock;
