@@ -1,5 +1,7 @@
 
 #include "StageManager.h"  // TryFire에서 필요
+#include "Enemy.h"
+#include "Stage.h"
 
 // ======================= Enemy 기본 클래스 ==========================
 
@@ -11,10 +13,13 @@ Enemy::Enemy(sf::Texture& texture, sf::Vector2f spawnPos)
     sprite.setOrigin(texture.getSize().x / 2.f, texture.getSize().y / 2.f);
 }
 
+
+
 // 기본 이동 로직
 void Enemy::Update(float dt, sf::Vector2f playerPos)
 {
     sf::Vector2f dir = playerPos - sprite.getPosition();
+    //cout << sprite.getPosition().x << " , " << sprite.getPosition().y << endl;
     float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
     if (len != 0) dir /= len;
 

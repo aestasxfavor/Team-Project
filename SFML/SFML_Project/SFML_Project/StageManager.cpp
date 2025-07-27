@@ -1,4 +1,7 @@
 #include "StageManager.h"
+#include "Enemy.h"
+#include "Player.h"
+#include "Stage.h"
 
 // [2025.07.23 수정] 원래 EnemyManager에서 하던 적 생성/관리를 StageManager로 통합함
 // 앞으로 적 관련 함수는 StageManager에서 관리함 (ex. FireBulletAtPlayer, UpdateEnemies 등)
@@ -8,7 +11,7 @@
 
 StageManager::StageManager()
 {
-    spawnInterval = 1.0f;    // 적 생성 간격을 5초로 설정
+    spawnInterval = 0.3f;    // 적 생성 간격을 5초로 설정
     spawnTimer = 0.f;       // 생성 타이머 초기화
     player = nullptr;
 }
@@ -27,9 +30,9 @@ void StageManager::Init()
     //추가
 
     //테스트용 슬라임 이미지
-    slimeTexture.loadFromFile(GetrscPath("slime.png"));
-    spriteSlime.setTexture(texture);    // 효 추가 : [확인 필요] texture 변수는 slimeTexture와 역할이 겹치는 것 같음 의도가 불분명.. 상의 후 결정하기
-    spriteSlime.setPosition(370.f, 280.f);
+   //slimeTexture.loadFromFile(GetrscPath("slime.png"));
+   //spriteSlime.setTexture(texture);    // 효 추가 : [확인 필요] texture 변수는 slimeTexture와 역할이 겹치는 것 같음 의도가 불분명.. 상의 후 결정하기
+   //spriteSlime.setPosition(370.f, 280.f);
     //spriteSlime.setTextureRect(sf::IntRect(0, 227, 227 , 227));'
 
     
@@ -49,13 +52,19 @@ void StageManager::Init()
 
 void StageManager::Update(float dt, sf::Vector2f playerPos) 
 {
-	player->Update(dt); // 효 추가 : 플레이어 업데이트
+	player->Update(dt,enemies); // 효 추가 : 플레이어 업데이트
+    player->GainExperience();
     spawnTimer += dt;       // 누적된 시간 갱신
-
+    shootTimer += dt;
     if (spawnTimer >= spawnInterval && enemies.size()< maxEnemies)   // 생성 간격이 지나면
     {
         SpawnEnemy(playerPos);    // 새로운 적 생성 유저를 기준으로 떨어지게 생성
         spawnTimer = 0.f;        // 타이머 초기화
+    }
+    if (shootTimer >= 0.9f) 
+    {
+        player->Attack(enemies); // 1초마다 발사
+        shootTimer = 0.f;
     }
 
     // 역순으로 적 리스트 순회 (삭제 안정성 확보)
@@ -70,6 +79,9 @@ void StageManager::Update(float dt, sf::Vector2f playerPos)
 
         if (enemies[i]->IsDead()) 
         {         // 적이 죽었으면
+            enemies[i]->isAlive = false;
+            Stage::killCount++;
+            cout << "KillCount : " << Stage::killCount << endl;
             delete enemies[i];               // 메모리 해제
             enemies.erase(enemies.begin() + i);  // 리스트에서 제거
         }
@@ -140,7 +152,6 @@ void StageManager::SpawnEnemy(sf::Vector2f playerPos)
 
 void StageManager::Draw(sf::RenderWindow& window) 
 {
-	player->Render(window); // 효 추가 : 플레이어 렌더링
 
     for (auto& enemy : enemies) 
     {
@@ -150,6 +161,7 @@ void StageManager::Draw(sf::RenderWindow& window)
     {
         window.draw(bullet.sprite);
     }
+	player->Render(window); // 효 추가 : 플레이어 렌더링
 }
 
 void StageManager::Clear() 

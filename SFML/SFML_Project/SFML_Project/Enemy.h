@@ -16,10 +16,13 @@ protected:
     int atk = 10;
     float speed = 50.f;
     bool dead = false;
+    bool isActive = false;
 
 public:
     Enemy(sf::Texture& texture, sf::Vector2f spawnPos);
+    //µ¿¹Î Ãß°¡
 
+    bool isAlive = true;
     virtual ~Enemy() = default;
 
     virtual void Update(float dt, sf::Vector2f playerPos);

@@ -1,4 +1,9 @@
 #include "Player.h"
+#include "PlayerStats.h"
+#include "Spear.h"
+#include "Enemy.h"
+#include "Bullet.h"
+
 
 void Player::Init()
 {
@@ -9,6 +14,9 @@ void Player::Init()
 	spritePlayer.setPosition(370.f,280.f);
 	spritePlayer.setTextureRect(sf::IntRect(0,40, 48, 48));
 	speed = 200.f;
+
+	stats = new PlayerStats;
+	
 	/*std::string path = GetrscPath("Catcharacter2.png");
 	std::cout << "Texture Path: " << path << std::endl;
 	if (!texture.loadFromFile(path)) {
@@ -16,7 +24,7 @@ void Player::Init()
 	}*/
 }
 
-void Player::Update(float deltaTime)
+void Player::Update(float deltaTime,const std::vector<Enemy*>& enemies)
 {
 	sf::Vector2f direction(0.f, 0.f);
 
@@ -63,17 +71,50 @@ void Player::Update(float deltaTime)
 		animationTimer = 0.f;
 		currentFrame = 0;
 	}
-
-	// 미니가 추가한 함수.
-	if (!canAttack)
+	spearCoolTime += deltaTime;
+	if (!spear && spearCoolTime >= 1.f) // 쿨타임이 지났을 때 
 	{
-		currentAttackCoolTime += deltaTime;
-		if (currentAttackCoolTime >= stats.GetFinalAttackCooldown())
+		spearCoolTime = 0.f;
+		spear = new Spear(this);
+	}
+	if (spear)
+	{
+		spear->Update(deltaTime, enemies);
+
+		// 검사 코드
+		for (auto e : enemies)
 		{
-			canAttack = true;
-			currentAttackCoolTime = 0.0f;
+			if (spear->Checkcollision(e))
+			{
+				e->TakeDamage(spear->spearDamage);
+				
+				delete spear;
+				spear = nullptr;
+				break;
+			}
+		}
+		if (spear && spear->IsFinished())
+		{
+			delete spear;
+			spear = nullptr;
 		}
 	}
+	// 미니가 추가한 함수.
+	for (auto* bullet : bullets) 
+	{
+		bullet->Update(deltaTime, enemies); 
+	}
+
+	bullets.erase(std::remove_if(bullets.begin(), bullets.end(),
+		[](Bullet* b) 
+		{
+			if (!b->IsActive())
+			{
+				delete b;
+				return true;
+			}
+			return false;
+		}), bullets.end());
 
 	// 피격시 무적
 	if (isInvincible)
@@ -105,9 +146,17 @@ void Player::Update(float deltaTime)
 //원본은 주석처리!
 void Player::Render(sf::RenderWindow& window)
 {
-	//window.draw(spritePlayer);
+
+	if (spear != nullptr)
+	{
+		spear->Render(window);
+	}
 	if (visible)
 		window.draw(spritePlayer);
+	for (auto* bullet : bullets) {
+		bullet->Render(window);
+	}
+
 }
 
 void Player::Move(float deltaTime, const sf::Vector2f& dir)
@@ -126,39 +175,47 @@ void Player::Move(float deltaTime, const sf::Vector2f& dir)
 
 void Player::PickUp()
 {
+
 }
 
 void Player::LevelUp()
 {
+	stats->LevelUp();
 }
 
-void Player::Attack()
+void Player::Attack(const std::vector<Enemy*>& enemies)
 {
-	// 미니가 추가한 함수.
-	if (canAttack)
-	{
-		// 공격 구현 하면 됨.
+	Enemy* closest = nullptr;
+	float minDist = std::numeric_limits<float>::max();
+	// 가장 가까운 적 탐색
+	for (auto* enemy : enemies) {
+		float dist = std::hypot(enemy->GetPosition().x - GetPosition().x,
+								enemy->GetPosition().y - GetPosition().y);
+		if (dist < minDist) {
+			minDist = dist;
+			closest = enemy;
+		}
 	}
-	else
+
+	// 방향 벡터 구해서 Bullet 생성
+	if (closest)
 	{
-		// 공격 불가능 상태구현.
+		sf::Vector2f toTarget = closest->GetPosition() - GetPosition();
+		bullets.push_back(new Bullet(GetPosition(), toTarget ,stats));
 	}
-
 }
 
-void Player::UseSkill(int slot)
-{
-}
 
-void Player::GainExperience(int amount)
+
+void Player::GainExperience()
 {
-	stats.GainExp(amount);
+	stats->GainExp();
 }
 
 void Player::AddItemStat(const PlayerStats::StatOption itemStats)
 {	
 	// 미래에 있을 김동민이 구현할 아이템 얻을 때 스탯 변화
-	stats.ApplyStat(itemStats);
+	stats->ApplyStat(itemStats);
 }
 
 sf::Vector2f Player::GetPosition() const
@@ -184,14 +241,14 @@ void Player::TakeDamage(int amount)
 	if (isInvincible)
 		return;
 
-	stats.currentHp -= amount;
+	stats->currentHp -= amount;
 	std::cout << "플레이어가 받은 피해: " << amount << std::endl;
 
 	isInvincible = true;
 	invincibleTimer = 0.f;
 	blinkTimer = 0.f;
 
-	if (stats.currentHp <= 0)
+	if (stats->currentHp <= 0)
 	{
 		std::cout << "플레이어가 죽었습니다!" << std::endl;
 	}

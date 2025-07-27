@@ -82,7 +82,7 @@ public:
 
 	// 레벨 관련
 
-	void GainExp(int amount);           // 경험치획득
+	void GainExp();           // 경험치획득
 	void LevelUp();                     // 레벨 업
 
 	// 스탯 적용 함수

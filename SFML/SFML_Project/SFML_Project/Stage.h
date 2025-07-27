@@ -20,7 +20,7 @@ public:
 	EffectManager* effectManager;	// 2025-07-22 효 추가 : 이펙트는... 일단 보류하기
 
 	//킬카운트
-	int killCount = 0;
+	static int killCount;
 
 	Stage()
 	{
