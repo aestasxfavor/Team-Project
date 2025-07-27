@@ -53,7 +53,7 @@ void StageManager::Init()
 void StageManager::Update(float dt, sf::Vector2f playerPos) 
 {
 	player->Update(dt,enemies); // 효 추가 : 플레이어 업데이트
-    player->GainExperience();
+    
     spawnTimer += dt;       // 누적된 시간 갱신
     shootTimer += dt;
     if (spawnTimer >= spawnInterval && enemies.size()< maxEnemies)   // 생성 간격이 지나면
@@ -81,6 +81,7 @@ void StageManager::Update(float dt, sf::Vector2f playerPos)
         {         // 적이 죽었으면
             enemies[i]->isAlive = false;
             Stage::killCount++;
+			player->GainExperience(); // 플레이어 경험치 획득
             cout << "KillCount : " << Stage::killCount << endl;
             delete enemies[i];               // 메모리 해제
             enemies.erase(enemies.begin() + i);  // 리스트에서 제거
