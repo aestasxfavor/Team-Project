@@ -68,6 +68,7 @@ void TitleScene::Init()
 
         startText.setFont(font);
         startText.setString("<Press Enter to Start>");
+		//startText.setString(L"엔터키.");       // 한글 쓰는 방법 : L"문자열"
         startText.setCharacterSize(30);
         startText.setFillColor(sf::Color::Black);
         startText.setPosition(250, 300);
