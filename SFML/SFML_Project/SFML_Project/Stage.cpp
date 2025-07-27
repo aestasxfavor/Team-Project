@@ -1,4 +1,7 @@
 #include "Stage.h"
+#include "Enemy.h"
+
+int Stage::killCount = 0;
 
 void Stage::Init()
 {
@@ -29,6 +32,7 @@ void Stage::Init()
 	view.setSize(800.f, 600.f);//화면으로 보여줄 뷰 크기 
 	
 }
+
 
 void Stage::Update(float deltaTime)
 {
@@ -84,16 +88,17 @@ void Stage::HandlePlayerEnemyCollision()//충돌관련 (2025-07-21 준호님 추가)
 		{
 			player->TakeDamage(enemy->GetAtk());   // 플레이어가 받는 피해
 			//나중에 에너미 atk로 수정
-			enemy->TakeDamage(999);   // 플레이어가 가하는 피해
-			//테스트용이라 999로 설정했습니다.
+			
+			enemy->TakeDamage(player->stats->damage);   // 플레이어가 가하는 피해
+			
 			//나중에 무기에 넣을거면 재횔용될듯
 
 			if (enemy->IsDead())
 			{
-				killCount++;
+				//killCount++;
 				delete enemy;
 				enemies.erase(enemies.begin() + i);
-				std::cout << "Kill Count: " << killCount << std::endl;
+				//std::cout << "Kill Count: " << killCount << std::endl;
 			}
 		}
 	}

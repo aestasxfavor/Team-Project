@@ -130,6 +130,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="DropItem.cpp" />
     <ClCompile Include="DropManager.cpp" />
     <ClCompile Include="Enemy.cpp" />
@@ -139,6 +140,7 @@
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="ShopUI.cpp" />
     <ClCompile Include="SoundManager.cpp" />
+    <ClCompile Include="Spear.cpp" />
     <ClCompile Include="StageManager.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Inventory.cpp" />
@@ -150,9 +152,9 @@
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="UIManager.cpp" />
-    <ClCompile Include="Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="CameraManager.h" />
     <ClInclude Include="DropItem.h" />
     <ClInclude Include="DropManager.h" />
@@ -162,6 +164,7 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="ShopUI.h" />
     <ClInclude Include="SoundManager.h" />
+    <ClInclude Include="Spear.h" />
     <ClInclude Include="StageManager.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameScene.h" />
@@ -177,7 +180,6 @@
     <ClInclude Include="UIManager.h" />
     <ClInclude Include="Util.h" />
     <ClInclude Include="WaveManager.h" />
-    <ClInclude Include="Weapon.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

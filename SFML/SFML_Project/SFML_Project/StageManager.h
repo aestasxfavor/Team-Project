@@ -1,8 +1,9 @@
 #pragma once
 #include "Util.h"
-#include "Enemy.h"
-#include "Player.h"
-
+//#include "Enemy.h"
+//#include "Player.h"
+class Enemy;
+class Player;
 // [2025.07.23 수정] 원래 EnemyManager에서 하던 적 생성/관리를 StageManager로 통합함
 // 앞으로 적 관련 함수는 StageManager에서 관리함 (ex. FireBulletAtPlayer, UpdateEnemies 등)
 // 요거 중요해요!!!!
@@ -64,6 +65,8 @@ private:
     float spawnTimer;              // 누적된 시간 (적 생성 시간 체크용)
     float minSpawnDistance = 150.f;
     int maxEnemies = 100;//몬스터 최대치
+    float shootTimer = 0.f;
+    
     //추가
     //enemy 스프라이트 관련 코드
     sf::Sprite spriteSlime;
