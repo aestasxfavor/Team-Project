@@ -1,5 +1,6 @@
 #pragma once
 #include "Util.h"
+#include "ShopUI.h"
 
 // 2025-07-22 효 추가 : 정확하지 않음 
 
@@ -11,6 +12,7 @@ class UIManager
 private:
 
 	Player* player; // 플레이어 객체 포인터 (has - a 관계)
+	
 
 	sf::Font font;
 	sf::Text timerText;
@@ -54,6 +56,8 @@ private:
 	// 아 소리도 넣어야하구나 -> 확인... 사운드를 어디서... 
 	// 타이틀 -> 게임시작 -> 게임종료 띄우기 
 public:
+	ShopUI shopUI; // 상점 UI 객체 (has - a 관계)
+public:
 	void Init();
 	void Update(float dt);
 	void Render(sf::RenderWindow& window);
@@ -75,6 +79,11 @@ public:
 	sf::Color GetHPColor(float ratio); // ratio = currentHp / maxHp
 	void UpdateExpBar(int currentExp, int maxExp); // 경험치 바 업데이트 (void 함수)
 
+	void OpenShop();
+	void UpdateShop(const sf::Vector2f& pos, bool isClick);
+	void RenderShop(sf::RenderWindow& window);		// 상점 UI 렌더링 (void 함수)
+
+	bool IsShopOpen() const;
 
 };
 

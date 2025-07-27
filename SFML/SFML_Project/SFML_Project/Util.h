@@ -1,6 +1,7 @@
 // 효 추가
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include <Windows.h>	// 이건 혹시 몰라서 
 #include <conio.h>
@@ -9,6 +10,8 @@
 #include <chrono>
 #include <cstdlib> // rand()
 #include <cmath>	// 작아졌다 커졌다 느낌을 주기위한 애니메이션 (sin 함수 사용)
+#include <functional>
+
 
 // 자료구조 컨테이너
 #include <string>

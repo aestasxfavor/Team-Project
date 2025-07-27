@@ -138,6 +138,7 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="ShopUI.cpp" />
+    <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="StageManager.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Inventory.cpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="GameOverScene.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="ShopUI.h" />
+    <ClInclude Include="SoundManager.h" />
     <ClInclude Include="StageManager.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameScene.h" />

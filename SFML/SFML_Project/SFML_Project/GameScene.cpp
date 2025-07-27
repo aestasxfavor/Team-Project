@@ -19,23 +19,84 @@ void GameScene::Init()
 	uiManager.ResetWaveTimer(); // 그리고 나서 타이머 시작
 
 	clock.restart();  // 시간 초기화
+
+	// 상점 UI 콜백 등록 (딱 한 번만 하면 됨)
+	uiManager.shopUI.SetOnSelect([this](int selectedIndex)
+		{
+			std::cout << "Selected Option : " << selectedIndex << std::endl;
+
+			uiManager.shopUI.Close();
+
+			// -1은 "닫기 버튼 누름"
+			if (selectedIndex != -1)
+			{
+				// 아이템 적용 로직 여기에!
+			}
+
+			// 어쨌든 다음 웨이브는 시작
+			stage->stageManager->NextWave();
+			uiManager.ResetWaveTimer();
+			uiManager.ShowWaveText(stage->stageManager->GetCurrentWave());
+		});
 }
 
 void GameScene::Update(sf::RenderWindow& window)
 {
 	float dt = clock.restart().asSeconds();  // 델타타임 계산
 
-	if (uiManager.GetWaveElapsedTime() >= 30.f)
+	// 0. 상점이 열려있으면 게임 로직 정지 + 상태 업데이트
+	if (uiManager.IsShopOpen())
 	{
-		stage->stageManager->NextWave(); // 웨이브 숫자 올리기
-		uiManager.ResetWaveTimer();      // 타이머 리셋
-		uiManager.ShowWaveText(stage->stageManager->GetCurrentWave()); // 웨이브 텍스트 보여주기
+		sf::Vector2f mousePos = window.mapPixelToCoords(
+			sf::Mouse::getPosition(window),
+			window.getDefaultView()  // 이거 추가!
+		);
+
+		bool nowMousePressed = sf::Mouse::isButtonPressed(sf::Mouse::Left);
+		bool isClick = !prevMousePressed && nowMousePressed;  // 눌렀을 때 딱 한 번만 true
+
+		uiManager.UpdateShop(mousePos, isClick);
+
+		prevMousePressed = nowMousePressed;  // 마지막에 상태 저장
+		wasShopOpen = true;
+		return;
 	}
 
-	stage->Update(dt);
-	uiManager.Update(dt); // UI 매니저 업데이트
+	// 1. 상점이 막 닫혔으면 → 다음 웨이브 시작
+	if (wasShopOpen && !uiManager.IsShopOpen())
+	{
+		/*stage->stageManager->NextWave();
+		uiManager.ResetWaveTimer();
+		uiManager.ShowWaveText(stage->stageManager->GetCurrentWave());*/
+	}
 
-	
+	// 2. 웨이브 종료 타이머 (30초)
+	if (!waveEnded && uiManager.GetWaveElapsedTime() >= 30.f)
+	{
+		waveEnded = true;
+		waveEndTimer = 0.f;
+	}
+
+	// 3. 상점 열기 지연
+	if (waveEnded)
+	{
+		waveEndTimer += dt;
+
+		if (waveEndTimer >= 1.f)
+		{
+			uiManager.OpenShop();
+			waveEnded = false;
+		}
+
+		return;
+	}
+
+	// 4. 일반 게임 업데이트
+	stage->Update(dt);
+	uiManager.Update(dt);
+
+	// 5. 마지막에 상점 상태 저장
+	wasShopOpen = false;
 
 }
 
@@ -44,4 +105,3 @@ void GameScene::Render(sf::RenderWindow& window)
 	stage->Render(window);
 	uiManager.Render(window); // UI 매니저 렌더링
 }
- 

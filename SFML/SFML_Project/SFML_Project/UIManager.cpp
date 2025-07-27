@@ -11,6 +11,9 @@ void UIManager::Init()
 	InitWaveText(); // 웨이브 텍스트 초기화
 	InitStatusUIBar(); // 체력바 및 프로필 아이콘 초기화
 
+    statusShadowText();  //  이거 추가해줘야 그림자 텍스트도 초기화됨
+
+	shopUI.Init(font); // 상점 UI 초기화
 	
 }
 
@@ -37,7 +40,7 @@ void UIManager::Render(sf::RenderWindow& window)
     // 2. 기본 뷰(화면 고정 뷰)로 변경
     window.setView(window.getDefaultView());
     // 3. UI 그리기 (화면 고정 위치에 그려짐)
- // 3. UI 그리기 (화면 고정 위치에 그려짐)
+
     window.draw(timerText);
 
     // UI 요소들 (그림자 포함)
@@ -55,7 +58,10 @@ void UIManager::Render(sf::RenderWindow& window)
 
     // 4. Wave 그리기 ( 화면 고정 위치)
     window.draw(waveText);  // ← 이거는 이제 고정 출력
-    // 5. 원래 뷰 복원
+
+	// 5. 상점 UI 그리기
+    RenderShop(window);
+    // 6. 원래 뷰 복원
     window.setView(originalView);
 }
 
@@ -199,6 +205,36 @@ void UIManager::UpdateHPBar(int currentHP, int maxHP)
     sf::Vector2f pos(190.f, 28.f);
     hpText.setPosition(pos);
     hpTextShadow.setPosition(pos + sf::Vector2f(1.f, 1.f));
+}
+
+sf::Color UIManager::GetHPColor(float ratio)
+{
+    return sf::Color();
+}
+
+void UIManager::UpdateExpBar(int currentExp, int maxExp)
+{
+
+}
+
+void UIManager::OpenShop()
+{
+   shopUI.Open();
+}
+
+void UIManager::UpdateShop(const sf::Vector2f& pos, bool isClick)
+{
+    { shopUI.Update(pos, isClick); }
+}
+
+void UIManager::RenderShop(sf::RenderWindow& window)
+{
+     shopUI.Render(window); 
+}
+
+bool UIManager::IsShopOpen() const
+{
+    { return shopUI.IsOpen(); }
 }
 
 
