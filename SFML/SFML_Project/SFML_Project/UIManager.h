@@ -1,7 +1,7 @@
 #pragma once
 #include "Util.h"
 #include "ShopUI.h"
-
+#include "Player.h" // Player 클래스 필요
 // 2025-07-22 효 추가 : 정확하지 않음 
 
 class Player;
@@ -74,9 +74,10 @@ public:
 	void ShowWaveText(int wave);  // 웨이브 넘길 때 호출
 
 	void SetPlayer(Player* _player);  // 플레이어 설정 (void 함수)
-	void UpdateHPBar(int currentHP, int maxHP); // 체력바 업데이트 (void 함수)
+	void UpdateHPBar(int currentHp, int maxHp); // 체력바 업데이트 (void 함수)
 
 	sf::Color GetHPColor(float ratio); // ratio = currentHp / maxHp
+	sf::Color GetExpColor(float ratio); // ratio = currentHp / maxHp
 	void UpdateExpBar(int currentExp, int maxExp); // 경험치 바 업데이트 (void 함수)
 
 	void OpenShop();

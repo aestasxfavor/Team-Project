@@ -12,9 +12,12 @@ void GameScene::Init()
 
 	uiManager.Init(); // UI 매니저 초기화
 	stage->stageManager->SetUIManager(&uiManager); // StageManager에 UI 매니저 설정
+	stage->player->uiManager = &uiManager;
 
 	stage->stageManager->NextWave(); // 첫 웨이브 수 증가
 	uiManager.ShowWaveText(stage->stageManager->GetCurrentWave()); // 웨이브 1 표시
+
+	uiManager.SetPlayer(stage->player); // 플레이어 설정 (UI 매니저에 플레이어 설정)
 
 	uiManager.ResetWaveTimer(); // 그리고 나서 타이머 시작
 

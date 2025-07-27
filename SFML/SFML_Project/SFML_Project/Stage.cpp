@@ -95,10 +95,10 @@ void Stage::HandlePlayerEnemyCollision()//충돌관련 (2025-07-21 준호님 추가)
 
 			if (enemy->IsDead())
 			{
-				//killCount++;
+				Stage::killCount++; // 적 처치 수 증가
+				player->GainExperience();
 				delete enemy;
 				enemies.erase(enemies.begin() + i);
-				//std::cout << "Kill Count: " << killCount << std::endl;
 			}
 		}
 	}

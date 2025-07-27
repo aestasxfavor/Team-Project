@@ -1,73 +1,83 @@
-#include "UIManager.h"
+ï»¿#include "UIManager.h"
 
 void UIManager::Init()
 {
     if (!font.loadFromFile(GetrscPath("Font/BMJUA_ttf.ttf")))
     {
-       cerr << "ÆùÆ® ·Îµå ½ÇÆĞ!" << std::endl;
+       cerr << "í°íŠ¸ ë¡œë“œ ì‹¤íŒ¨!" << std::endl;
     }
 
-	InitTimeText(); // Å¸ÀÌ¸Ó ÅØ½ºÆ® ÃÊ±âÈ­
-	InitWaveText(); // ¿şÀÌºê ÅØ½ºÆ® ÃÊ±âÈ­
-	InitStatusUIBar(); // Ã¼·Â¹Ù ¹× ÇÁ·ÎÇÊ ¾ÆÀÌÄÜ ÃÊ±âÈ­
+	InitTimeText(); // íƒ€ì´ë¨¸ í…ìŠ¤íŠ¸ ì´ˆê¸°í™”
+	InitWaveText(); // ì›¨ì´ë¸Œ í…ìŠ¤íŠ¸ ì´ˆê¸°í™”
+	InitStatusUIBar(); // ì²´ë ¥ë°” ë° í”„ë¡œí•„ ì•„ì´ì½˜ ì´ˆê¸°í™”
 
-    statusShadowText();  //  ÀÌ°Å Ãß°¡ÇØÁà¾ß ±×¸²ÀÚ ÅØ½ºÆ®µµ ÃÊ±âÈ­µÊ
+    statusShadowText();  //  ì´ê±° ì¶”ê°€í•´ì¤˜ì•¼ ê·¸ë¦¼ì í…ìŠ¤íŠ¸ë„ ì´ˆê¸°í™”ë¨
 
-	shopUI.Init(font); // »óÁ¡ UI ÃÊ±âÈ­
+	shopUI.Init(font); // ìƒì  UI ì´ˆê¸°í™”
 	
 }
 
 void UIManager::Update(float dt)
 {
-    // ÀÏ´Ü °íÁ¤ ¼öÄ¡·Î ±âº» Ã¼·Â¹Ù º¸¿©ÁÖ±â
-    UpdateHPBar(100, 100);
+    // ì¼ë‹¨ ê³ ì • ìˆ˜ì¹˜ë¡œ ê¸°ë³¸ ì²´ë ¥ë°” ë³´ì—¬ì£¼ê¸°
+ 
     if (isWaveActive)
     {
-		UpdateWaveTimerText(); // Å¸ÀÌ¸Ó ÅØ½ºÆ® ¾÷µ¥ÀÌÆ®
+		UpdateWaveTimerText(); // íƒ€ì´ë¨¸ í…ìŠ¤íŠ¸ ì—…ë°ì´íŠ¸
     }
     else
     {
         timerText.setString("");
     }
 
+    if (player != nullptr)
+    {
+		UpdateHPBar(player->stats->currentHp, player->stats->maxHp);    // ì²´ë ¥ ë°” ì—…ë°ì´íŠ¸
+		UpdateExpBar(player->stats->currentExp, player->stats->exp); // ê²½í—˜ì¹˜ ë°” ì—…ë°ì´íŠ¸
+
+        // ë ˆë²¨ í…ìŠ¤íŠ¸
+        levelText.setString("Lv." + std::to_string(player->stats->level));
+        levelTextShadow.setString("Lv." + std::to_string(player->stats->level));
+    }
+
 }
 
 void UIManager::Render(sf::RenderWindow& window)
 {
-    // 1. ÇöÀç ºä ÀúÀå
+    // 1. í˜„ì¬ ë·° ì €ì¥
     sf::View originalView = window.getView();
 
-    // 2. ±âº» ºä(È­¸é °íÁ¤ ºä)·Î º¯°æ
+    // 2. ê¸°ë³¸ ë·°(í™”ë©´ ê³ ì • ë·°)ë¡œ ë³€ê²½
     window.setView(window.getDefaultView());
-    // 3. UI ±×¸®±â (È­¸é °íÁ¤ À§Ä¡¿¡ ±×·ÁÁü)
+    // 3. UI ê·¸ë¦¬ê¸° (í™”ë©´ ê³ ì • ìœ„ì¹˜ì— ê·¸ë ¤ì§)
 
     window.draw(timerText);
 
-    // UI ¿ä¼Òµé (±×¸²ÀÚ Æ÷ÇÔ)
-    window.draw(profileIcon);       // ÇÁ·ÎÇÊ ¾ÆÀÌÄÜ
+    // UI ìš”ì†Œë“¤ (ê·¸ë¦¼ì í¬í•¨)
+    window.draw(profileIcon);       // í”„ë¡œí•„ ì•„ì´ì½˜
 
-    window.draw(hpBarBack);         // Ã¼·Â¹Ù ¹è°æ
-    window.draw(hpBarFront);        // Ã¼·Â¹Ù º»Ã¼
-    window.draw(expBarBack);        // °æÇèÄ¡ ¹è°æ
-    window.draw(expBarFront);       // °æÇèÄ¡ º»Ã¼
+    window.draw(hpBarBack);         // ì²´ë ¥ë°” ë°°ê²½
+    window.draw(hpBarFront);        // ì²´ë ¥ë°” ë³¸ì²´
+    window.draw(expBarBack);        // ê²½í—˜ì¹˜ ë°°ê²½
+    window.draw(expBarFront);       // ê²½í—˜ì¹˜ ë³¸ì²´
 
-    window.draw(hpTextShadow);      // Ã¼·Â ÅØ½ºÆ® ±×¸²ÀÚ
-    window.draw(hpText);            // Ã¼·Â ÅØ½ºÆ®
-    window.draw(levelTextShadow);   // ·¹º§ ÅØ½ºÆ® ±×¸²ÀÚ
-    window.draw(levelText);         // ·¹º§ ÅØ½ºÆ®
+    window.draw(hpTextShadow);      // ì²´ë ¥ í…ìŠ¤íŠ¸ ê·¸ë¦¼ì
+    window.draw(hpText);            // ì²´ë ¥ í…ìŠ¤íŠ¸
+    window.draw(levelTextShadow);   // ë ˆë²¨ í…ìŠ¤íŠ¸ ê·¸ë¦¼ì
+    window.draw(levelText);         // ë ˆë²¨ í…ìŠ¤íŠ¸
 
-    // 4. Wave ±×¸®±â ( È­¸é °íÁ¤ À§Ä¡)
-    window.draw(waveText);  // ¡ç ÀÌ°Å´Â ÀÌÁ¦ °íÁ¤ Ãâ·Â
+    // 4. Wave ê·¸ë¦¬ê¸° ( í™”ë©´ ê³ ì • ìœ„ì¹˜)
+    window.draw(waveText);  // â† ì´ê±°ëŠ” ì´ì œ ê³ ì • ì¶œë ¥
 
-	// 5. »óÁ¡ UI ±×¸®±â
+	// 5. ìƒì  UI ê·¸ë¦¬ê¸°
     RenderShop(window);
-    // 6. ¿ø·¡ ºä º¹¿ø
+    // 6. ì›ë˜ ë·° ë³µì›
     window.setView(originalView);
 }
 
 void UIManager::InitTimeText()
 {
-    // Å¸ÀÌ¸Ó ÅØ½ºÆ® ¼³Á¤
+    // íƒ€ì´ë¨¸ í…ìŠ¤íŠ¸ ì„¤ì •
     timerText.setFont(font);
     timerText.setCharacterSize(30);
     timerText.setFillColor(sf::Color::White);
@@ -76,68 +86,68 @@ void UIManager::InitTimeText()
 
 void UIManager::InitWaveText()
 {
-    // Wave ÅØ½ºÆ® ¼³Á¤
+    // Wave í…ìŠ¤íŠ¸ ì„¤ì •
     waveText.setFont(font);
     waveText.setCharacterSize(30);
     waveText.setFillColor(sf::Color::White);
     waveText.setString("");
-    waveText.setPosition(800.f / 2.f, 100.f); // ÀûÀıÇÑ Áß¾Ó À§Ä¡·Î Á¶Á¤
+    waveText.setPosition(800.f / 2.f, 100.f); // ì ì ˆí•œ ì¤‘ì•™ ìœ„ì¹˜ë¡œ ì¡°ì •
     waveClock.restart();
 }
 
 void UIManager::InitStatusUIBar()
 {
-    // 1. ÇÁ·ÎÇÊ ¾ÆÀÌÄÜ (¿ŞÂÊ »ó´Ü)
+    // 1. í”„ë¡œí•„ ì•„ì´ì½˜ (ì™¼ìª½ ìƒë‹¨)
     if (!profileTexture.loadFromFile(GetrscPath("profile.png"))) 
     {
-        std::cerr << "ÇÁ·ÎÇÊ ÀÌ¹ÌÁö ·Îµå ½ÇÆĞ!" << std::endl;
+        std::cerr << "í”„ë¡œí•„ ì´ë¯¸ì§€ ë¡œë“œ ì‹¤íŒ¨!" << std::endl;
     }
    /* profileTexture.loadFromFile("profile.png");*/
     profileIcon.setTexture(profileTexture);
     profileIcon.setScale(1.0f, 1.0f);
-    profileIcon.setPosition(10.f, 10.f);  // È­¸é ÁÂ»ó´Ü ¿©¹é 20
+    profileIcon.setPosition(10.f, 10.f);  // í™”ë©´ ì¢Œìƒë‹¨ ì—¬ë°± 20
 
-    // 2. Ã¼·Â ¹Ù (¾ÆÀÌÄÜ ¿À¸¥ÂÊ)
+    // 2. ì²´ë ¥ ë°” (ì•„ì´ì½˜ ì˜¤ë¥¸ìª½)
     hpBarBack.setSize({ 200.f, 20.f });
     hpBarBack.setFillColor(sf::Color(50, 50, 50));
-    hpBarBack.setPosition(80.f, 30.f);  // ¾ÆÀÌÄÜº¸´Ù »ìÂ¦ ¾Æ·¡
+    hpBarBack.setPosition(80.f, 30.f);  // ì•„ì´ì½˜ë³´ë‹¤ ì‚´ì§ ì•„ë˜
 
     hpBarFront.setSize({ 200.f, 20.f });
     hpBarFront.setFillColor(sf::Color::Red);
     hpBarFront.setPosition(80.f, 30.f);
 
-    // 3. °æÇèÄ¡ ¹Ù (Ã¼·Â¹Ù ¾Æ·¡)
-    expBarBack.setSize({ 200.f, 8.f });
+    // 3. ê²½í—˜ì¹˜ ë°” (ì²´ë ¥ë°” ì•„ë˜)
+    expBarBack.setSize({ 200.f, 10.f });
     expBarBack.setFillColor(sf::Color(30, 30, 30));
-    expBarBack.setPosition(80.f, 55.f);  // Ã¼·Â¹Ù ¾Æ·¡ÂÊ¿¡ ¿©¹é
+    expBarBack.setPosition(80.f, 55.f);  // ì²´ë ¥ë°” ì•„ë˜ìª½ì— ì—¬ë°±
 
-    expBarFront.setSize({ 100.f, 8.f }); // ÃÊ±â°ª
+    expBarFront.setSize({ 200.f, 10.f }); // ì´ˆê¸°ê°’
     expBarFront.setFillColor(sf::Color::Green);
     expBarFront.setPosition(80.f, 55.f);
 
-    // 4. Ã¼·Â ¼öÄ¡ ÅØ½ºÆ® (hpBar ¿À¸¥ÂÊ À§ÂÊ Á¤·Ä)
+    // 4. ì²´ë ¥ ìˆ˜ì¹˜ í…ìŠ¤íŠ¸ (hpBar ì˜¤ë¥¸ìª½ ìœ„ìª½ ì •ë ¬)
     hpText.setFont(font);
     hpText.setCharacterSize(16);
     hpText.setFillColor(sf::Color::White);
-    hpText.setPosition(290.f, 30.f);  // Ã¼·Â¹Ù ¿À¸¥ÂÊ¿¡ À§Ä¡
+    hpText.setPosition(290.f, 30.f);  // ì²´ë ¥ë°” ì˜¤ë¥¸ìª½ì— ìœ„ì¹˜
 
-    // 5. ·¹º§ ÅØ½ºÆ® (hp À§¿¡ »ìÂ¦)
+    // 5. ë ˆë²¨ í…ìŠ¤íŠ¸ (hp ìœ„ì— ì‚´ì§)
     levelText.setFont(font);
     levelText.setCharacterSize(16);
-    levelText.setFillColor(sf::Color::Green);
-    levelText.setPosition(290.f, 10.f);  // hp ÅØ½ºÆ®º¸´Ù À§
+    levelText.setFillColor(sf::Color::White);
+    levelText.setPosition(290.f, 10.f);  // hp í…ìŠ¤íŠ¸ë³´ë‹¤ ìœ„
 
 }
 
 void UIManager::statusShadowText()
 {
 
-    // Ã¼·Â ÅØ½ºÆ® ±×¸²ÀÚ
+    // ì²´ë ¥ í…ìŠ¤íŠ¸ ê·¸ë¦¼ì
     hpTextShadow = hpText;
     hpTextShadow.move(1.f, 1.f);
     hpTextShadow.setFillColor(sf::Color(0, 0, 0, 150));
 
-    // ·¹º§ ÅØ½ºÆ® ±×¸²ÀÚ
+    // ë ˆë²¨ í…ìŠ¤íŠ¸ ê·¸ë¦¼ì
     levelTextShadow = levelText;
     levelTextShadow.move(1.f, 1.f);
     levelTextShadow.setFillColor(sf::Color(0, 0, 0, 150));
@@ -151,35 +161,35 @@ void UIManager::UpdateWaveTimerText()
 
     timerText.setString(std::to_string(timeLeft));
 
-    // Áß¾Ó Á¤·Ä À¯ÁöÇÏ·Á¸é Origin ´Ù½Ã ¼³Á¤!
+    // ì¤‘ì•™ ì •ë ¬ ìœ ì§€í•˜ë ¤ë©´ Origin ë‹¤ì‹œ ì„¤ì •
     sf::FloatRect textBounds = timerText.getLocalBounds();
     timerText.setOrigin(textBounds.width / 2.f, textBounds.height / 2.f);
-    timerText.setPosition(400, 70); // ¿øÇÏ´Â À§Ä¡¿¡ ¸Â°Ô y°ª Á¶Àı!
+    timerText.setPosition(400, 70); // yê°’ ì¡°ì ˆ
 }
 
 void UIManager::ResetWaveTimer()
 {
     waveClock.restart();
-	isWaveActive = true;  // ¿şÀÌºê Å¸ÀÌ¸Ó È°¼ºÈ­
+	isWaveActive = true;  // ì›¨ì´ë¸Œ íƒ€ì´ë¨¸ í™œì„±í™”
 }
 
 float UIManager::GetWaveElapsedTime() const
 {
-    return waveClock.getElapsedTime().asSeconds(); // ½ÇÁ¦ ½Ã°£ ¹İÈ¯!
+    return waveClock.getElapsedTime().asSeconds(); // ì‹¤ì œ ì‹œê°„ ë°˜í™˜
 }
 
 void UIManager::ShowWaveText(int wave)
 {
-    // ¿şÀÌºê ÅØ½ºÆ®´Â °è¼Ó Ç¥½ÃµÊ (flag ÇÊ¿ä X)
+    // ì›¨ì´ë¸Œ í…ìŠ¤íŠ¸ëŠ” ê³„ì† í‘œì‹œë¨ (flag í•„ìš” X)
     showWaveText = true;
     waveTextTimer = 2.5f;
 
     waveText.setString("Wave " + std::to_string(wave));
 
-    // Áß¾Ó Á¤·Ä ´Ù½Ã ¸ÂÃçÁÖ±â!
+    // ì¤‘ì•™ ì •ë ¬ ë‹¤ì‹œ ë§ì¶°ì£¼ê¸°!
     sf::FloatRect bounds = waveText.getLocalBounds();
     waveText.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
-    waveText.setPosition(400, 30); // À§ÂÊ À§Ä¡
+    waveText.setPosition(400, 30); // ìœ„ìª½ ìœ„ì¹˜
 }
 
 void UIManager::SetPlayer(Player* _player)
@@ -187,21 +197,21 @@ void UIManager::SetPlayer(Player* _player)
     player = _player;
 }
 
-void UIManager::UpdateHPBar(int currentHP, int maxHP)
+void UIManager::UpdateHPBar(int currentHp, int maxHp)
 {
-    float ratio = static_cast<float>(currentHP) / maxHP;
+    float ratio = static_cast<float>(currentHp) / maxHp;
     if (ratio < 0.f) ratio = 0.f;
     if (ratio > 1.f) ratio = 1.f;
 
-    // Ã¼·Â¹Ù Å©±â Á¶Àı
+    // ì²´ë ¥ë°” í¬ê¸° ì¡°ì ˆ
     hpBarFront.setSize({ 200.f * ratio, 20.f });
 
-    // ÅØ½ºÆ® °»½Å
-    std::string hpStr = std::to_string(currentHP) + " / " + std::to_string(maxHP);
+    // í…ìŠ¤íŠ¸ ê°±ì‹ 
+    std::string hpStr = std::to_string(currentHp) + " / " + std::to_string(maxHp);
     hpText.setString(hpStr);
-    hpTextShadow.setString(hpStr); // ±×¸²ÀÚ ÅØ½ºÆ®µµ °°ÀÌ
+    hpTextShadow.setString(hpStr); // ê·¸ë¦¼ì í…ìŠ¤íŠ¸ë„ ê°™ì´
 
-    // À§Ä¡ Á¶Á¤ (¼öÄ¡ ±æÀÌ ´Ş¶óÁú ¼öµµ ÀÖÀ¸´Ï±î °íÁ¤ ¸»°í º¤ÅÍ·Î)
+    // ìœ„ì¹˜ ì¡°ì • (ìˆ˜ì¹˜ ê¸¸ì´ ë‹¬ë¼ì§ˆ ìˆ˜ë„ ìˆìœ¼ë‹ˆê¹Œ ê³ ì • ë§ê³  ë²¡í„°ë¡œ)
     sf::Vector2f pos(190.f, 28.f);
     hpText.setPosition(pos);
     hpTextShadow.setPosition(pos + sf::Vector2f(1.f, 1.f));
@@ -212,9 +222,25 @@ sf::Color UIManager::GetHPColor(float ratio)
     return sf::Color();
 }
 
-void UIManager::UpdateExpBar(int currentExp, int maxExp)
+sf::Color UIManager::GetExpColor(float ratio)
 {
+    return sf::Color();
+}
 
+void UIManager::UpdateExpBar(int currentExp, int maxExp)        
+{
+    // ê²½í—˜ì¹˜ ë¹„ìœ¨ ê³„ì‚°
+    float ratio = static_cast<float>(currentExp) / maxExp;
+    if (ratio < 0.f) ratio = 0.f;
+    if (ratio > 1.f) ratio = 1.f;
+
+    // ê²½í—˜ì¹˜ ë°” ê¸¸ì´ ì¡°ì ˆ
+    expBarFront.setOrigin(0.f, 0.f); // ì™¼ìª½ ê¸°ì¤€
+    expBarFront.setSize({ 200.f * ratio, 10.f }); // ë„ˆë¹„ëŠ” 200 ê¸°ì¤€
+    expBarFront.setPosition(80.f, 55.f); 
+    
+    // ìˆ˜ì¹˜ ëŠë‚Œ ì• ë‹ˆë©”ì´ì…˜ìš© ì €ì¥
+    targetExpRatio = ratio;
 }
 
 void UIManager::OpenShop()

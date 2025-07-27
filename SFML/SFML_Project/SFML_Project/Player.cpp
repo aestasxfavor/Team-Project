@@ -4,6 +4,7 @@
 #include "Spear.h"
 #include "Enemy.h"
 #include "Bullet.h"
+#include "UIManager.h"
 
 
 void Player::Init()
@@ -249,6 +250,7 @@ sf::FloatRect Player::GetGlobalBounds() const//충돌관련
 {
 	return spritePlayer.getGlobalBounds();
 }
+
 void Player::TakeDamage(int amount)		// 2025-07-26 효 추가 : 플레이어가 데미지 입고 죽는거까지 구현완료
 {
 	//if (isInvincible||isDead)
@@ -270,13 +272,20 @@ void Player::TakeDamage(int amount)		// 2025-07-26 효 추가 : 플레이어가 데미지 �
 	if (isInvincible || isDead)
 		return;
 
-
 	stats->currentHp -= amount;
-	cout << "[TakeDamage] 현재 체력 : " << stats->currentHp << endl;
+	if (stats->currentHp < 0)
+		stats->currentHp = 0;
 
-	stats->currentHp -= amount;
+	std::cout << "[TakeDamage] 현재 체력: " << stats->currentHp << std::endl;
 	std::cout << "플레이어가 받은 피해: " << amount << std::endl;
 
+	// 여기서 UI 갱신
+	if (uiManager)
+	{
+		cout << "[UIManager 연결됨]" << endl;
+		uiManager->UpdateHPBar(stats->currentHp, stats->maxHp);
+	}
+		
 
 	isInvincible = true;
 	invincibleTimer = 0.f;
@@ -284,7 +293,7 @@ void Player::TakeDamage(int amount)		// 2025-07-26 효 추가 : 플레이어가 데미지 �
 
 	if (stats->currentHp <= 0)
 	{
-		cout << "[Death 호출 조건 충족]" << endl;
+		std::cout << "[Death 호출 조건 충족]" << std::endl;
 		Death();
 	}
 }

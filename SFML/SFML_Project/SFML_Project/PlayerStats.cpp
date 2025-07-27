@@ -21,6 +21,7 @@ std::vector<PlayerStats::StatOption> PlayerStats::GetRandomChoices(const vector<
 void PlayerStats::GainExp()
 {
 	currentExp = Stage::killCount;
+	//currentExp ++;  // Stage::killCount는 현재 스테이지에서 처치한 적의 수
 	//cout << "CurrenExp : " << currentExp << endl;
 	if (Stage::killCount >= exp) LevelUp();   // 경험치가 다차면 레벨업
 }
@@ -28,6 +29,7 @@ void PlayerStats::GainExp()
 void PlayerStats::LevelUp()
 {
 	level++;
+	currentExp = 0;
 	Stage::killCount = 0;  // 0으로 다시 초기화
 	exp = exp + exp;
 	cout  << level << "레벨이 되었습니다 !!!" << endl;     //작동 확인 용 추후 삭제바람.

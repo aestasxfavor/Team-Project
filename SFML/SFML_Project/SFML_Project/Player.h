@@ -11,6 +11,7 @@
 #include "Bullet.h"
 
 class SceneManager; // 전방 선언: SceneManager 클래스 필요
+class UIManager; // 전방 선언: UIManager 클래스 필요
 
 
 class Enemy;
@@ -25,6 +26,8 @@ public:
 	Inventory* inven;
 	Spear* spear = nullptr;
 	float spearCoolTime = 0.f;
+
+	UIManager* uiManager = nullptr; // UI 매니저 포인터 (has - a 관계)
 	
 
 	sf::Texture texture;
