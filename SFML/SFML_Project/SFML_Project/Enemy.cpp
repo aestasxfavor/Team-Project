@@ -131,7 +131,7 @@ enemy01::enemy01(sf::Texture& texture, sf::Vector2f spawnPos)
     : Enemy(texture, spawnPos)
 {
     hp = 3;
-    atk = 12;
+    atk = 5;
     speed = 70.f;
 
     frameSize = { 64, 64 };
@@ -191,7 +191,7 @@ enemy02::enemy02(sf::Texture& texture, sf::Vector2f spawnPos)
     : Enemy(texture, spawnPos)
 {
     hp = 3;
-    atk = 12;
+    atk = 4;
     speed = 70.f;
 
     frameSize = { 64, 64 };
@@ -243,7 +243,7 @@ enemy03::enemy03(sf::Texture& texture, sf::Vector2f spawnPos)
     : Enemy(texture, spawnPos)
 {
     hp = 3;
-    atk = 12;
+    atk = 6;
     speed = 70.f;
 
     frameSize = { 64, 64 };

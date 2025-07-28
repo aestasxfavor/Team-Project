@@ -2,34 +2,6 @@
 
 void TitleScene::Init()
 {
-    /*if (!backgroundTexture.loadFromFile(GetrscPath("BackGround2.png")))
-    {
-        std::cerr << "배경 이미지 로드 실패!" << std::endl;
-    }
-
-    backgroundSprite1.setTexture(backgroundTexture);
-    backgroundSprite2.setTexture(backgroundTexture);
-
-    backgroundX1 = 0.f;
-    backgroundX2 = static_cast<float>(backgroundTexture.getSize().x);
-
-    backgroundSprite1.setPosition(backgroundX1, -100.f);
-    backgroundSprite2.setPosition(backgroundX2, -100.f);
-
-    font.loadFromFile(GetrscPath("Font/BMJUA_ttf.ttf"));
-
-    titleText.setFont(font);
-    titleText.setString("Meowbellion");
-    titleText.setCharacterSize(60);
-    titleText.setFillColor(sf::Color::Black);
-    titleText.setPosition(250, 200);
-
-    startText.setFont(font);
-    startText.setString("<Press Enter to Start>");
-    startText.setCharacterSize(30);
-    startText.setFillColor(sf::Color::Black);
-    startText.setPosition(250, 300);*/
-
  
         if (!backgroundTexture.loadFromFile(GetrscPath("BackGround7.png")))
         {
@@ -41,7 +13,7 @@ void TitleScene::Init()
         backgroundSprite2.setTexture(backgroundTexture);
 
         // ?? 여기서 윈도우 사이즈에 맞춰 스케일 조절!
-        sf::Vector2u windowSize = { 800, 600 };  // 고정된 창 사이즈
+        sf::Vector2u windowSize = { 800, 600 };  // 고정된 창 사이즈   1920x1080으로 전체 사이즈 수정하기    10시간 뒤의 효가 수정하겠지ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ
         sf::Vector2u textureSize = backgroundTexture.getSize();
 
         float scaleX = static_cast<float>(windowSize.x) / textureSize.x;
@@ -75,7 +47,7 @@ void TitleScene::Init()
     
 }
 
-void TitleScene::Update(sf::RenderWindow& window)
+void TitleScene::Update(sf::RenderWindow& window)       // 2025-07-28 13:20 효 추가 :  여기 손봐야겠네 
 {
     float deltaTime = clock.restart().asSeconds();
 
