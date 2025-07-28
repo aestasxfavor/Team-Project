@@ -1,6 +1,7 @@
 #include "PlayerStats.h"
 #include <algorithm>
 #include <random>
+#include "Stage.h"
 
 std::vector<PlayerStats::StatOption> PlayerStats::GetRandomChoices(const vector<StatOption>& pool, int count)
 {
@@ -17,17 +18,21 @@ std::vector<PlayerStats::StatOption> PlayerStats::GetRandomChoices(const vector<
 }
 
 
-void PlayerStats::GainExp(int amount)
+void PlayerStats::GainExp()
 {
-	currentExp += amount;
-	if (exp <= currentExp) LevelUp();   // 경험치가 다차면 레벨업
+	currentExp = Stage::killCount;
+	//currentExp ++;  // Stage::killCount는 현재 스테이지에서 처치한 적의 수
+	//cout << "CurrenExp : " << currentExp << endl;
+	if (Stage::killCount >= exp) LevelUp();   // 경험치가 다차면 레벨업
 }
 
 void PlayerStats::LevelUp()
 {
 	level++;
-	currentExp = 0;     // 0으로 다시 초기화
-	cout << "레벨업 했습니다" << endl;     //작동 확인 용 추후 삭제바람.
+	currentExp = 0;
+	Stage::killCount = 0;  // 0으로 다시 초기화
+	exp = exp + exp;
+	cout  << level << "레벨이 되었습니다 !!!" << endl;     //작동 확인 용 추후 삭제바람.
 
 
 	// 레벨업 시 PlayerStats::CalculateFinalAttackSpeed()가 호출될 필요는 없을 듯?
@@ -92,7 +97,7 @@ float PlayerStats::GetFinalAttackCooldown() const
 PlayerStats::PlayerStats()
 {
 	maxHp = 100;
-	currentHp = 100;
+	currentHp = 100;		// 플레이어 기본 체력 
 	damage = 5;
 	attackSpeed = 1.0f;
 	defense = 0;
@@ -100,7 +105,7 @@ PlayerStats::PlayerStats()
 	moveSpeed = 1.0f;
 	attackRange = { 4.0f, 4.0f };
 	level = 1;
-	exp = 30;
+	exp = 50;
 	currentExp = 0;
 
 	baseAttackSpeed = 1.0f;			//기본 공속 상태

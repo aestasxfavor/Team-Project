@@ -1,22 +1,45 @@
 #include "StageManager.h"
 
+#include "UIManager.h"
+
+#include "Enemy.h"
+#include "Player.h"
+#include "Stage.h"
 
 
-EnemyManager::EnemyManager() 
+// [2025.07.23 수정] 원래 EnemyManager에서 하던 적 생성/관리를 StageManager로 통합함
+// 앞으로 적 관련 함수는 StageManager에서 관리함 (ex. FireBulletAtPlayer, UpdateEnemies 등)
+// 요거 중요해요!!!!
+
+// 2025-07-24 효 추가 : 메인으로 코멘트 달기위한 주석입니다 :)
+
+StageManager::StageManager()
 {
-    spawnInterval = 1.0f;    // 적 생성 간격을 5초로 설정
+    spawnInterval = 5.3f;    // 적 생성 간격을 5초로 설정
     spawnTimer = 0.f;       // 생성 타이머 초기화
+    player = nullptr;
+	uiManager = nullptr; // UI 매니저 초기화
 }
 
-EnemyManager::~EnemyManager() 
+
+StageManager::~StageManager() 
 {
     Clear();                // 소멸자에서 적들 메모리 정리
 }
 
-void EnemyManager::Init() 
+void StageManager::Init() 
 {
+  
+	player->Init(); // 효 추가 : 플레이어 초기화
     //enemyTexture.loadFromFile("enemy.png");  // 적 텍스처 파일 로드
     //추가
+
+    //테스트용 슬라임 이미지
+   //slimeTexture.loadFromFile(GetrscPath("slime.png"));
+   //spriteSlime.setTexture(texture);    // 효 추가 : [확인 필요] texture 변수는 slimeTexture와 역할이 겹치는 것 같음 의도가 불분명.. 상의 후 결정하기
+   //spriteSlime.setPosition(370.f, 280.f);
+    //spriteSlime.setTextureRect(sf::IntRect(0, 227, 227 , 227));'
+
     
      // enemy01 이미지
     std::string path01 = GetrscPath("enemy01.png");
@@ -43,14 +66,21 @@ void EnemyManager::Init()
     bulletTexture.loadFromFile(GetrscPath("bullet.png"));
 }
 
-void EnemyManager::Update(float dt, sf::Vector2f playerPos) 
+void StageManager::Update(float dt, sf::Vector2f playerPos) 
 {
+	player->Update(dt,enemies); // 효 추가 : 플레이어 업데이트
+    player->GainExperience();
     spawnTimer += dt;       // 누적된 시간 갱신
-
+    shootTimer += dt;
     if (spawnTimer >= spawnInterval && enemies.size()< maxEnemies)   // 생성 간격이 지나면
     {
         SpawnEnemy(playerPos);    // 새로운 적 생성 유저를 기준으로 떨어지게 생성
         spawnTimer = 0.f;        // 타이머 초기화
+    }
+    if (shootTimer >= 0.9f) 
+    {
+        player->Attack(enemies); // 1초마다 발사
+        shootTimer = 0.f;
     }
 
     // 역순으로 적 리스트 순회 (삭제 안정성 확보)
@@ -65,6 +95,9 @@ void EnemyManager::Update(float dt, sf::Vector2f playerPos)
 
         if (enemies[i]->IsDead()) 
         {         // 적이 죽었으면
+            enemies[i]->isAlive = false;
+            Stage::killCount++;
+            cout << "KillCount : " << Stage::killCount << endl;
             delete enemies[i];               // 메모리 해제
             enemies.erase(enemies.begin() + i);  // 리스트에서 제거
         }
@@ -93,7 +126,7 @@ void EnemyManager::Update(float dt, sf::Vector2f playerPos)
 }
 
 
-void EnemyManager::SpawnEnemy(sf::Vector2f playerPos)
+void StageManager::SpawnEnemy(sf::Vector2f playerPos)
 {
 
     float angle = static_cast<float>(rand() % 360) * 3.1415926f / 180.f;
@@ -107,8 +140,9 @@ void EnemyManager::SpawnEnemy(sf::Vector2f playerPos)
 
     Enemy* enemy = nullptr;
 
-    int enemyType = rand() % 3;  // 현재는 1종으로 적 class 수 만큼 늘려주세요.
-    std::cout << "spawn type = " << enemyType << std::endl;
+    int enemyType = rand() % 3;  // 2025-07-26 효 추가 : 3가지 적을 맵에 랜덤으로 생성
+    //std::cout << "spawn type = " << enemyType << std::endl;
+
     switch (enemyType)
     {
     case 0:
@@ -131,8 +165,9 @@ void EnemyManager::SpawnEnemy(sf::Vector2f playerPos)
         enemies.push_back(enemy);
 }
 
-void EnemyManager::Draw(sf::RenderWindow& window) 
+void StageManager::Draw(sf::RenderWindow& window) 
 {
+
     for (auto& enemy : enemies) 
     {
         enemy->Draw(window);        // 각 적을 화면에 그림
@@ -141,9 +176,10 @@ void EnemyManager::Draw(sf::RenderWindow& window)
     {
         window.draw(bullet.sprite);
     }
+	player->Render(window); // 효 추가 : 플레이어 렌더링
 }
 
-void EnemyManager::Clear() 
+void StageManager::Clear() 
 {
     for (auto enemy : enemies) 
     {
@@ -152,15 +188,24 @@ void EnemyManager::Clear()
     enemies.clear();                // 리스트 비우기
 }
 
-std::vector<Enemy*>& EnemyManager::GetEnemies()
+vector<Enemy*>& StageManager::GetEnemies()
 {
     return enemies;
-    // TODO: 여기에 return 문을 삽입합니다.
+}
+
+Player* StageManager::GetPlayer()
+{
+    return player;
+}
+
+void StageManager::SetPlayer(Player* _player)
+{
+    player = _player; 
 }
 
 
-//투사체 패턴관련
-void EnemyManager::FireBulletAtPlayer(sf::Vector2f start, sf::Vector2f playerPos, int damage)
+//(2025-07-23) 준호님 : 투사체 패턴관련 + 효 추가 : 적이 플레이어를 향해 쏘는 투사체
+void StageManager::FireBulletAtPlayer(sf::Vector2f start, sf::Vector2f playerPos, int damage)
 {
     sf::Sprite bullet;
     bullet.setTexture(bulletTexture);
@@ -183,14 +228,28 @@ void EnemyManager::FireBulletAtPlayer(sf::Vector2f start, sf::Vector2f playerPos
 
 
 
-std::vector<BulletData>& EnemyManager::GetBullets()
+std::vector<BulletData>& StageManager::GetBullets()
 {
     return bullets;
-    // TODO: 여기에 return 문을 삽입합니다.
+}
+
+void StageManager::SetUIManager(UIManager* _uiManager)
+{
+	uiManager = _uiManager; // StageManager에 UI 매니저 설정
+}
+
+int StageManager::GetCurrentWave() const
+{
+     return currentWave; 
+}
+
+void StageManager::NextWave()
+{
+    currentWave++;
 }
 
 
-void EnemyManager::FireBullet(sf::Vector2f start, sf::Vector2f target, int damage)
+void StageManager::FireBullet(sf::Vector2f start, sf::Vector2f target, int damage)
 {
     sf::Sprite bullet;
     bullet.setTexture(bulletTexture);

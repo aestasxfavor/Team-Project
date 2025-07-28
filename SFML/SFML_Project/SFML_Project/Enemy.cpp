@@ -1,5 +1,7 @@
 
 #include "StageManager.h"  // TryFire에서 필요
+#include "Enemy.h"
+#include "Stage.h"
 
 // ======================= Enemy 기본 클래스 ==========================
 
@@ -12,10 +14,13 @@ Enemy::Enemy(sf::Texture& texture, sf::Vector2f spawnPos)
     sprite.setScale(scale);  // 디폴트값
 }
 
+
+
 // 기본 이동 로직
 void Enemy::Update(float dt, sf::Vector2f playerPos)
 {
     sf::Vector2f dir = playerPos - sprite.getPosition();
+    //cout << sprite.getPosition().x << " , " << sprite.getPosition().y << endl;
     float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
     if (len != 0) dir /= len;
 
@@ -31,11 +36,6 @@ void Enemy::Draw(sf::RenderWindow& window)
 // 피격 처리
 void Enemy::TakeDamage(int amount)
 {
-<<<<<<< Updated upstream
-    hp -= amount;
-    if (hp <= 0)
-        dead = true;
-=======
 
     // 2025-07-23 데미지 코드 보류 
   /*  if (amount <= 0)
@@ -52,7 +52,6 @@ void Enemy::TakeDamage(int amount)
 
     
 
->>>>>>> Stashed changes
 }
 
 // 사망 여부
@@ -78,12 +77,9 @@ sf::FloatRect Enemy::GetGlobalBounds() const
     return sprite.getGlobalBounds();
 }
 
-<<<<<<< Updated upstream
-=======
 
 
 
->>>>>>> Stashed changes
 // 위치 반환
 sf::Vector2f Enemy::GetPosition() const
 {
@@ -97,7 +93,7 @@ bool Enemy::CanFire(float dt)
 }
 
 // 기본적으로 발사 안 함
-void Enemy::TryFire(EnemyManager* manager, sf::Vector2f playerPos)
+void Enemy::TryFire(StageManager* manager, sf::Vector2f playerPos)
 {
     // 기본 적은 아무것도 안 함
 }
@@ -108,13 +104,8 @@ void Enemy::TryFire(EnemyManager* manager, sf::Vector2f playerPos)
 enemy01::enemy01(sf::Texture& texture, sf::Vector2f spawnPos)
     : Enemy(texture, spawnPos)
 {
-<<<<<<< Updated upstream
-    hp = 3;
-    atk = 12;
-=======
     hp = 15;
     atk = 5;
->>>>>>> Stashed changes
     speed = 70.f;
 
     frameSize = { 64, 64 };
@@ -128,6 +119,7 @@ enemy01::enemy01(sf::Texture& texture, sf::Vector2f spawnPos)
 }
 
 // enemy01::Update
+
 void enemy01::Update(float dt, sf::Vector2f playerPos)
 {
     Enemy::Update(dt, playerPos);
@@ -137,9 +129,15 @@ void enemy01::Update(float dt, sf::Vector2f playerPos)
     {
         animationTimer = 0.f;
         currentFrame = (currentFrame + 1) % frameCount;
-        sprite.setTextureRect(sf::IntRect(currentFrame * frameSize.x, 0, frameSize.x, frameSize.y));
+
+        int left = currentFrame * frameSize.x;
+        sprite.setTextureRect(sf::IntRect(left, 0, frameSize.x, frameSize.y));
     }
 }
+
+//        sprite.setTextureRect(sf::IntRect(currentFrame * frameSize.x, 0, frameSize.x, frameSize.y));
+//    }
+//}
 
 // enemy01::CanFire
 bool enemy01::CanFire(float dt)
@@ -154,10 +152,11 @@ bool enemy01::CanFire(float dt)
 }
 
 // enemy01::TryFire
-void enemy01::TryFire(EnemyManager* manager, sf::Vector2f playerPos)
+void enemy01::TryFire(StageManager* manager, sf::Vector2f playerPos)
 {
     manager->FireBulletAtPlayer(GetPosition(), playerPos, atk);
 }
+
 
 // ======================= enemy01 ==========================
 
@@ -165,13 +164,8 @@ void enemy01::TryFire(EnemyManager* manager, sf::Vector2f playerPos)
 enemy02::enemy02(sf::Texture& texture, sf::Vector2f spawnPos)
     : Enemy(texture, spawnPos)
 {
-<<<<<<< Updated upstream
-    hp = 3;
-    atk = 12;
-=======
     hp = 15;
     atk = 4;
->>>>>>> Stashed changes
     speed = 70.f;
 
     frameSize = { 64, 64 };
@@ -210,7 +204,7 @@ bool enemy02::CanFire(float dt)
 }
 
 // enemy02::TryFire
-void enemy02::TryFire(EnemyManager* manager, sf::Vector2f playerPos)
+void enemy02::TryFire(StageManager* manager, sf::Vector2f playerPos)
 {
     manager->FireBulletAtPlayer(GetPosition(), playerPos, atk);
 }
@@ -222,13 +216,8 @@ void enemy02::TryFire(EnemyManager* manager, sf::Vector2f playerPos)
 enemy03::enemy03(sf::Texture& texture, sf::Vector2f spawnPos)
     : Enemy(texture, spawnPos)
 {
-<<<<<<< Updated upstream
-    hp = 3;
-    atk = 12;
-=======
     hp = 15;
     atk = 6;
->>>>>>> Stashed changes
     speed = 70.f;
 
     frameSize = { 64, 64 };
@@ -267,7 +256,8 @@ bool enemy03::CanFire(float dt)
 }
 
 // enemy03::TryFire
-void enemy03::TryFire(EnemyManager* manager, sf::Vector2f playerPos)
+void enemy03::TryFire(StageManager* manager, sf::Vector2f playerPos)
 {
     manager->FireBulletAtPlayer(GetPosition(), playerPos, atk);
 }
+

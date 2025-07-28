@@ -6,7 +6,7 @@
 #include <cmath>
 
 // 전방 선언: TryFire에서 사용
-class EnemyManager;
+class StageManager;
 
 // ======================= 기본 Enemy 클래스 ==========================
 class Enemy {
@@ -16,18 +16,16 @@ protected:
     int atk = 10;
     float speed = 50.f;
     bool dead = false;
+    bool isActive = false;
 
     sf::Vector2f scale = { 1.0f, 1.0f };//이미지크기
 
 public:
     Enemy(sf::Texture& texture, sf::Vector2f spawnPos);
+    //동민 추가
 
-<<<<<<< Updated upstream
-    virtual ~Enemy() = default;
-=======
     bool isAlive = true;
     virtual ~Enemy();
->>>>>>> Stashed changes
 
     virtual void Update(float dt, sf::Vector2f playerPos);
     virtual void Draw(sf::RenderWindow& window);
@@ -38,24 +36,35 @@ public:
     virtual sf::Vector2f GetPosition() const;
 
     virtual bool CanFire(float dt);
-    virtual void TryFire(EnemyManager* manager, sf::Vector2f playerPos);
+
+    virtual void TryFire(StageManager* manager, sf::Vector2f playerPos);
+
+    //virtual void TryFire(EnemyManager* manager, sf::Vector2f playerPos);
 
     void SetScale(sf::Vector2f s); //이미지 크기 조절
+
 };
 
-<<<<<<< Updated upstream
-=======
 
 //적 개체 데이터
->>>>>>> Stashed changes
 // ======================= enemy01 클래스 ==========================
+
 class enemy01 : public Enemy {
 public:
     enemy01(sf::Texture& texture, sf::Vector2f spawnPos); // 정의는 cpp에서
 
+
+    //    frameSize = { 64, 64 };           // 실제 다람쥐 프레임 크기
+    //    frameCount = 3;                   // 프레임 수
+
+    //    sprite.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y));
+    //    sprite.setOrigin(frameSize.x / 2.f, frameSize.y / 2.f);
+    //}
+
     void Update(float dt, sf::Vector2f playerPos) override;
+    /*void Update(float dt, sf::Vector2f playerPos) override;*/
     bool CanFire(float dt) override;
-    void TryFire(EnemyManager* manager, sf::Vector2f playerPos) override;
+    void TryFire(StageManager* manager, sf::Vector2f playerPos) override;
 
 private:
     int currentFrame = 0;
@@ -65,7 +74,7 @@ private:
     sf::Vector2i frameSize = { 64, 64 };
 
     float bulletTimer = 0.f;
-    float bulletCooldown = 4.0f;//발사쿨타임
+    float bulletCooldown = 2.0f;//발사쿨타임
 };
 
 // ======================= enemy02 클래스 ==========================
@@ -75,7 +84,7 @@ public:
 
     void Update(float dt, sf::Vector2f playerPos) override;
     bool CanFire(float dt) override;
-    void TryFire(EnemyManager* manager, sf::Vector2f playerPos) override;
+    void TryFire(StageManager* manager, sf::Vector2f playerPos) override;
 
 private:
     int currentFrame = 0;
@@ -85,7 +94,7 @@ private:
     sf::Vector2i frameSize = { 64, 64 };
 
     float bulletTimer = 0.f;
-    float bulletCooldown = 6.0f;//발사쿨타임
+    float bulletCooldown = 2.0f;//발사쿨타임
 };
 
 // ======================= enemy03 클래스 ==========================
@@ -96,7 +105,7 @@ public:
 
     void Update(float dt, sf::Vector2f playerPos) override;
     bool CanFire(float dt) override;
-    void TryFire(EnemyManager* manager, sf::Vector2f playerPos) override;
+    void TryFire(StageManager* manager, sf::Vector2f playerPos) override;
 
 private:
     int currentFrame = 0;
@@ -106,5 +115,5 @@ private:
     sf::Vector2i frameSize = { 64, 64 };
 
     float bulletTimer = 0.f;
-    float bulletCooldown = 8.0f;//발사쿨타임
+    float bulletCooldown = 2.0f;//발사쿨타임
 };

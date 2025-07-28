@@ -7,24 +7,25 @@
 #include "EffectManager.h"
 #include "Map.h"
 
-class Stage
+class Stage 
 {
 	
 public:
 	Map map;
 	Player* player;					// Player 관한 클래스 접근 시
-	EnemyManager* enemyManager;		// 적 생성
+	StageManager* stageManager;		// 효 추가 : Player+Enemy 둘다 관리하는 거
 	DropManager* dropManager;		// 적 죽이면 드랍되는 드랍아이템 관련
 	UIManager* uiManager;			// UI 관련
-	EffectManager* effectManager;	// 
-	//킬카운트
-	int killCount = 0;
 
-	
+	EffectManager* effectManager;	// 2025-07-22 효 추가 : 이펙트는... 일단 보류하기
+
+	//킬카운트
+	static int killCount;
+
 	Stage()
 	{
 		player = nullptr;
-		enemyManager = nullptr;
+		stageManager = nullptr;
 		dropManager = nullptr;
 		uiManager = nullptr;
 		effectManager = nullptr;
@@ -32,7 +33,7 @@ public:
 	~Stage()
 	{
 		delete player;
-		delete enemyManager;
+		delete stageManager;
 		delete dropManager;
 		delete uiManager;
 		delete effectManager;
@@ -41,11 +42,11 @@ public:
 	void Update(float deltaTime);
 	void Render(sf::RenderWindow& window);
 
-	//추가
+	//추가 (2025-07-21 준호님 추가)
 	void HandlePlayerEnemyCollision();//충돌 Stage.cpp
 
 private:
-	sf::View view;
+	sf::View view;	// 카메라
 
 };
 

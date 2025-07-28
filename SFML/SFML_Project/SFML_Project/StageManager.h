@@ -1,9 +1,16 @@
 #pragma once
 #include "Util.h"
-#include "Enemy.h"
-#include <vector>
-#include <SFML/Graphics.hpp>
+//#include "Enemy.h"
+//#include "Player.h"
+class Enemy;
+class Player;
+// [2025.07.23 수정] 원래 EnemyManager에서 하던 적 생성/관리를 StageManager로 통합함
+// 앞으로 적 관련 함수는 StageManager에서 관리함 (ex. FireBulletAtPlayer, UpdateEnemies 등)
+// 요거 중요해요!!!!
 
+// 2025-07-21 효 추가 (EnemyManager->StageManager 이름 변경)
+
+class UIManager; // 전방 선언: StageManager가 UIManager를 사용하기 때문에 (has - a 관계)
 
 //투사체관련
 struct BulletData
@@ -17,11 +24,11 @@ struct BulletData
 };
 
 
-class EnemyManager
+class StageManager
 {
 public:
-    EnemyManager();                 // 생성자: 초기 변수 세팅 및 리소스 준비
-    ~EnemyManager();                // 소멸자: 동적 할당된 적들 메모리 해제
+    StageManager();                 // 생성자: 초기 변수 세팅 및 리소스 준비
+    ~StageManager();                // 소멸자: 동적 할당된 적들 메모리 해제
 
     void Init();                   // 초기화: 텍스처 로드 및 초기 변수 설정
     void Update(float dt, sf::Vector2f playerPos);
@@ -33,6 +40,10 @@ public:
     // 모든 적을 화면에 그리기
     void Clear();                  // 적 리스트 초기화 및 동적 할당된 적 메모리 해제
     std::vector<Enemy*>& GetEnemies();//충돌관련
+    Player* GetPlayer();
+
+	// 효 추가 : Player 객체를 StageManager에 설정
+    void SetPlayer(Player* _player);    // 초기화 해주기
 
     void FireBullet(sf::Vector2f start, sf::Vector2f target, int damage);//투사체관련
     void FireBulletAtPlayer(sf::Vector2f start, sf::Vector2f playerPos, int damage);    //조준투사체
@@ -43,13 +54,22 @@ public:
 
     std::vector<BulletData>& GetBullets();
 
+    void SetUIManager(UIManager* _uiManager); // UI 매니저 설정      // GameScene 선언에서 stage->stageManager->SetUIManager(&uiManager); 로 처리하기위해
+	int GetCurrentWave() const; // 현재 웨이브 번호 반환
+	void NextWave(); // 다음 웨이브로 넘어가기
+
+
 private:
+   
+    Player* player;                 // 효 추가, StageManager가 Player를 내부에 포함함(has - a 관계)
     std::vector<Enemy*> enemies;   // 현재 게임에 존재하는 적들 포인터 리스트
     sf::Texture enemyTexture;      // 적 텍스처 (이미지 데이터)
     float spawnInterval;           // 적 생성 간격 (초)
     float spawnTimer;              // 누적된 시간 (적 생성 시간 체크용)
     float minSpawnDistance = 150.f;
     int maxEnemies = 100;//몬스터 최대치
+    float shootTimer = 0.f;
+    
     //추가
     //enemy 스프라이트 관련 코드
     sf::Texture texture;
@@ -62,4 +82,12 @@ private:
     std::vector<BulletData> bullets;
     sf::Texture bulletTexture;
     float bulletSpeed = 300.f;
+
+    // 2025-07-26 효 추가 : 웨이브 설계 코드(무한확장)
+	int currentWave = 0; // 현재 웨이브 번호
+	float waveTimer = 0.f; // 웨이브 시간 누적
+    float waveDuration = 30.f;    // 웨이브 지속 시간
+
+    // 30초 웨이브 추가 
+	UIManager* uiManager; // UI 매니저 객체, UI 관련 작업을 처리하기 위한 객체
 };

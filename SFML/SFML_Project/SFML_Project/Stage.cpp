@@ -1,17 +1,22 @@
 #include "Stage.h"
+#include "Enemy.h"
+
+int Stage::killCount = 0;
 
 void Stage::Init()
 {
-	if (player == nullptr)
-	{
-		player = new Player;
-	}
 	map.Load("background.png");
-	player->Init();
-	if (enemyManager == nullptr)
+
+	if (stageManager == nullptr)
 	{
-		enemyManager = new EnemyManager();
-		enemyManager->Init();  // 적 텍스처 등 초기화
+		// 효 추가 : StageManager 생성 및 초기화
+		stageManager = new StageManager();
+		// 효 추가 : Player 객체 생성 및 StageManager에 설정
+		player = new Player();
+		//player->SetUIManager(uiManager); // Player에 UI 매니저 설정 (2025-07-26 효 추가)
+		stageManager->SetPlayer(player);  // StageManager에 Player 설정
+		stageManager->Init();  // 적 텍스처 등 초기화
+		
 	}
 
 	// charTex.loadFromFile(GetrscPath("player_cat.png"));
@@ -25,23 +30,22 @@ void Stage::Init()
 
 	//추가
 	view.setSize(800.f, 600.f);//화면으로 보여줄 뷰 크기 
-
+	
 }
+
 
 void Stage::Update(float deltaTime)
 {
-
-	player->Update(deltaTime);
 	// enemyManager.update();
 	// dropManager.update();
 	// uiManager.update();
 	// effectManager.update();
 	//추가
-	if (enemyManager)
+	if (stageManager)
 	{
-		enemyManager->Update(deltaTime, player->GetPosition());
+		stageManager->Update(deltaTime, player->GetPosition());
 		HandlePlayerEnemyCollision();
-		auto& bullets = enemyManager->GetBullets();
+		auto& bullets = stageManager->GetBullets();
 		sf::FloatRect playerBounds = player->GetGlobalBounds();
 
 		for (int i = bullets.size() - 1; i >= 0; --i)
@@ -67,13 +71,13 @@ void Stage::Render(sf::RenderWindow& window)
 	window.setView(view);// 카메라시야를 플레이어따라
 	map.Render(window, player->GetPosition());
 	player->Render(window); 
-	if (enemyManager) enemyManager->Draw(window);
+	if (stageManager) stageManager->Draw(window);
 }
 
-void Stage::HandlePlayerEnemyCollision()//충돌관련
+void Stage::HandlePlayerEnemyCollision()//충돌관련 (2025-07-21 준호님 추가)
 {
 	sf::FloatRect playerBounds = player->GetGlobalBounds();
-	auto& enemies = enemyManager->GetEnemies();  
+	auto& enemies = stageManager->GetEnemies();  
 
 	for (int i = enemies.size() - 1; i >= 0; --i)
 	{
@@ -84,16 +88,17 @@ void Stage::HandlePlayerEnemyCollision()//충돌관련
 		{
 			player->TakeDamage(enemy->GetAtk());   // 플레이어가 받는 피해
 			//나중에 에너미 atk로 수정
-			enemy->TakeDamage(999);   // 플레이어가 가하는 피해
-			//테스트용이라 999로 설정했습니다.
+			
+			enemy->TakeDamage(player->stats->damage);   // 플레이어가 가하는 피해
+			
 			//나중에 무기에 넣을거면 재횔용될듯
 
 			if (enemy->IsDead())
 			{
-				killCount++;
+				Stage::killCount++; // 적 처치 수 증가
+				player->GainExperience();
 				delete enemy;
 				enemies.erase(enemies.begin() + i);
-				std::cout << "Kill Count: " << killCount << std::endl;
 			}
 		}
 	}

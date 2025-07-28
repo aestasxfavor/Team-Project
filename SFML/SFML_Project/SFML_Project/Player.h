@@ -1,38 +1,51 @@
 #pragma once
 #include "Util.h"
 #include "Inventory.h"
-#include "Weapon.h"
+
 #include "Skill.h"
 #include "PlayerStats.h"
 
+// 전방선언햇는데 얘네가 왜 잇어야하는지.. 모르겟음 판단 보류
+#include "Enemy.h"
+#include "Spear.h"
+#include "Bullet.h"
+
+class SceneManager; // 전방 선언: SceneManager 클래스 필요
+class UIManager; // 전방 선언: UIManager 클래스 필요
+
+
+class Enemy;
+class Spear;
+class Bullet;
+
 class Player
 {
-
 public:
-	int hp, level, exp;
-	// 효 추가(개인적인 생각) : hp = 20(기본), level, exp = 0 기본설정하면 될거같습니당
-	float x, y;				// 지워도 됨.
-	float speed, attackDMG, critical;
+	float speed;
 
 	Inventory* inven;
-	std::vector<Weapon*> weapons;
-	Skill* skillSlots[4]; // qwer 또는 1234
+	Spear* spear = nullptr;
+	float spearCoolTime = 0.f;
+
+	UIManager* uiManager = nullptr; // UI 매니저 포인터 (has - a 관계)
+	
 
 	sf::Texture texture;
 	sf::Sprite spritePlayer;
 	enum State { IDLE, MOVE } state = IDLE;
 
+	bool isDead = false; // 플레이어가 죽었는지 여부
+
 
 	// 미니 추가 
 	// PlayerStat관련 함수 및 변수임
-	PlayerStats stats;
+	PlayerStats * stats;
 	float currentAttackCoolTime; // 현재 공격 쿨타임
-	bool canAttack; // 공격 가능한 상태인지? 체크 변수
+	std::vector<Bullet*> bullets;
 
-				// 이거 생성자 Cpp로 옮길 시 같이 옮겨 주세엽
-	Player(): stats(),currentAttackCoolTime(0.0f),canAttack(true)
+				// 이거 생성자 Cpp로 옮길 시 같이 옮겨 주세엽		// 2025-07-24 01:13분 효 추가 : 이거 옮길 필요가..있나? 일단 보류 내일 상의해서 하기 
+	Player(): stats(),currentAttackCoolTime(0.0f)
 	{
-		
 	}
 	~Player()
 	{
@@ -40,19 +53,25 @@ public:
 	}
 
 	void Init();
-	void Update(float deltaTime);
+	void Update(float deltaTime, const std::vector<Enemy*>& enemies);
 	void Render(sf::RenderWindow& window);
 	void Move(float deltaTime, const sf::Vector2f& dir);
 	void PickUp();
 	void LevelUp(); // 미니 추가 : 이거 안써도 될 듯?? PlayerStat에서 하니까
+
 	void Attack();
 	void UseSkill(int slot); // 키 입력 받고 키를 매개변수로 해당하는 값에 따라 스킬 실행
 							 // update안에다가 키입력 조건 걸어서 UseSkill() 해놓고 누른 버튼 변환해서 또는 enum으로
 							 // 그 인수를 int slot으로 넣기
+	void Death(); // 플레이어가 죽었을 때 호출되는 함수
+
+	void Attack(const std::vector<Enemy*>& enemies);
+	
+
 
 	// 미니가 추가한 함수
 	// 아이템 먹고 경험치 얻을 때 함수
-	void GainExperience(int amount);
+	void GainExperience();
 	void AddItemStat(const PlayerStats::StatOption itemStats);
 
 	//추가
@@ -65,7 +84,7 @@ public:
 	//피격시 무적
 	bool isInvincible = false;
 	float invincibleTimer = 0.f;
-	float invincibleDuration = 1.0f;//피격시 1초무족
+	float invincibleDuration = 1.0f;//피격시 1초 무적
 	//깜빡이기
 	float blinkTimer = 0.f;
 	float blinkInterval = 0.1f; // 0.1초마다 깜빡
