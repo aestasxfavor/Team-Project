@@ -56,12 +56,37 @@ void Enemy::TakeDamage(int amount)
     if (hp <= 0)
         dead = true;
 
+
+    hp -= amount;
+    if (hp <= 0)
+        dead = true;
+
+
+    // 2025-07-23 데미지 코드 보류 
+  /*  if (amount <= 0)
+    {
+        cout << "음수 처리 안되게" << amount << endl;
+        return;
+    }*/
+
+    hp -= amount;          // 데미지 만큼 체력 차감
+
+    //std::cout << "[슬라임 피격] 현재 HP: " << hp << std::endl;
+    if (hp <= 0)           // 체력 0 이하이면
+        dead = true;       // 죽음 표시
+
+
 }
 
 // 사망 여부
 bool Enemy::IsDead() const
 {
     return dead;
+}
+
+Enemy::~Enemy()
+{
+   // std::cout << "  작동!" << std::endl;
 }
 
 // 공격력 반환
@@ -75,6 +100,7 @@ sf::FloatRect Enemy::GetGlobalBounds() const
 {
     return sprite.getGlobalBounds();
 }
+
 
 
 void slime::Update(float dt, sf::Vector2f playerPos)
@@ -105,7 +131,6 @@ void slime::Update(float dt, sf::Vector2f playerPos)
     }
 }
 
-
 // 위치 반환
 sf::Vector2f Enemy::GetPosition() const
 {
@@ -130,8 +155,16 @@ void Enemy::TryFire(StageManager* manager, sf::Vector2f playerPos)
 enemy01::enemy01(sf::Texture& texture, sf::Vector2f spawnPos)
     : Enemy(texture, spawnPos)
 {
+
     hp = 3;
+
     atk = 5;
+
+    atk = 12;
+
+    hp = 15;
+    atk = 5;
+
     speed = 70.f;
 
     frameSize = { 64, 64 };
@@ -190,8 +223,16 @@ void enemy01::TryFire(StageManager* manager, sf::Vector2f playerPos)
 enemy02::enemy02(sf::Texture& texture, sf::Vector2f spawnPos)
     : Enemy(texture, spawnPos)
 {
+
     hp = 3;
+
     atk = 4;
+
+    atk = 12;
+
+    hp = 15;
+    atk = 4;
+
     speed = 70.f;
 
     frameSize = { 64, 64 };
@@ -242,8 +283,16 @@ void enemy02::TryFire(StageManager* manager, sf::Vector2f playerPos)
 enemy03::enemy03(sf::Texture& texture, sf::Vector2f spawnPos)
     : Enemy(texture, spawnPos)
 {
+
     hp = 3;
+
     atk = 6;
+
+    atk = 12;
+
+    hp = 15;
+    atk = 6;
+
     speed = 70.f;
 
     frameSize = { 64, 64 };

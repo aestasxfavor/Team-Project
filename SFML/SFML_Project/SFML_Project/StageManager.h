@@ -20,6 +20,9 @@ struct BulletData
     sf::Sprite sprite;
     sf::Vector2f velocity;
     int damage = 0;//대미지
+    ~BulletData() {
+        //std::cout << "소멸자작동!]" << std::endl;
+    }
 };
 
 
@@ -73,10 +76,8 @@ private:
     
     //추가
     //enemy 스프라이트 관련 코드
-    sf::Sprite spriteSlime;
     sf::Texture texture;
     //적 개체스프라이트
-    sf::Texture slimeTexture;
     sf::Texture enemy01Texture;//이거 에너미 늘릴대 마다 추가
     sf::Texture enemy02Texture;//이거 에너미 늘릴대 마다 추가
     sf::Texture enemy03Texture;//이거 에너미 늘릴대 마다 추가

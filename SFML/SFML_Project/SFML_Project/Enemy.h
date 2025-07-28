@@ -24,8 +24,10 @@ public:
     Enemy(sf::Texture& texture, sf::Vector2f spawnPos);
     //동민 추가
 
+
     bool isAlive = true;
-    virtual ~Enemy() = default;
+    virtual ~Enemy();
+
 
     virtual void Update(float dt, sf::Vector2f playerPos);
     virtual void Draw(sf::RenderWindow& window);
@@ -44,6 +46,7 @@ public:
     void SetScale(sf::Vector2f s); //이미지 크기 조절
 
 };
+
 
 
 //적 개체 데이터
@@ -79,6 +82,10 @@ private:
 
 
 
+
+
+//적 개체 데이터
+
 // ======================= enemy01 클래스 ==========================
 
 class enemy01 : public Enemy {
@@ -106,7 +113,7 @@ private:
     sf::Vector2i frameSize = { 64, 64 };
 
     float bulletTimer = 0.f;
-    float bulletCooldown = 2.0f;//발사쿨타임
+    float bulletCooldown = 4.0f;//발사쿨타임
 };
 
 // ======================= enemy02 클래스 ==========================
@@ -126,7 +133,7 @@ private:
     sf::Vector2i frameSize = { 64, 64 };
 
     float bulletTimer = 0.f;
-    float bulletCooldown = 2.0f;//발사쿨타임
+    float bulletCooldown = 6.0f;//발사쿨타임
 };
 
 // ======================= enemy03 클래스 ==========================
@@ -147,5 +154,5 @@ private:
     sf::Vector2i frameSize = { 64, 64 };
 
     float bulletTimer = 0.f;
-    float bulletCooldown = 2.0f;//발사쿨타임
+    float bulletCooldown = 8.0f;//발사쿨타임
 };
