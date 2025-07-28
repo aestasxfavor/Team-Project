@@ -2,17 +2,19 @@
 #include "Util.h"
 #include "ShopUI.h"
 #include "Player.h" // Player 클래스 필요
+
 // 2025-07-22 효 추가 : 정확하지 않음 
 
 class Player;
-
+class PlayerStats;
 
 class UIManager
 {
 private:
 
 	Player* player; // 플레이어 객체 포인터 (has - a 관계)
-	
+	PlayerStats* stats;
+	//vector<StatOption>* option;
 
 	sf::Font font;
 	sf::Text timerText;

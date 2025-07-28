@@ -1,4 +1,5 @@
 ﻿#include "UIManager.h"
+#include "PlayerStats.h"
 
 void UIManager::Init()
 {
@@ -16,10 +17,10 @@ void UIManager::Init()
 	shopUI.Init(font); // 상점 UI 초기화
 	
 }
-
 void UIManager::Update(float dt)
 {
-    // 일단 고정 수치로 기본 체력바 보여주기
+   // option.
+   
  
     if (isWaveActive)
     {
