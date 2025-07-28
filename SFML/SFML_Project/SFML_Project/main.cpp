@@ -9,6 +9,7 @@
 
 int main()
 {
+    // 2025-07-29 01:32분 커밋하기위한 효의 주석
     
         sf::RenderWindow window(sf::VideoMode(1920, 1080), "Meowbellion");
 
