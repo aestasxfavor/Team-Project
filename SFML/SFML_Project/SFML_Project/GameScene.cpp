@@ -1,4 +1,5 @@
 #include "GameScene.h"
+#include "PlayerStats.h"
 
 GameScene::~GameScene()
 {
@@ -14,7 +15,7 @@ void GameScene::Init()
 	stage->stageManager->SetUIManager(&uiManager); // StageManager에 UI 매니저 설정
 	stage->player->uiManager = &uiManager;
 
-	stage->stageManager->NextWave(); // 첫 웨이브 수 증가
+	stage->stageManager->NextWave(*stage->player, uiManager, -1, {}); // 첫 웨이브 수 증가
 	uiManager.ShowWaveText(stage->stageManager->GetCurrentWave()); // 웨이브 1 표시
 
 	uiManager.SetPlayer(stage->player); // 플레이어 설정 (UI 매니저에 플레이어 설정)
@@ -37,7 +38,7 @@ void GameScene::Init()
 			}
 
 			// 어쨌든 다음 웨이브는 시작
-			stage->stageManager->NextWave();
+			stage->stageManager->NextWave(*stage->player, uiManager, selectedIndex, selectedStatChoices);
 			uiManager.ResetWaveTimer();
 			uiManager.ShowWaveText(stage->stageManager->GetCurrentWave());
 		});
@@ -87,7 +88,7 @@ void GameScene::Update(sf::RenderWindow& window)
 
 		if (waveEndTimer >= 1.f)
 		{
-			uiManager.OpenShop();
+			uiManager.OpenShop(*stage->player->stats);
 			waveEnded = false;
 		}
 

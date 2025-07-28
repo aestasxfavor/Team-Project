@@ -13,7 +13,7 @@ void TitleScene::Init()
         backgroundSprite2.setTexture(backgroundTexture);
 
         // ?? 여기서 윈도우 사이즈에 맞춰 스케일 조절!
-        sf::Vector2u windowSize = { 800, 600 };  // 고정된 창 사이즈   1920x1080으로 전체 사이즈 수정하기    10시간 뒤의 효가 수정하겠지ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ
+        sf::Vector2u windowSize = {1920, 1080 };  // 고정된 창 사이즈   1920x1080으로 전체 사이즈 수정하기    10시간 뒤의 효가 수정하겠지ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ
         sf::Vector2u textureSize = backgroundTexture.getSize();
 
         float scaleX = static_cast<float>(windowSize.x) / textureSize.x;

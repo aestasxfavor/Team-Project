@@ -47,36 +47,40 @@ public:
 public:
 	struct StatOption           //선택지 옵션 구조체
 	{
-		std::string name;
+		std::wstring name;
 		StatType type = StatType::DEFAULT;
 		float amount = 0;
-		std::string Grade;
+		std::wstring Grade;
 	};
 	const std::vector<StatOption> options = {
-		{"체력 +10",StatType::MAXHP,10.f,"C"},
-		{"체력 +20",StatType::MAXHP,20.f,"B"},
-		{"체력 +30",StatType::MAXHP,30.f,"A"},
-		{"공격력 +5",StatType::DAMAGE,5.f,"C"},
-		{"공격력 +10",StatType::DAMAGE,10.f,"B"},
-		{"공격력 +15",StatType::DAMAGE,15.f,"A"},
-		{"공격속도 +7%",StatType::ATTACKSPEED,0.07f,"C"},
-		{"공격속도 +10%",StatType::ATTACKSPEED,0.1f,"B"},
-		{"공격속도 +15%",StatType::ATTACKSPEED,0.15f,"A"},
-		{"방어력 +2",StatType::DEFENSE,2.f,"C"},
-		{"방어력 +3",StatType::DEFENSE,3.f,"B"},
-		{"방어력 +5",StatType::DEFENSE,5.f,"A"},
-		{"치명타율 +3%",StatType::CRITICAL,0.03f,"C"},
-		{"치명타율 +5%",StatType::CRITICAL,0.05f,"B"},
-		{"치명타율 +7%",StatType::CRITICAL,0.07f,"A"},
-		{"이동속도 +5%",StatType::MOVESPEED,0.05f,"C"},
-		{"이동속도 +7%",StatType::MOVESPEED,0.07f,"B"},
-		{"이동속도 +10%",StatType::MOVESPEED,0.1f,"A"},
+		{L"체력 +10",StatType::MAXHP,10.f,L"C"},
+		{L"체력 +20",StatType::MAXHP,20.f,L"B"},
+		{L"체력 +30",StatType::MAXHP,30.f,L"A"},
+		{L"공격력 +5",StatType::DAMAGE,5.f,L"C"},
+		{L"공격력 +10",StatType::DAMAGE,10.f,L"B"},
+		{L"공격력 +15",StatType::DAMAGE,15.f,L"A"},
+		{L"공격속도 +7%",StatType::ATTACKSPEED,0.07f,L"C"},
+		{L"공격속도 +10%",StatType::ATTACKSPEED,0.1f,L"B"},
+		{L"공격속도 +15%",StatType::ATTACKSPEED,0.15f,L"A"},
+		{L"방어력 +2",StatType::DEFENSE,2.f,L"C"},
+		{L"방어력 +3",StatType::DEFENSE,3.f,L"B"},
+		{L"방어력 +5",StatType::DEFENSE,5.f,L"A"},
+		{L"치명타율 +3%",StatType::CRITICAL,0.03f,L"C"},
+		{L"치명타율 +5%",StatType::CRITICAL,0.05f,L"B"},
+		{L"치명타율 +7%",StatType::CRITICAL,0.07f,L"A"},
+		{L"이동속도 +5%",StatType::MOVESPEED,0.05f,L"C"},
+		{L"이동속도 +7%",StatType::MOVESPEED,0.07f,L"B"},
+		{L"이동속도 +10%",StatType::MOVESPEED,0.1f,L"A"},
 		// 추후 사정거리 추가해야함.
 
 	};  // 위 선택지 내용 담아둘 컨테이너
 
 public:
 	std::vector<StatOption> GetRandomChoices(const vector<StatOption>& pool, int count = 3);
+
+	// PlayerStats.h 안에 추가
+	const vector<StatOption>& GetStatPool() const { return options; }
+
 	// 필요하다 생각되면 private로 빼도됨
 	PlayerStats();
 	~PlayerStats();

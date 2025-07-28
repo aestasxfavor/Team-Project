@@ -48,6 +48,11 @@ private:
 	sf::Text hpTextShadow;
 	sf::Text levelTextShadow;
 
+	// 스탯 로그 관련
+	vector<wstring> statLogs;        // 최근 선택 스탯들
+	sf::RectangleShape statLogBox;            // 로그 감싸는 네모박스
+	sf::Text statLogTexts[3];                 // 로그 출력 텍스트들 (최대 3개)
+
 	float currentExpRatio = 0.f;  // 실제 exp보다 약간 느리게 따라가는 느낌
 	float targetExpRatio = 0.f;   // 실제 exp 값 (0~1)
 
@@ -82,11 +87,21 @@ public:
 	sf::Color GetExpColor(float ratio); // ratio = currentHp / maxHp
 	void UpdateExpBar(int currentExp, int maxExp); // 경험치 바 업데이트 (void 함수)
 
-	void OpenShop();
+	void InitShop(PlayerStats& playerStats);
+	void OpenShop(PlayerStats& playerStats);
 	void UpdateShop(const sf::Vector2f& pos, bool isClick);
 	void RenderShop(sf::RenderWindow& window);		// 상점 UI 렌더링 (void 함수)
 
 	bool IsShopOpen() const;
+
+	// 스탯 로그 추가 함수
+	void AddStatLog(const wstring& log);
+
+	// Init에서 호출할 스탯 로그 초기화 함수
+	void InitStatLogUI(sf::Font& font);
+
+	// Render 안에 넣을 함수 (혹은 직접 Render에서 출력해도 됨)
+	void RenderStatLog(sf::RenderWindow& window);
 
 };
 

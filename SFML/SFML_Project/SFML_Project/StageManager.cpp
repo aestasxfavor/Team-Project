@@ -6,6 +6,9 @@
 #include "Player.h"
 #include "Stage.h"
 
+#include "PlayerStats.h"
+
+
 
 // [2025.07.23 수정] 원래 EnemyManager에서 하던 적 생성/관리를 StageManager로 통합함
 // 앞으로 적 관련 함수는 StageManager에서 관리함 (ex. FireBulletAtPlayer, UpdateEnemies 등)
@@ -243,10 +246,64 @@ int StageManager::GetCurrentWave() const
      return currentWave; 
 }
 
-void StageManager::NextWave()
+void StageManager::SpawnEnemiesForWave(int waveNumber)
+{
+    std::cout << "[StageManager] " << waveNumber << " 웨이브 적 생성!" << std::endl;
+
+    // 기존 적 제거
+    Clear();
+
+    // 웨이브 수에 따라 생성할 적 수 결정 (ex: wave * 3 마리)
+    int numEnemies = waveNumber * 3;
+
+    for (int i = 0; i < numEnemies; ++i)
+    {
+        // 플레이어 위치 기준으로 생성할 수 있도록 좌표는 플레이어 기준으로
+        sf::Vector2f playerPos = player ? player->GetPosition() : sf::Vector2f(400.f, 300.f);
+
+        SpawnEnemy(playerPos);  // 기존에 만들어둔 랜덤 타입 적 생성 함수
+    }
+}
+
+void StageManager::NextWave(Player& player, UIManager& uiManager, int selectedIndex, const vector<PlayerStats::StatOption>& selectedChoices)
 {
     currentWave++;
+    std::cout << "[StageManager] Wave " << currentWave << " 시작!" << std::endl;
+
+    // 선택된 스탯 적용
+    /*if (selectedIndex >= 0 && selectedIndex < selectedChoices.size())
+    {
+        player.stats->ApplyStat(selectedChoices[selectedIndex]);
+
+        std::wstring statName;
+
+        switch (selectedChoices[selectedIndex].type)
+        {
+        case StatType::MAXHP: statName = L"체력 +" + std::to_wstring(selectedChoices[selectedIndex].amount); break;
+        case StatType::DAMAGE: statName = L"공격력 +" + std::to_wstring(selectedChoices[selectedIndex].amount); break;
+        case StatType::DEFENSE: statName = L"방어력 +" + std::to_wstring(selectedChoices[selectedIndex].amount); break;
+        case StatType::ATTACKSPEED: statName = L"공격속도 +" + std::to_wstring(selectedChoices[selectedIndex].amount); break;
+        case StatType::MOVESPEED: statName = L"이동속도 +" + std::to_wstring(selectedChoices[selectedIndex].amount); break;
+        case StatType::CRITICAL: statName = L"크리티컬 +" + std::to_wstring(selectedChoices[selectedIndex].amount); break;
+        default: statName = L"기타";
+        }
+
+        uiManager.AddStatLog(statName);
+    }*/
+
+    // 플레이어 체력 초기화
+    if (player.stats)
+    {
+        player.stats->currentHp = player.stats->maxHp;
+    }
+
+    // 적 생성
+    SpawnEnemiesForWave(currentWave);
+    //uiManager.UpdateHPBar(player.stats->currentHp, player.stats->maxHp);
+
 }
+
+
 
 
 void StageManager::FireBullet(sf::Vector2f start, sf::Vector2f target, int damage)

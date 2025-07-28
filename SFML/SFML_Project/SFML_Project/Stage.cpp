@@ -29,7 +29,7 @@ void Stage::Init()
 	// 그냥 초기화 진행 할거
 
 	//추가
-	view.setSize(800.f, 600.f);//화면으로 보여줄 뷰 크기 
+	view.setSize(1920.f, 1080.f);//화면으로 보여줄 뷰 크기 
 	
 }
 

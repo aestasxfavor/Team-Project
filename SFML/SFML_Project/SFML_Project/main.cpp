@@ -10,7 +10,7 @@
 int main()
 {
     
-        sf::RenderWindow window(sf::VideoMode(800, 600), "Meowbellion");
+        sf::RenderWindow window(sf::VideoMode(1920, 1080), "Meowbellion");
 
         SceneManager::AddScene("Title", new TitleScene());
         SceneManager::AddScene("Game", new GameScene());

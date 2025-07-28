@@ -2,6 +2,7 @@
 #include "Util.h"
 //#include "Enemy.h"
 //#include "Player.h"
+#include "PlayerStats.h"
 class Enemy;
 class Player;
 // [2025.07.23 수정] 원래 EnemyManager에서 하던 적 생성/관리를 StageManager로 통합함
@@ -11,6 +12,7 @@ class Player;
 // 2025-07-21 효 추가 (EnemyManager->StageManager 이름 변경)
 
 class UIManager; // 전방 선언: StageManager가 UIManager를 사용하기 때문에 (has - a 관계)
+class PlayerStats; // 전방 선언: PlayerStats를 사용하기 때문에
 
 //투사체관련
 struct BulletData
@@ -51,10 +53,12 @@ public:
 
     std::vector<BulletData>& GetBullets();
 
+    int currentWave = 0; // 현재 웨이브 번호
+
     void SetUIManager(UIManager* _uiManager); // UI 매니저 설정      // GameScene 선언에서 stage->stageManager->SetUIManager(&uiManager); 로 처리하기위해
 	int GetCurrentWave() const; // 현재 웨이브 번호 반환
-	void NextWave(); // 다음 웨이브로 넘어가기
-
+	void NextWave(Player& player, UIManager& uiManager, int selectedIndex, const vector<PlayerStats::StatOption>& selectedChoices); // 다음 웨이브로 넘어가기
+	void SpawnEnemiesForWave(int waveNumber); // 웨이브에 따라 적 생성
 
 private:
    
@@ -83,7 +87,7 @@ private:
     float bulletSpeed = 300.f;
 
     // 2025-07-26 효 추가 : 웨이브 설계 코드(무한확장)
-	int currentWave = 0; // 현재 웨이브 번호
+	
 	float waveTimer = 0.f; // 웨이브 시간 누적
     float waveDuration = 30.f;    // 웨이브 지속 시간
 

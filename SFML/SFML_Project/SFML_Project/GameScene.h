@@ -14,6 +14,10 @@ private:
     Stage* stage;
     sf::Clock clock; // 시간 측정용 시계
 
+    int selectedIndex = -1;
+    vector<PlayerStats::StatOption> selectedStatChoices;
+
+
 	// wave 끝났는지 여부
     bool waveEnded = false;
     float waveEndTimer = 0.f;
