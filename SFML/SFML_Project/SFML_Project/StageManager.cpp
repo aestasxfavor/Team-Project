@@ -37,12 +37,6 @@ void StageManager::Init()
     //enemyTexture.loadFromFile("enemy.png");  // 적 텍스처 파일 로드
     //추가
 
-    //테스트용 슬라임 이미지
-   //slimeTexture.loadFromFile(GetrscPath("slime.png"));
-   //spriteSlime.setTexture(texture);    // 효 추가 : [확인 필요] texture 변수는 slimeTexture와 역할이 겹치는 것 같음 의도가 불분명.. 상의 후 결정하기
-   //spriteSlime.setPosition(370.f, 280.f);
-    //spriteSlime.setTextureRect(sf::IntRect(0, 227, 227 , 227));'
-
     
      // enemy01 이미지
     std::string path01 = GetrscPath("enemy01.png");
@@ -265,6 +259,16 @@ void StageManager::SpawnEnemiesForWave(int waveNumber)
     }
 }
 
+void StageManager::Reset()
+{
+    Clear();  // 모든 적 제거
+    bullets.clear();  // 투사체도 초기화
+
+    currentWave = 1;  // 웨이브 초기화
+    spawnTimer = 0.f;
+    shootTimer = 0.f;
+}
+
 void StageManager::NextWave(Player& player, UIManager& uiManager, int selectedIndex, const vector<PlayerStats::StatOption>& selectedChoices)
 {
     currentWave++;
@@ -281,12 +285,12 @@ void StageManager::NextWave(Player& player, UIManager& uiManager, int selectedIn
 
         switch (selectedChoices[selectedIndex].type)
         {
-        case StatType::MAXHP: ss << L"체력 +" << selectedChoices[selectedIndex].amount; break;
-        case StatType::DAMAGE: ss << L"공격력 +" << selectedChoices[selectedIndex].amount; break;
-        case StatType::DEFENSE: ss << L"방어력 +" << selectedChoices[selectedIndex].amount; break;
-        case StatType::ATTACKSPEED: ss << L"공격속도 +" << selectedChoices[selectedIndex].amount;  break;
-        case StatType::MOVESPEED:  ss << L"이동속도 +" << selectedChoices[selectedIndex].amount; break;
-        case StatType::CRITICAL: ss << L"크리티컬 +" << selectedChoices[selectedIndex].amount; break;
+        case StatType::MAXHP: ss << L"체력 + " << selectedChoices[selectedIndex].amount; break;
+        case StatType::DAMAGE: ss << L"공격력 + " << selectedChoices[selectedIndex].amount; break;
+        case StatType::DEFENSE: ss << L"방어력 + " << selectedChoices[selectedIndex].amount; break;
+        case StatType::ATTACKSPEED: ss << L"공격속도 + " << selectedChoices[selectedIndex].amount;  break;
+        case StatType::MOVESPEED:  ss << L"이동속도 + " << selectedChoices[selectedIndex].amount; break;
+        case StatType::CRITICAL: ss << L"크리티컬 + " << selectedChoices[selectedIndex].amount; break;
         default: ss << L"기타"; break;
            
         }
@@ -331,4 +335,33 @@ void StageManager::FireBullet(sf::Vector2f start, sf::Vector2f target, int damag
     b.damage = damage;  
 
     bullets.push_back(b);
+}
+
+//원형투사체
+void StageManager::FireBulletSpread(sf::Vector2f start)
+{
+    const int numBullets = 6; // 6방향
+    const float angleStep = 360.f / numBullets;
+
+    for (int i = 0; i < numBullets; ++i)
+    {
+        float angle = angleStep * i * 3.1415926f / 180.f; // 도 -> 라디안 변환
+        sf::Vector2f dir(std::cos(angle), std::sin(angle));
+
+        sf::Sprite bullet;
+        bullet.setTexture(bulletTexture);
+
+        int frame = rand() % 6;
+        bullet.setTextureRect(sf::IntRect(frame * 17, 0, 17, 17));
+        bullet.setOrigin(8.5f, 8.5f);
+        bullet.setPosition(start);
+        bullet.setScale(2.f, 2.f);
+
+        BulletData b;
+        b.sprite = bullet;
+        b.velocity = dir * bulletSpeed; // bulletSpeed는 StageManager 멤버
+        b.damage = 10; // 고정값 또는 enemy03에서 넘겨받도록 수정 가능
+
+        bullets.push_back(b);
+    }
 }

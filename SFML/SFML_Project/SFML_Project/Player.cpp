@@ -9,7 +9,7 @@
 
 void Player::Init()
 {
-
+	
 	texture.loadFromFile(GetrscPath("Catcharacter2.png"));
 	
 	spritePlayer.setTexture(texture);
@@ -207,6 +207,44 @@ void Player::Attack(const std::vector<Enemy*>& enemies)
 	}
 }
 
+void Player::Reset()
+{
+	if (stats)
+		stats->Reset();
+}
+
+//void Player::Reset()
+//{
+//	spritePlayer.setPosition(370.f, 280.f);
+//
+//	if (stats)
+//		stats->Reset();
+//
+//	isDead = false;
+//	isInvincible = false;
+//	visible = true;
+//	invincibleTimer = 0.f;
+//	blinkTimer = 0.f;
+//
+//	// 무기 삭제
+//	for (auto* bullet : bullets)
+//		delete bullet;
+//	bullets.clear();
+//
+//	if (spear)
+//	{
+//		delete spear;
+//		spear = nullptr;
+//	}
+//
+//	state = IDLE;
+//	animationTimer = 0.f;
+//	currentFrame = 0;
+//
+//	// 필요 시 쿨타임도 초기화
+//	spearCoolTime = 0.f;
+//}
+
 
 
 void Player::Death()
@@ -221,8 +259,8 @@ void Player::Death()
 
 
 void Player::GainExperience()
-
 {
+	if (stats)
 	stats->GainExp();
 }
 

@@ -63,6 +63,8 @@ public:
 	void NextWave(Player& player, UIManager& uiManager, int selectedIndex, const vector<PlayerStats::StatOption>& selectedChoices); // 다음 웨이브로 넘어가기
 	void SpawnEnemiesForWave(int waveNumber); // 웨이브에 따라 적 생성
 
+	void Reset(); // 웨이브 초기화 및 적 제거
+
 private:
    
     Player* player;                 // 효 추가, StageManager가 Player를 내부에 포함함(has - a 관계)

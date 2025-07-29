@@ -12,6 +12,7 @@ public:
     static void ChangeScene(const std::string& name);
     static void Update(sf::RenderWindow& window);
     static void Render(sf::RenderWindow& window);
+    static Scene* GetScene(const std::string& name);  // ¾À ÀÌ¸§À¸·Î ¾À °¡Á®¿À±â
 
 private:
     static map<std::string, Scene*> scenes;

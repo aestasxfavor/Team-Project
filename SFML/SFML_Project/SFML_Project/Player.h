@@ -66,8 +66,8 @@ public:
 	void Death(); // 플레이어가 죽었을 때 호출되는 함수
 
 	void Attack(const std::vector<Enemy*>& enemies);
-	
 
+	void Reset(); // 플레이어 상태 초기화 함수
 
 	// 미니가 추가한 함수
 	// 아이템 먹고 경험치 얻을 때 함수

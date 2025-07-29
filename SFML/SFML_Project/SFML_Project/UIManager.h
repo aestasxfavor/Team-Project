@@ -52,6 +52,8 @@ private:
 	sf::RectangleShape statLogBox;            // 로그 감싸는 네모박스
 	sf::Text statLogTexts[3];                 // 로그 출력 텍스트들 (최대 3개)
 
+
+
 	float currentExpRatio = 0.f;  // 실제 exp보다 약간 느리게 따라가는 느낌
 	float targetExpRatio = 0.f;   // 실제 exp 값 (0~1)
 
@@ -101,6 +103,8 @@ public:
 
 	// Render 안에 넣을 함수 (혹은 직접 Render에서 출력해도 됨)
 	void RenderStatLog(sf::RenderWindow& window);
+
+	void Reset(); // UI 초기화 (void 함수)
 
 };
 

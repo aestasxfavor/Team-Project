@@ -24,10 +24,8 @@ public:
     Enemy(sf::Texture& texture, sf::Vector2f spawnPos);
     //동민 추가
 
-
     bool isAlive = true;
     virtual ~Enemy();
-
 
     virtual void Update(float dt, sf::Vector2f playerPos);
     virtual void Draw(sf::RenderWindow& window);
@@ -41,67 +39,19 @@ public:
 
     virtual void TryFire(StageManager* manager, sf::Vector2f playerPos);
 
-    //virtual void TryFire(EnemyManager* manager, sf::Vector2f playerPos);
-
     void SetScale(sf::Vector2f s); //이미지 크기 조절
 
 };
 
 
-
 //적 개체 데이터
-//테스트용 슬라임
-class slime : public Enemy {
-public:
-    slime(sf::Texture& texture, sf::Vector2f spawnPos)
-        : Enemy(texture, spawnPos)
-    {
-        hp = 1;
-        speed = 60.f;
-        atk = 90;
-        sprite.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y));
-
-        sprite.setOrigin(frameSize.x / 2.f, frameSize.y / 2.f);
-    }
-
-    void Update(float dt, sf::Vector2f playerPos) override;
-    //투사체관련
-    float bulletTimer = 0.f;
-    float bulletCooldown = 2.0f;
-
-private:
-    int currentFrame = 0;
-    float animationTimer = 0.f;
-    float frameDuration = 0.2f;
-    int frameCount = 7;
-
-    sf::Vector2i frameSize = { 250, 250 };
-
-};
-
-
-
-
-
-
-//적 개체 데이터
-
 // ======================= enemy01 클래스 ==========================
 
 class enemy01 : public Enemy {
 public:
     enemy01(sf::Texture& texture, sf::Vector2f spawnPos); // 정의는 cpp에서
-
-
-    //    frameSize = { 64, 64 };           // 실제 다람쥐 프레임 크기
-    //    frameCount = 3;                   // 프레임 수
-
-    //    sprite.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y));
-    //    sprite.setOrigin(frameSize.x / 2.f, frameSize.y / 2.f);
-    //}
-
     void Update(float dt, sf::Vector2f playerPos) override;
-    /*void Update(float dt, sf::Vector2f playerPos) override;*/
+
     bool CanFire(float dt) override;
     void TryFire(StageManager* manager, sf::Vector2f playerPos) override;
 
@@ -113,7 +63,7 @@ private:
     sf::Vector2i frameSize = { 64, 64 };
 
     float bulletTimer = 0.f;
-    float bulletCooldown = 4.0f;//발사쿨타임
+    float bulletCooldown = 2.0f;//발사쿨타임
 };
 
 // ======================= enemy02 클래스 ==========================
@@ -133,7 +83,7 @@ private:
     sf::Vector2i frameSize = { 64, 64 };
 
     float bulletTimer = 0.f;
-    float bulletCooldown = 6.0f;//발사쿨타임
+    float bulletCooldown = 2.0f;//발사쿨타임
 };
 
 // ======================= enemy03 클래스 ==========================
@@ -154,5 +104,5 @@ private:
     sf::Vector2i frameSize = { 64, 64 };
 
     float bulletTimer = 0.f;
-    float bulletCooldown = 8.0f;//발사쿨타임
+    float bulletCooldown = 2.0f;//발사쿨타임
 };

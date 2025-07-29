@@ -1,7 +1,12 @@
 #include "TitleScene.h"
+#include "SoundManager.h"
 
 void TitleScene::Init()
 {
+    if (soundManager.LoadBGM(GetSoundPath("Main_Display_BGM.wav")))
+    {
+        soundManager.PlayBGM(true);  // 반복 재생
+    }
  
         if (!backgroundTexture.loadFromFile(GetrscPath("BackGround7.png")))
         {
@@ -31,19 +36,6 @@ void TitleScene::Init()
 
         // 폰트 & 텍스트
         font.loadFromFile(GetrscPath("Font/BMJUA_ttf.ttf"));
-
-  //      titleText.setFont(font);
-  //      titleText.setString("Meowbellion");
-  //      titleText.setCharacterSize(60);
-  //      titleText.setFillColor(sf::Color::Black);
-  //      titleText.setPosition(1920.f/2.f, 1080.f/2.f);
-
-  //      startText.setFont(font);
-  //      startText.setString("<Press Enter to Start>");
-		////startText.setString(L"엔터키.");       // 한글 쓰는 방법 : L"문자열"
-  //      startText.setCharacterSize(30);
-  //      startText.setFillColor(sf::Color::Black);
-  //      startText.setPosition(1920.f/2.f, 1080.f/2.f);
 
         // 제목 텍스트 (중앙 정렬)
         titleText.setFont(font);
@@ -94,13 +86,29 @@ void TitleScene::Update(sf::RenderWindow& window)       // 2025-07-28 13:20 효 �
     backgroundSprite1.setPosition(backgroundX1, 0.f);
     backgroundSprite2.setPosition(backgroundX2, 0.f);
 
+    bool enterNowPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Enter);
+
     // 입력 처리
-    if (canStart && sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
+    /*if (canStart && sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
     {
         canStart = false;
         SceneManager::ChangeScene("Game");
     }
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+    {
+        window.close();
+    }*/
+
+    if(!enterPreviouslyPressed && enterNowPressed)
+    {
+        soundManager.StopBGM();     // 브금 멈추기
+        SceneManager::ChangeScene("Game");
+    }
+
+    enterPreviouslyPressed = enterNowPressed;
+
+    // Escape 눌렀을 경우 종료
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
     {
         window.close();
     }

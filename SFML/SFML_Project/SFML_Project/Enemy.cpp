@@ -14,8 +14,6 @@ Enemy::Enemy(sf::Texture& texture, sf::Vector2f spawnPos)
     sprite.setScale(scale);  // 디폴트값
 }
 
-
-
 // 기본 이동 로직
 void Enemy::Update(float dt, sf::Vector2f playerPos)
 {
@@ -36,20 +34,10 @@ void Enemy::Draw(sf::RenderWindow& window)
 // 피격 처리
 void Enemy::TakeDamage(int amount)
 {
-
-    // 2025-07-23 데미지 코드 보류 
-  /*  if (amount <= 0)
-    {
-        cout << "음수 처리 안되게" << amount << endl;
-        return;
-    }*/
-
     hp -= amount;          // 데미지 만큼 체력 차감
 
-    //std::cout << "[슬라임 피격] 현재 HP: " << hp << std::endl;
     if (hp <= 0)           // 체력 0 이하이면
         dead = true;       // 죽음 표시
-
 
 }
 
@@ -61,7 +49,7 @@ bool Enemy::IsDead() const
 
 Enemy::~Enemy()
 {
-   // std::cout << "  작동!" << std::endl;
+    // std::cout << "  작동!" << std::endl;
 }
 
 // 공격력 반환
@@ -78,33 +66,6 @@ sf::FloatRect Enemy::GetGlobalBounds() const
 
 
 
-void slime::Update(float dt, sf::Vector2f playerPos)
-{
-    Enemy::Update(dt, playerPos);  // 기존 이동 로직
-
-    animationTimer += dt;
-    if (animationTimer >= frameDuration)
-    {
-        animationTimer = 0.f;
-        currentFrame = (currentFrame + 1) % frameCount;
-
-        sprite.setTextureRect(sf::IntRect(currentFrame * frameSize.x, 0, frameSize.x, frameSize.y));
-    }
-    //투사체
-    bulletTimer += dt;
-    if (bulletTimer >= bulletCooldown)
-    {
-        bulletTimer = 0.f;
-
-        sf::Vector2f dir = playerPos - sprite.getPosition();
-        float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
-        if (len != 0)
-            dir /= len;
-
-        // EnemyManager가 발사 기능 가지고 있음
-        // → 여기서는 직접 호출할 수 없으니 EnemyManager에서 강제로 처리하는 방식 사용
-    }
-}
 
 // 위치 반환
 sf::Vector2f Enemy::GetPosition() const
@@ -130,16 +91,8 @@ void Enemy::TryFire(StageManager* manager, sf::Vector2f playerPos)
 enemy01::enemy01(sf::Texture& texture, sf::Vector2f spawnPos)
     : Enemy(texture, spawnPos)
 {
-
-    hp = 3;
-
-    atk = 5;
-
-    atk = 12;
-
     hp = 15;
     atk = 5;
-
     speed = 70.f;
 
     frameSize = { 64, 64 };
@@ -169,10 +122,6 @@ void enemy01::Update(float dt, sf::Vector2f playerPos)
     }
 }
 
-//        sprite.setTextureRect(sf::IntRect(currentFrame * frameSize.x, 0, frameSize.x, frameSize.y));
-//    }
-//}
-
 // enemy01::CanFire
 bool enemy01::CanFire(float dt)
 {
@@ -198,16 +147,8 @@ void enemy01::TryFire(StageManager* manager, sf::Vector2f playerPos)
 enemy02::enemy02(sf::Texture& texture, sf::Vector2f spawnPos)
     : Enemy(texture, spawnPos)
 {
-
-    hp = 100;
-
-    atk = 4;
-
-    atk = 12;
-
     hp = 15;
     atk = 4;
-
     speed = 70.f;
 
     frameSize = { 64, 64 };
@@ -258,16 +199,8 @@ void enemy02::TryFire(StageManager* manager, sf::Vector2f playerPos)
 enemy03::enemy03(sf::Texture& texture, sf::Vector2f spawnPos)
     : Enemy(texture, spawnPos)
 {
-
-    hp = 100;
-
-    atk = 6;
-
-    atk = 12;
-
     hp = 15;
     atk = 6;
-
     speed = 70.f;
 
     frameSize = { 64, 64 };
@@ -305,9 +238,9 @@ bool enemy03::CanFire(float dt)
     return false;
 }
 
-// enemy03::TryFire
-void enemy03::TryFire(StageManager* manager, sf::Vector2f playerPos)
+//원형투사체
+void enemy03::TryFire(StageManager* stageManager, sf::Vector2f playerPos)
 {
-    manager->FireBulletAtPlayer(GetPosition(), playerPos, atk);
+    stageManager->FireBulletSpread(GetPosition()); // 6방향 뿌리기
 }
 

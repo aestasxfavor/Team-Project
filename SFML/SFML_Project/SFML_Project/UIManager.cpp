@@ -338,7 +338,7 @@ void UIManager::InitStatLogUI(sf::Font& font)
     for (int i = 0; i < 3; ++i)
     {
         statLogTexts[i].setFont(font);
-        statLogTexts[i].setCharacterSize(18);
+        statLogTexts[i].setCharacterSize(20);
         statLogTexts[i].setFillColor(sf::Color::White);
         statLogTexts[i].setPosition(1700.f, 30.f + i * 24.f);
     }
@@ -354,6 +354,39 @@ void UIManager::RenderStatLog(sf::RenderWindow& window)
     std::wcout << L"[렌더링 직전 텍스트] " << statLogTexts[i].getString().toWideString() << std::endl;
         window.draw(statLogTexts[i]);
     }
+}
+
+void UIManager::Reset()
+{
+    // 체력바 및 경험치바 초기화
+    hpBarFront.setSize({ 0.f, 20.f });
+    expBarFront.setSize({ 0.f, 10.f });
+
+    // 텍스트 초기화
+    hpText.setString("");
+    hpTextShadow.setString("");
+
+    levelText.setString("Lv.1");
+    levelTextShadow.setString("Lv.1");
+
+    timerText.setString("");
+    sf::FloatRect textBounds = timerText.getLocalBounds();
+    timerText.setOrigin(textBounds.width / 2.f, textBounds.height / 2.f);
+    timerText.setPosition(1920.f / 2.f, 70.f);
+
+    // 웨이브 타이머 초기화
+    waveClock.restart();
+    isWaveActive = true;
+
+    // 스탯 로그 초기화
+    statLogs.clear();
+    for (int i = 0; i < 3; ++i)
+    {
+        statLogTexts[i].setString(L"");
+    }
+
+    // 상점 UI 닫기
+    shopUI.Close();
 }
 
 

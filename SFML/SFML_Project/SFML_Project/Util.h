@@ -47,3 +47,9 @@ inline std::string GetscPath(const std::string& filename)
 {
 	return "../../Rjpg/Font/" + filename;
 }
+
+// 사운드 전용 상대경로
+inline std::string GetSoundPath(const std::string& filename)
+{
+	return "../../Rjpg/Sound/" + filename;
+}

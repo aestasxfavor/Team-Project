@@ -94,6 +94,24 @@ float PlayerStats::GetFinalAttackCooldown() const
 	return 99999.0f; // 공격 불가 또는 매우 긴 쿨타임.
 }
 
+void PlayerStats::Reset()
+{
+	maxHp = 100;
+	currentHp = 100;		// 플레이어 기본 체력 
+	damage = 5;
+	attackSpeed = 1.0f;
+	defense = 0;
+	critical = 0.0f;
+	moveSpeed = 1.0f;
+	attackRange = { 4.0f, 4.0f };
+	level = 1;
+	exp = 50;
+	currentExp = 0;
+
+	baseAttackSpeed = 1.0f;			//기본 공속 상태
+	totalAttackSpeed = 0.0f;		//추가 공속이라 없는 상태
+}
+
 PlayerStats::PlayerStats()
 {
 	maxHp = 100;

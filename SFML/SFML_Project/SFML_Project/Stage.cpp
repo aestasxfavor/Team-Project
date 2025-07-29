@@ -18,17 +18,6 @@ void Stage::Init()
 		stageManager->Init();  // 적 텍스처 등 초기화
 		
 	}
-
-	// charTex.loadFromFile(GetrscPath("player_cat.png"));
-	// SPplayer.setTexture(charTex);
-	// SPplayer.setTextureRect(sf::IntRect(0,40, 48, 48));
-
-
-
-	// sfml include 해서 세팅하거나 
-	// 그냥 초기화 진행 할거
-
-	//추가
 	view.setSize(1920.f, 1080.f);//화면으로 보여줄 뷰 크기 
 	
 }
@@ -47,15 +36,30 @@ void Stage::Update(float deltaTime)
 		HandlePlayerEnemyCollision();
 		auto& bullets = stageManager->GetBullets();
 		sf::FloatRect playerBounds = player->GetGlobalBounds();
+		//화면 밖으로 나가면 투사체가 사라지도록 하기 위한 화면크기 구하는 코드
+		sf::FloatRect viewBounds(
+			view.getCenter().x - view.getSize().x / 2.f,
+			view.getCenter().y - view.getSize().y / 2.f,
+			view.getSize().x,
+			view.getSize().y
+		);
+
 
 		for (int i = bullets.size() - 1; i >= 0; --i)
 		{
-
+			sf::FloatRect bulletBounds = bullets[i].sprite.getGlobalBounds();
 			if (playerBounds.intersects(bullets[i].sprite.getGlobalBounds()))
 			{
 				std::cout << "투사체 충돌! damage: " << bullets[i].damage << std::endl;
 				player->TakeDamage(bullets[i].damage); //직접 저장된 데미지를 사용
 				bullets.erase(bullets.begin() + i);    //투사체 제거
+			}
+			//투사체 화면나감
+			else if (!viewBounds.intersects(bulletBounds))
+			{
+				bullets.erase(bullets.begin() + i);
+				//cout << "적투사체 화면밖으로 나감" << endl;
+				continue;
 			}
 		}
 	}

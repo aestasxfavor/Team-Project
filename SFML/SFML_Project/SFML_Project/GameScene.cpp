@@ -1,7 +1,6 @@
 #include "GameScene.h"
 #include "PlayerStats.h"
-
-// 게임씬 문젠가 ㅅㅂ 해결햇다 시발 
+#include "SoundManager.h"
 
 GameScene::~GameScene()
 {
@@ -10,10 +9,13 @@ GameScene::~GameScene()
 
 void GameScene::Init()
 {
-	stage = new Stage();
-	stage->Init();
-
+	if (soundManager.LoadBGM(GetSoundPath("Stage_BGM_1.wav")))
+	{
+		soundManager.PlayBGM(true);
+	}
 	uiManager.Init(); // UI 매니저 초기화
+	stage = new Stage();  //  반드시 먼저 해줘야 함
+	stage->Init();
 	stage->stageManager->SetUIManager(&uiManager); // StageManager에 UI 매니저 설정
 	stage->player->uiManager = &uiManager;
 
@@ -111,4 +113,50 @@ void GameScene::Render(sf::RenderWindow& window)
 {
 	stage->Render(window);
 	uiManager.Render(window); // UI 매니저 렌더링
+}
+
+void GameScene::ResetGame()
+{
+	std::cout << "[리셋됨] GameScene::ResetGame() 호출됨!" << std::endl;
+	delete stage;
+	stage = new Stage();
+	stage->Init();
+
+	uiManager.Init();
+	stage->stageManager->SetUIManager(&uiManager);
+	stage->player->uiManager = &uiManager;
+
+	stage->stageManager->NextWave(*stage->player, uiManager, -1, {});
+	uiManager.ShowWaveText(stage->stageManager->GetCurrentWave());
+	uiManager.SetPlayer(stage->player);
+
+	uiManager.ResetWaveTimer();
+	clock.restart();
+
+	waveEnded = false;
+	waveEndTimer = 0.f;
+	wasShopOpen = false;
+	prevMousePressed = false;
+
+	if (stage->player->stats)
+		stage->player->stats->Reset();
+
+	Stage::killCount = 0;
+
+	// 상점 콜백도 다시 등록
+	uiManager.shopUI.SetOnSelect([this](int selectedIndex)
+		{
+			std::cout << "Selected Option : " << selectedIndex << std::endl;
+			uiManager.shopUI.Close();
+
+			if (selectedIndex != -1)
+			{
+				// 선택 능력 적용 로직
+			}
+
+			selectedStatChoices = uiManager.shopUI.GetSelectedChoices();
+			stage->stageManager->NextWave(*stage->player, uiManager, selectedIndex, selectedStatChoices);
+			uiManager.ResetWaveTimer();
+			uiManager.ShowWaveText(stage->stageManager->GetCurrentWave());
+		});
 }

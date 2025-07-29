@@ -101,5 +101,7 @@ public:
 	void CalculateFinalAttackSpeed();	// 모든 스탯 변화 시 호출해서 최종 공격 속도 갱신 함수
 	float GetFinalAttackCooldown() const; // 최종적으로 계산된 공격 쿨타임 반환(Player 클래스에서 사용할 예정)
 	float GetAttackSpeedPercentageBonus() const { return totalAttackSpeed; }
+
+	void Reset(); // 플레이어 상태 초기화 함수
 };
 
