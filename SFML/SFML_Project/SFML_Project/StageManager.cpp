@@ -15,7 +15,7 @@
 
 StageManager::StageManager()
 {
-    spawnInterval = 5.3f;    // 적 생성 간격을 5초로 설정
+    spawnInterval = 0.3f;    // 적 생성 간격을 5초로 설정
     spawnTimer = 0.f;       // 생성 타이머 초기화
     player = nullptr;
 	uiManager = nullptr; // UI 매니저 초기화
@@ -138,6 +138,10 @@ void StageManager::SpawnEnemy(sf::Vector2f playerPos)
         playerPos.y + sin(angle) * distance
     };
 
+    //근처생산방지코드
+    if (std::hypot(spawnPos.x - playerPos.x, spawnPos.y - playerPos.y) < 350.f)
+        return;
+    //300 
     Enemy* enemy = nullptr;
 
     int enemyType = rand() % 3;  // 2025-07-26 효 추가 : 3가지 적을 맵에 랜덤으로 생성
@@ -270,4 +274,33 @@ void StageManager::FireBullet(sf::Vector2f start, sf::Vector2f target, int damag
     b.damage = damage;  
 
     bullets.push_back(b);
+}
+
+//원형투사체
+void StageManager::FireBulletSpread(sf::Vector2f start)
+{
+    const int numBullets = 6; // 6방향
+    const float angleStep = 360.f / numBullets;
+
+    for (int i = 0; i < numBullets; ++i)
+    {
+        float angle = angleStep * i * 3.1415926f / 180.f; // 도 -> 라디안 변환
+        sf::Vector2f dir(std::cos(angle), std::sin(angle));
+
+        sf::Sprite bullet;
+        bullet.setTexture(bulletTexture);
+
+        int frame = rand() % 6;
+        bullet.setTextureRect(sf::IntRect(frame * 17, 0, 17, 17));
+        bullet.setOrigin(8.5f, 8.5f);
+        bullet.setPosition(start);
+        bullet.setScale(2.f, 2.f);
+
+        BulletData b;
+        b.sprite = bullet;
+        b.velocity = dir * bulletSpeed; // bulletSpeed는 StageManager 멤버
+        b.damage = 10; // 고정값 또는 enemy03에서 넘겨받도록 수정 가능
+
+        bullets.push_back(b);
+    }
 }

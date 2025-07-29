@@ -256,8 +256,14 @@ bool enemy03::CanFire(float dt)
 }
 
 // enemy03::TryFire
-void enemy03::TryFire(StageManager* manager, sf::Vector2f playerPos)
+//void enemy03::TryFire(StageManager* manager, sf::Vector2f playerPos)
+//{
+//    manager->FireBulletAtPlayer(GetPosition(), playerPos, atk);
+//}
+
+//원형투사체
+void enemy03::TryFire(StageManager* stageManager, sf::Vector2f playerPos)
 {
-    manager->FireBulletAtPlayer(GetPosition(), playerPos, atk);
+    stageManager->FireBulletSpread(GetPosition()); // 6방향 뿌리기
 }
 

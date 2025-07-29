@@ -47,15 +47,30 @@ void Stage::Update(float deltaTime)
 		HandlePlayerEnemyCollision();
 		auto& bullets = stageManager->GetBullets();
 		sf::FloatRect playerBounds = player->GetGlobalBounds();
+		//화면 밖으로 나가면 투사체가 사라지도록 하기 위한 화면크기 구하는 코드
+		sf::FloatRect viewBounds(
+			view.getCenter().x - view.getSize().x / 2.f,
+			view.getCenter().y - view.getSize().y / 2.f,
+			view.getSize().x,
+			view.getSize().y
+		);
+		
 
 		for (int i = bullets.size() - 1; i >= 0; --i)
 		{
-
+			sf::FloatRect bulletBounds = bullets[i].sprite.getGlobalBounds();
 			if (playerBounds.intersects(bullets[i].sprite.getGlobalBounds()))
 			{
 				std::cout << "투사체 충돌! damage: " << bullets[i].damage << std::endl;
 				player->TakeDamage(bullets[i].damage); //직접 저장된 데미지를 사용
 				bullets.erase(bullets.begin() + i);    //투사체 제거
+			}
+			//투사체 화면나감
+			else if (!viewBounds.intersects(bulletBounds))
+			{
+				bullets.erase(bullets.begin() + i);
+				//cout << "적투사체 화면밖으로 나감" << endl;
+				continue;
 			}
 		}
 	}
@@ -89,7 +104,7 @@ void Stage::HandlePlayerEnemyCollision()//충돌관련 (2025-07-21 준호님 추가)
 			player->TakeDamage(enemy->GetAtk());   // 플레이어가 받는 피해
 			//나중에 에너미 atk로 수정
 			
-			enemy->TakeDamage(player->stats->damage);   // 플레이어가 가하는 피해
+			//enemy->TakeDamage(player->stats->damage);   // 플레이어가 가하는 피해
 			
 			//나중에 무기에 넣을거면 재횔용될듯
 
