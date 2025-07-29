@@ -338,9 +338,9 @@ void UIManager::InitStatLogUI(sf::Font& font)
     for (int i = 0; i < 3; ++i)
     {
         statLogTexts[i].setFont(font);
-        statLogTexts[i].setCharacterSize(16);
+        statLogTexts[i].setCharacterSize(18);
         statLogTexts[i].setFillColor(sf::Color::White);
-        statLogTexts[i].setPosition(560.f, 30.f + i * 25.f);
+        statLogTexts[i].setPosition(1700.f, 30.f + i * 24.f);
     }
 }
 
@@ -348,12 +348,12 @@ void UIManager::InitStatLogUI(sf::Font& font)
 void UIManager::RenderStatLog(sf::RenderWindow& window)
 {
 
+    window.draw(statLogBox);
     for (int i = 0; i < statLogs.size(); i++)
     {
     std::wcout << L"[렌더링 직전 텍스트] " << statLogTexts[i].getString().toWideString() << std::endl;
         window.draw(statLogTexts[i]);
     }
-    window.draw(statLogBox);
 }
 
 

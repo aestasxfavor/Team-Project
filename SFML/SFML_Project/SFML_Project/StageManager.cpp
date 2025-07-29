@@ -274,20 +274,24 @@ void StageManager::NextWave(Player& player, UIManager& uiManager, int selectedIn
     if (selectedIndex >= 0 && selectedIndex < selectedChoices.size())
     {
         player.stats->ApplyStat(selectedChoices[selectedIndex]);
+         
 
-        std::wstring statName;
+        wstringstream ss;
+        ss << std::fixed << std::setprecision(2);
 
         switch (selectedChoices[selectedIndex].type)
         {
-        case StatType::MAXHP: statName = L"체력 +" + std::to_wstring(selectedChoices[selectedIndex].amount); break;
-        case StatType::DAMAGE: statName = L"공격력 +" + std::to_wstring(selectedChoices[selectedIndex].amount); break;
-        case StatType::DEFENSE: statName = L"방어력 +" + std::to_wstring(selectedChoices[selectedIndex].amount); break;
-        case StatType::ATTACKSPEED: statName = L"공격속도 +" + std::to_wstring(selectedChoices[selectedIndex].amount); break;
-        case StatType::MOVESPEED: statName = L"이동속도 +" + std::to_wstring(selectedChoices[selectedIndex].amount); break;
-        case StatType::CRITICAL: statName = L"크리티컬 +" + std::to_wstring(selectedChoices[selectedIndex].amount); break;
-        default: statName = L"기타";
+        case StatType::MAXHP: ss << L"체력 +" << selectedChoices[selectedIndex].amount; break;
+        case StatType::DAMAGE: ss << L"공격력 +" << selectedChoices[selectedIndex].amount; break;
+        case StatType::DEFENSE: ss << L"방어력 +" << selectedChoices[selectedIndex].amount; break;
+        case StatType::ATTACKSPEED: ss << L"공격속도 +" << selectedChoices[selectedIndex].amount;  break;
+        case StatType::MOVESPEED:  ss << L"이동속도 +" << selectedChoices[selectedIndex].amount; break;
+        case StatType::CRITICAL: ss << L"크리티컬 +" << selectedChoices[selectedIndex].amount; break;
+        default: ss << L"기타"; break;
+           
         }
 
+        wstring statName = ss.str();
         uiManager.AddStatLog(statName);
     }
 
