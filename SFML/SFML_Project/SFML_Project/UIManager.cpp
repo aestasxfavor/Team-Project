@@ -14,8 +14,8 @@ void UIManager::Init()
 
     statusShadowText();  //  이거 추가해줘야 그림자 텍스트도 초기화됨
 
+	InitStatLogUI(font); // 스탯 로그 UI 초기화
 	shopUI.Init(font); // 상점 UI 초기화
-	//InitStatLogUI(font); // 스탯 로그 UI 초기화
 
     // player가 Init() 전에 아직 nullptr 아니면 SetPlayer() 함수 안에서 등록하기
     if (player != nullptr)
@@ -78,7 +78,7 @@ void UIManager::Render(sf::RenderWindow& window)
 
 	// 5. 상점 UI 그리기
     RenderShop(window);
-    //RenderStatLog(window);
+    RenderStatLog(window);
     // 6. 원래 뷰 복원
     window.setView(originalView);
 }
@@ -329,11 +329,11 @@ void UIManager::AddStatLog(const std::wstring& log)
 
 void UIManager::InitStatLogUI(sf::Font& font)
 {
-    statLogBox.setSize({ 220.f, 100.f });
+    statLogBox.setSize({ 240.f, 120.f });
     statLogBox.setFillColor(sf::Color(30, 30, 30, 200)); // 반투명한 회색
     statLogBox.setOutlineColor(sf::Color::White);
     statLogBox.setOutlineThickness(2.f);
-    statLogBox.setPosition(550.f, 20.f); // 오른쪽 상단
+    statLogBox.setPosition(1650.f, 20.f); // 오른쪽 상단
 
     for (int i = 0; i < 3; ++i)
     {
@@ -344,13 +344,16 @@ void UIManager::InitStatLogUI(sf::Font& font)
     }
 }
 
+
 void UIManager::RenderStatLog(sf::RenderWindow& window)
 {
-    window.draw(statLogBox);
+
     for (int i = 0; i < statLogs.size(); i++)
     {
+    std::wcout << L"[렌더링 직전 텍스트] " << statLogTexts[i].getString().toWideString() << std::endl;
         window.draw(statLogTexts[i]);
     }
+    window.draw(statLogBox);
 }
 
 

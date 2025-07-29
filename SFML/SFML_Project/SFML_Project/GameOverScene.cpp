@@ -15,7 +15,7 @@ void GameOverScene::Init()
     {
         std::cerr << "폰트 로딩 실패!" << std::endl;
     }
-    //font.loadFromFile(GetrscPath("Font/BMJUA_ttf.ttf"));
+  
 
     gameOverText.setFont(font);
     gameOverText.setString("Game Over");
@@ -29,10 +29,7 @@ void GameOverScene::Init()
     restartText.setFillColor(sf::Color::White);
     restartText.setPosition(300, 300);
 
-    //sf::View defaultView;
-    //defaultView.setSize(800, 600);            // 너희 창 사이즈로
-    //defaultView.setCenter(800 / 2, 600 / 2);  // 가운데 정렬
-    //window.setView(defaultView);   // 또는 window.setView(...) 방식으로
+    
 }
 
 void GameOverScene::Update(sf::RenderWindow& window)
@@ -47,7 +44,8 @@ void GameOverScene::Update(sf::RenderWindow& window)
         SceneManager::ChangeScene("Title"); //  타이틀 화면으로 전환!
     }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) 
+    {
         window.close(); // 게임 종료
     }
 

@@ -32,18 +32,41 @@ void TitleScene::Init()
         // 폰트 & 텍스트
         font.loadFromFile(GetrscPath("Font/BMJUA_ttf.ttf"));
 
+  //      titleText.setFont(font);
+  //      titleText.setString("Meowbellion");
+  //      titleText.setCharacterSize(60);
+  //      titleText.setFillColor(sf::Color::Black);
+  //      titleText.setPosition(1920.f/2.f, 1080.f/2.f);
+
+  //      startText.setFont(font);
+  //      startText.setString("<Press Enter to Start>");
+		////startText.setString(L"엔터키.");       // 한글 쓰는 방법 : L"문자열"
+  //      startText.setCharacterSize(30);
+  //      startText.setFillColor(sf::Color::Black);
+  //      startText.setPosition(1920.f/2.f, 1080.f/2.f);
+
+        // 제목 텍스트 (중앙 정렬)
         titleText.setFont(font);
         titleText.setString("Meowbellion");
-        titleText.setCharacterSize(60);
+        titleText.setCharacterSize(80);
         titleText.setFillColor(sf::Color::Black);
-        titleText.setPosition(250, 200);
 
+        // 텍스트의 바운딩 박스를 기준으로 중심점을 origin으로 설정
+        sf::FloatRect titleBounds = titleText.getLocalBounds();
+        titleText.setOrigin(titleBounds.left + titleBounds.width / 2.0f, titleBounds.top + titleBounds.height / 2.0f);
+        titleText.setPosition(1920.f / 2.f, 1080.f / 2.f - 30.f);  // 살짝 위로
+
+        // 시작 텍스트 (중앙 정렬)
         startText.setFont(font);
         startText.setString("<Press Enter to Start>");
-		//startText.setString(L"엔터키.");       // 한글 쓰는 방법 : L"문자열"
-        startText.setCharacterSize(30);
+        startText.setCharacterSize(50);
         startText.setFillColor(sf::Color::Black);
-        startText.setPosition(250, 300);
+
+        // origin 설정
+        sf::FloatRect startBounds = startText.getLocalBounds();
+        startText.setOrigin(startBounds.left + startBounds.width / 2.0f, startBounds.top + startBounds.height / 2.0f);
+        startText.setPosition(1920.f / 2.f, 1080.f / 2.f + 60.f);  // 살짝 아래로
+
     
 }
 

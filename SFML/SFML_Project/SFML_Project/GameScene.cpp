@@ -1,6 +1,8 @@
 #include "GameScene.h"
 #include "PlayerStats.h"
 
+// 게임씬 문젠가 ㅅㅂ 해결햇다 시발 
+
 GameScene::~GameScene()
 {
 	delete stage; // Stage 객체 삭제
@@ -38,6 +40,7 @@ void GameScene::Init()
 			}
 
 			// 어쨌든 다음 웨이브는 시작
+			selectedStatChoices = uiManager.shopUI.GetSelectedChoices();		// 텍스트가 안나왓던 이유 : 이걸 안써줌;;;;;
 			stage->stageManager->NextWave(*stage->player, uiManager, selectedIndex, selectedStatChoices);
 			uiManager.ResetWaveTimer();
 			uiManager.ShowWaveText(stage->stageManager->GetCurrentWave());

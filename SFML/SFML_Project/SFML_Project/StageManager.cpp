@@ -271,7 +271,7 @@ void StageManager::NextWave(Player& player, UIManager& uiManager, int selectedIn
     std::cout << "[StageManager] Wave " << currentWave << " 시작!" << std::endl;
 
     // 선택된 스탯 적용
-    /*if (selectedIndex >= 0 && selectedIndex < selectedChoices.size())
+    if (selectedIndex >= 0 && selectedIndex < selectedChoices.size())
     {
         player.stats->ApplyStat(selectedChoices[selectedIndex]);
 
@@ -289,7 +289,7 @@ void StageManager::NextWave(Player& player, UIManager& uiManager, int selectedIn
         }
 
         uiManager.AddStatLog(statName);
-    }*/
+    }
 
     // 플레이어 체력 초기화
     if (player.stats)

@@ -14,7 +14,6 @@ private:
 
 	Player* player; // 플레이어 객체 포인터 (has - a 관계)
 	PlayerStats* stats;
-	//vector<StatOption>* option;
 
 	sf::Font font;
 	sf::Text timerText;
