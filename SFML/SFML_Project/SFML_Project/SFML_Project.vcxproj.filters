@@ -18,28 +18,16 @@
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="DropItem.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="DropManager.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Enemy.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="StageManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Inventory.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Map.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Skill.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Stage.cpp">
@@ -86,25 +74,10 @@
     <ClInclude Include="Util.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="DropItem.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="DropManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="EffectManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Inventory.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Map.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Skill.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Stage.h">
@@ -120,15 +93,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="StageManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="WaveManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="CameraManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Item.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Game.h">

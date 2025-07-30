@@ -1,8 +1,6 @@
 #pragma once
 #include "Util.h"
-#include "Inventory.h"
 
-#include "Skill.h"
 #include "PlayerStats.h"
 
 // 전방선언햇는데 얘네가 왜 잇어야하는지.. 모르겟음 판단 보류
@@ -22,8 +20,6 @@ class Player
 {
 public:
 	float speed;
-
-	Inventory* inven;
 	Spear* spear = nullptr;
 	float spearCoolTime = 0.f;
 
@@ -44,12 +40,13 @@ public:
 	std::vector<Bullet*> bullets;
 
 				// 이거 생성자 Cpp로 옮길 시 같이 옮겨 주세엽		// 2025-07-24 01:13분 효 추가 : 이거 옮길 필요가..있나? 일단 보류 내일 상의해서 하기 
-	Player(): stats(),currentAttackCoolTime(0.0f)
+	Player(): stats(nullptr),currentAttackCoolTime(0.0f)
 	{
 	}
 	~Player()
 	{
-
+		delete stats;
+		// 소멸자 구현잇다가 하고 
 	}
 
 	void Init();
@@ -60,9 +57,7 @@ public:
 	void LevelUp(); // 미니 추가 : 이거 안써도 될 듯?? PlayerStat에서 하니까
 
 	void Attack();
-	void UseSkill(int slot); // 키 입력 받고 키를 매개변수로 해당하는 값에 따라 스킬 실행
-							 // update안에다가 키입력 조건 걸어서 UseSkill() 해놓고 누른 버튼 변환해서 또는 enum으로
-							 // 그 인수를 int slot으로 넣기
+	
 	void Death(); // 플레이어가 죽었을 때 호출되는 함수
 
 	void Attack(const std::vector<Enemy*>& enemies);

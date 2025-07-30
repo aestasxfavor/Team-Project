@@ -310,7 +310,7 @@ void Player::TakeDamage(int amount)		// 2025-07-26 효 추가 : 플레이어가 데미지 �
 	if (isInvincible || isDead)
 		return;
 
-	stats->currentHp -= amount;
+	stats->currentHp -= amount;		// 방어력 수정
 	if (stats->currentHp < 0)
 		stats->currentHp = 0;
 

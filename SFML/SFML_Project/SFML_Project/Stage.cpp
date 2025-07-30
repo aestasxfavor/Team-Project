@@ -25,10 +25,7 @@ void Stage::Init()
 
 void Stage::Update(float deltaTime)
 {
-	// enemyManager.update();
-	// dropManager.update();
-	// uiManager.update();
-	// effectManager.update();
+	
 	//Ãß°¡
 	if (stageManager)
 	{

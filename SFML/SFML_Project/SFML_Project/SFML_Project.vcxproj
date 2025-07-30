@@ -131,8 +131,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Bullet.cpp" />
-    <ClCompile Include="DropItem.cpp" />
-    <ClCompile Include="DropManager.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="GameOverScene.cpp" />
     <ClCompile Include="GameScene.cpp" />
@@ -143,22 +141,16 @@
     <ClCompile Include="Spear.cpp" />
     <ClCompile Include="StageManager.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerStats.cpp" />
-    <ClCompile Include="Skill.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bullet.h" />
-    <ClInclude Include="CameraManager.h" />
-    <ClInclude Include="DropItem.h" />
-    <ClInclude Include="DropManager.h" />
-    <ClInclude Include="EffectManager.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="GameOverScene.h" />
     <ClInclude Include="Scene.h" />
@@ -168,18 +160,14 @@
     <ClInclude Include="StageManager.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameScene.h" />
-    <ClInclude Include="Inventory.h" />
-    <ClInclude Include="Item.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerStats.h" />
     <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="Skill.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="UIManager.h" />
     <ClInclude Include="Util.h" />
-    <ClInclude Include="WaveManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
