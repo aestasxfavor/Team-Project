@@ -137,7 +137,11 @@ void StageManager::SpawnEnemy(sf::Vector2f playerPos)
 		playerPos.y + sin(angle) * distance
 	};
 
+
+	if (std::hypot(spawnPos.x - playerPos.x, spawnPos.y - playerPos.y) < 350.f)
+		return;
 	Enemy* enemy = nullptr;
+
 
 	int enemyType = rand() % 3;  // 2025-07-26 효 추가 : 3가지 적을 맵에 랜덤으로 생성
 	//std::cout << "spawn type = " << enemyType << std::endl;

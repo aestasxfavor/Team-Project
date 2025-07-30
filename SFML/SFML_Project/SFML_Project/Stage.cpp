@@ -90,6 +90,7 @@ void Stage::HandlePlayerEnemyCollision()//충돌관련 (2025-07-21 준호님 추가)
 			player->TakeDamage(enemy->GetAtk());   // 플레이어가 받는 피해
 			//나중에 에너미 atk로 수정
 			
+
 			enemy->TakeDamage(player->stats->damage);   // 플레이어가 가하는 피해
 			
 			//나중에 무기에 넣을거면 재횔용될듯

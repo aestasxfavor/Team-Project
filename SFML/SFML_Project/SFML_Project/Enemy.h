@@ -63,7 +63,9 @@ private:
     sf::Vector2i frameSize = { 64, 64 };
 
     float bulletTimer = 0.f;
-    float bulletCooldown = 2.0f;//발사쿨타임
+
+    float bulletCooldown = 999.0f;//발사쿨타임
+
 };
 
 // ======================= enemy02 클래스 ==========================
@@ -83,7 +85,9 @@ private:
     sf::Vector2i frameSize = { 64, 64 };
 
     float bulletTimer = 0.f;
-    float bulletCooldown = 2.0f;//발사쿨타임
+
+    float bulletCooldown = 3.0f;//발사쿨타임
+
 };
 
 // ======================= enemy03 클래스 ==========================
@@ -104,5 +108,7 @@ private:
     sf::Vector2i frameSize = { 64, 64 };
 
     float bulletTimer = 0.f;
-    float bulletCooldown = 2.0f;//발사쿨타임
+
+    float bulletCooldown = 5.0f;//발사쿨타임
+
 };
