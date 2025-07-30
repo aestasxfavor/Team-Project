@@ -156,3 +156,11 @@ void ShopUI::SetOnClose(std::function<void()> callback)
 {
     onCloseCallback = callback;
 }
+
+
+void ShopUI::ClearSelectedChoices()
+{
+	selectedStatChoices.clear();
+	selectedIndex = -1;  // 선택 초기화
+	std::cout << "[ShopUI] 선택된 스탯 초기화됨" << std::endl;
+}

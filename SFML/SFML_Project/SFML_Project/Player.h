@@ -84,11 +84,17 @@ public:
 	float blinkTimer = 0.f;
 	float blinkInterval = 0.1f; // 0.1초마다 깜빡
 	bool visible = true; // 현재 보이는 상태
+
+	void SetPosition(const sf::Vector2f& pos);
 private:
 	float animationTimer = 0.f;   // 누적된 애니메이션 시간
 	float frameDuration = 0.2f;   // 한 프레임당 지속 시간 (초)
 	int currentFrame = 0;
 	//추가
 	std::vector<sf::IntRect> walkFrames;
+
+	
+
+
 };
 

@@ -64,7 +64,7 @@ private:
 
     float bulletTimer = 0.f;
 
-    float bulletCooldown = 999.0f;//발사쿨타임
+    float bulletCooldown = 2.0f;//발사쿨타임
 
 };
 
@@ -109,6 +109,6 @@ private:
 
     float bulletTimer = 0.f;
 
-    float bulletCooldown = 5.0f;//발사쿨타임
+    float bulletCooldown = 3.0f;//발사쿨타임
 
 };

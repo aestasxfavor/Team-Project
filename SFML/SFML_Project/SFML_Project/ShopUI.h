@@ -43,6 +43,7 @@ public:
 
     const std::vector<PlayerStats::StatOption>& GetSelectedChoices() const { return selectedStatChoices; }
 
+    void ClearSelectedChoices();
     
 };
 

@@ -1,110 +1,139 @@
 #pragma once
 #include "Util.h"
 #include "ShopUI.h"
-#include "Player.h" // Player 클래스 필요
-
-// 2025-07-22 효 추가 : 정확하지 않음 
+#include "Player.h"  // Player 클래스 참조 필요
 
 class Player;
 class PlayerStats;
 
+// UIManager: 전체 게임 UI를 통합 관리하는 클래스
+// - 체력/경험치 바, 웨이브 타이머, 일시정지, 상점, 스탯 로그 등 포함
+
 class UIManager
 {
 private:
+    // ---------------------- 기본 객체 ----------------------
 
-	Player* player; // 플레이어 객체 포인터 (has - a 관계)
-	PlayerStats* stats;
+    Player* player;             // 플레이어 객체 포인터 (has-a 관계)
+    PlayerStats* stats;         // 플레이어 스탯
 
-	sf::Font font;
-	sf::Text timerText;
-	sf::Text titleText;
-	sf::Text startText;
-	sf::Text gameOverText;
+    sf::Font font;              // 공통 폰트
 
-	// 웨이브 관련 변수들
-	sf::Text waveText;        // 웨이브 표시용 텍스트
-	float waveTextTimer = 0.f; // 웨이브 텍스트 표시 시간
-	bool showWaveText = false; // 웨이브 텍스트 출력 여부
+    // ---------------------- 텍스트 요소 ----------------------
 
-	// 타이머 관련 변수들
-	sf::Clock waveClock;  // 웨이브 30초 타이머용
-	bool isWaveActive = false;  // 웨이브 타이머 동작 여부
+    sf::Text timerText;         // 웨이브 타이머 텍스트
+    sf::Text titleText;         // 타이틀 화면용 텍스트
+    sf::Text startText;         // 시작 안내 텍스트
+    sf::Text gameOverText;      // 게임 오버 텍스트
 
-	// 플레이어 체력관련 변수들
-	sf::RectangleShape hpBarBack;     // 체력 바 배경 (검은색 or 회색)
-	sf::RectangleShape hpBarFront;    // 체력 바 실제 체력 (빨간색)
+    // ---------------------- 웨이브 관련 ----------------------
 
-	sf::RectangleShape expBarBack;    // 경험치 바 배경
-	sf::RectangleShape expBarFront;   // 경험치 바 현재값
+    sf::Text waveText;          // 웨이브 넘버 텍스트
+    float waveTextTimer = 0.f;  // 웨이브 텍스트 표시 타이머
+    bool showWaveText = false;  // 웨이브 텍스트 출력 여부
 
-	sf::Text hpText;                  // "9 / 20" 같은 체력 수치
-	sf::Text levelText;              // "Lv.7" 이런 거
+    sf::Clock waveClock;        // 웨이브 타이머
+    bool isWaveActive = false;  // 웨이브 타이머 작동 여부
 
-	sf::Sprite profileIcon;          // 원형 캐릭터 프로필 이미지
-	sf::Texture profileTexture;
+    // ---------------------- 체력/경험치 UI ----------------------
 
-	// 그림자 효과를 위한 텍스트
-	sf::Text hpTextShadow;
-	sf::Text levelTextShadow;
+    sf::RectangleShape hpBarBack;    // 체력바 배경
+    sf::RectangleShape hpBarFront;   // 체력바 실제 값
 
-	// 스탯 로그 관련
-	vector<wstring> statLogs;        // 최근 선택 스탯들
-	sf::RectangleShape statLogBox;            // 로그 감싸는 네모박스
-	sf::Text statLogTexts[3];                 // 로그 출력 텍스트들 (최대 3개)
+    sf::RectangleShape expBarBack;   // 경험치바 배경
+    sf::RectangleShape expBarFront;  // 경험치바 실제 값
 
+    sf::Text hpText;            // 체력 수치 (ex. "9 / 20")
+    sf::Text levelText;         // 레벨 수치 (ex. "Lv.5")
 
+    sf::Sprite profileIcon;     // 플레이어 프로필 이미지
+    sf::Texture profileTexture; // 프로필 이미지 텍스처
 
-	float currentExpRatio = 0.f;  // 실제 exp보다 약간 느리게 따라가는 느낌
-	float targetExpRatio = 0.f;   // 실제 exp 값 (0~1)
+    // 그림자 효과용 텍스트
+    sf::Text hpTextShadow;
+    sf::Text levelTextShadow;
 
+    // 경험치 애니메이션용 비율
+    float currentExpRatio = 0.f;
+    float targetExpRatio = 0.f;
 
-	// 2025-07-22 효 추가 : UI는 미래의 내가 하나? 하겠지... ㅠ 
-	// 일단 필요한거
-	// 30초 버티면 다음웨이브니까 시간 띄우기 -> 이걸 해야하나
-	// 아 소리도 넣어야하구나 -> 확인... 사운드를 어디서... 
-	// 타이틀 -> 게임시작 -> 게임종료 띄우기 
+    // ---------------------- 스탯 로그 UI ----------------------
+
+    std::vector<std::wstring> statLogs;  // 최근 선택 스탯 로그
+    sf::RectangleShape statLogBox;       // 로그 감싸는 네모 UI
+    sf::Text statLogTexts[3];            // 최근 3개 스탯 로그 출력용
+
+    // ---------------------- 일시정지 UI ----------------------
+
+    bool isPaused = false;          // 일시정지 상태
+    bool prevEscPressed = false;    // 이전 ESC 입력 상태
+    bool prevMousePressed = false;  // 이전 마우스 입력 상태
+
+    sf::RectangleShape pauseBox;    // 일시정지 네모 박스
+    sf::Text resumeText;            // "계속하기"
+    sf::Text exitText;              // "나가기"
+
+    float elapsedBeforePause = 0.f; // 일시정지 전 누적 시간
+    bool isWavePaused = false;      // 웨이브 일시정지 여부
+
 public:
-	ShopUI shopUI; // 상점 UI 객체 (has - a 관계)
-public:
-	void Init();
-	void Update(float dt);
-	void Render(sf::RenderWindow& window);
+    // ---------------------- 상점 UI ----------------------
 
-	void InitTimeText(); // 타이머 텍스트 초기화 (void 함수)
-	void InitWaveText(); // 웨이브 텍스트 초기화 (void 함수)
-	void InitStatusUIBar(); // 체력바 초기화 (void 함수)
-	void statusShadowText(); // 체력바 그림자 텍스트 초기화 (void 함수)
-	void UpdateWaveTimerText(); // 웨이브 텍스트 업데이트 (void 함수)
+    ShopUI shopUI; // 상점 UI 객체 (has-a 관계)
 
-	void ResetWaveTimer();               // 타이머 리셋 (void 함수)
-	float GetWaveElapsedTime() const;   // 경과 시간 반환 (float 함수)
+    // ---------------------- 함수 선언 ----------------------
 
-	void ShowWaveText(int wave);  // 웨이브 넘길 때 호출
+    // 전체 UI 초기화
+    void Init();
 
-	void SetPlayer(Player* _player);  // 플레이어 설정 (void 함수)
-	void UpdateHPBar(int currentHp, int maxHp); // 체력바 업데이트 (void 함수)
+    // 프레임 단위 UI 갱신
+    void Update(float dt);
 
-	sf::Color GetHPColor(float ratio); // ratio = currentHp / maxHp
-	sf::Color GetExpColor(float ratio); // ratio = currentHp / maxHp
-	void UpdateExpBar(int currentExp, int maxExp); // 경험치 바 업데이트 (void 함수)
+    // UI 렌더링
+    void Render(sf::RenderWindow& window);
 
-	void InitShop(PlayerStats& playerStats);
-	void OpenShop(PlayerStats& playerStats);
-	void UpdateShop(const sf::Vector2f& pos, bool isClick);
-	void RenderShop(sf::RenderWindow& window);		// 상점 UI 렌더링 (void 함수)
+    // 체력/경험치 관련
+    void InitStatusUIBar();
+    void UpdateHPBar(int currentHp, int maxHp);
+    void UpdateExpBar(int currentExp, int maxExp);
+    void SetPlayer(Player* _player);
 
-	bool IsShopOpen() const;
+    // 체력/레벨 그림자 텍스트 초기화
+    void statusShadowText();
 
-	// 스탯 로그 추가 함수
-	void AddStatLog(const wstring& log);
+    // 타이머/웨이브 관련
+    void InitTimeText();
+    void InitWaveText();
+    void UpdateWaveTimerText();
+    void ResetWaveTimer();
+    float GetWaveElapsedTime() const;
+    void ResumeWaveTimer();
+    void PauseWaveTimer();
+    void ShowWaveText(int wave);
 
-	// Init에서 호출할 스탯 로그 초기화 함수
-	void InitStatLogUI(sf::Font& font);
+    // 일시정지 관련
+    void InitPauseUI();
+    void RenderPauseUI(sf::RenderWindow& window);
+    bool IsMouseOverResume(const sf::Vector2f& mousePos);
+    bool IsMouseOverExit(const sf::Vector2f& mousePos);
+    void SetPaused(bool paused);
 
-	// Render 안에 넣을 함수 (혹은 직접 Render에서 출력해도 됨)
-	void RenderStatLog(sf::RenderWindow& window);
+    // 상점 관련
+    void InitShop(PlayerStats& playerStats);
+    void OpenShop(PlayerStats& playerStats);
+    void UpdateShop(const sf::Vector2f& pos, bool isClick);
+    void RenderShop(sf::RenderWindow& window);
+    bool IsShopOpen() const;
 
-	void Reset(); // UI 초기화 (void 함수)
+    // 스탯 로그 관련
+    void AddStatLog(const std::wstring& log);
+    void InitStatLogUI(sf::Font& font);
+    void RenderStatLog(sf::RenderWindow& window);
 
+    // 전체 UI 상태 초기화 (리셋용)
+    void Reset();
+
+    void ClearStatLog();
 };
+
 

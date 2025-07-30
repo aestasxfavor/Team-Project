@@ -1,12 +1,10 @@
 #include "StageManager.h"
-
 #include "UIManager.h"
-
 #include "Enemy.h"
 #include "Player.h"
 #include "Stage.h"
-
 #include "PlayerStats.h"
+#include "SoundManager.h"
 
 
 
@@ -22,6 +20,7 @@ StageManager::StageManager()
 	spawnTimer = 0.f;       // 생성 타이머 초기화
 	player = nullptr;
 	uiManager = nullptr; // UI 매니저 초기화
+	soundManager.LoadAttackSound(GetSoundPath("Defensed_Vert.wav"));
 }
 
 
@@ -79,7 +78,8 @@ void StageManager::Update(float dt, sf::Vector2f playerPos)
 	{
 		player->Attack(enemies); // 1초마다 발사
 		shootTimer = 0.f ;
-		 // 밑에 이거 맞나..? 이걸 위거에다 더하라구요???
+		
+		soundManager.PlayAttackSound(); // 플레이어 공격 사운드 재생
 	}
 
 	// 역순으로 적 리스트 순회 (삭제 안정성 확보)
@@ -275,16 +275,58 @@ void StageManager::Reset()
 	shootTimer = 0.f;
 }
 
+void StageManager::SetResetting(bool value)
+{
+	isResetting = value;
+}
+
+bool StageManager::IsResetting() const
+{
+	return isResetting;
+}
+
 void StageManager::NextWave(Player& player, UIManager& uiManager, int selectedIndex, const vector<PlayerStats::StatOption>& selectedChoices)
 {
 	currentWave++;
 	std::cout << "[StageManager] Wave " << currentWave << " 시작!" << std::endl;
 
 	// 선택된 스탯 적용
-	if (selectedIndex >= 0 && selectedIndex < selectedChoices.size())
+	//if (selectedIndex >= 0 && selectedIndex < selectedChoices.size())
+	//{
+	//	player.stats->ApplyStat(selectedChoices[selectedIndex]);
+
+
+	//	wstringstream ss;
+	//	ss << std::fixed << std::setprecision(2);
+
+	//	switch (selectedChoices[selectedIndex].type)
+	//	{
+	//	case StatType::MAXHP: ss << L"체력 + " << selectedChoices[selectedIndex].amount; break;
+	//	case StatType::DAMAGE: ss << L"공격력 + " << selectedChoices[selectedIndex].amount; break;
+	//	case StatType::DEFENSE: ss << L"방어력 + " << selectedChoices[selectedIndex].amount; break;
+	//	case StatType::ATTACKSPEED: ss << L"공격속도 + " << selectedChoices[selectedIndex].amount;  break;
+	//	case StatType::MOVESPEED:  ss << L"이동속도 + " << selectedChoices[selectedIndex].amount; break;
+	//	case StatType::CRITICAL: ss << L"크리티컬 + " << selectedChoices[selectedIndex].amount; break;
+	//	default: ss << L"기타"; break;
+
+	//	}
+
+	//	wstring statName = ss.str();
+	//	uiManager.AddStatLog(statName);
+	//}
+
+	//// 플레이어 체력 초기화
+	//if (player.stats)
+	//{
+	//	player.stats->currentHp = player.stats->maxHp;
+	//}
+
+	//// 적 생성
+	//SpawnEnemiesForWave(currentWave);
+
+	if (!IsResetting() && selectedIndex >= 0 && selectedIndex < selectedChoices.size())
 	{
 		player.stats->ApplyStat(selectedChoices[selectedIndex]);
-
 
 		wstringstream ss;
 		ss << std::fixed << std::setprecision(2);
@@ -294,26 +336,24 @@ void StageManager::NextWave(Player& player, UIManager& uiManager, int selectedIn
 		case StatType::MAXHP: ss << L"체력 + " << selectedChoices[selectedIndex].amount; break;
 		case StatType::DAMAGE: ss << L"공격력 + " << selectedChoices[selectedIndex].amount; break;
 		case StatType::DEFENSE: ss << L"방어력 + " << selectedChoices[selectedIndex].amount; break;
-		case StatType::ATTACKSPEED: ss << L"공격속도 + " << selectedChoices[selectedIndex].amount;  break;
+		case StatType::ATTACKSPEED: ss << L"공격속도 + " << selectedChoices[selectedIndex].amount; break;
 		case StatType::MOVESPEED:  ss << L"이동속도 + " << selectedChoices[selectedIndex].amount; break;
 		case StatType::CRITICAL: ss << L"크리티컬 + " << selectedChoices[selectedIndex].amount; break;
 		default: ss << L"기타"; break;
-
 		}
 
 		wstring statName = ss.str();
 		uiManager.AddStatLog(statName);
 	}
 
-	// 플레이어 체력 초기화
+	// 체력 회복
 	if (player.stats)
 	{
 		player.stats->currentHp = player.stats->maxHp;
 	}
 
-	// 적 생성
 	SpawnEnemiesForWave(currentWave);
-	//uiManager.UpdateHPBar(player.stats->currentHp, player.stats->maxHp);
+	
 
 }
 

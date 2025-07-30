@@ -8,60 +8,60 @@
 // 생성자
 Enemy::Enemy(sf::Texture& texture, sf::Vector2f spawnPos)
 {
-    sprite.setTexture(texture);
-    sprite.setPosition(spawnPos);
-    sprite.setOrigin(texture.getSize().x / 2.f, texture.getSize().y / 2.f);
-    sprite.setScale(scale);  // 디폴트값
+	sprite.setTexture(texture);
+	sprite.setPosition(spawnPos);
+	sprite.setOrigin(texture.getSize().x / 2.f, texture.getSize().y / 2.f);
+	sprite.setScale(scale);  // 디폴트값
 }
 
 // 기본 이동 로직
 void Enemy::Update(float dt, sf::Vector2f playerPos)
 {
-    sf::Vector2f dir = playerPos - sprite.getPosition();
-    //cout << sprite.getPosition().x << " , " << sprite.getPosition().y << endl;
-    float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
-    if (len != 0) dir /= len;
+	sf::Vector2f dir = playerPos - sprite.getPosition();
+	//cout << sprite.getPosition().x << " , " << sprite.getPosition().y << endl;
+	float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+	if (len != 0) dir /= len;
 
-    sprite.move(dir * speed * dt);
+	sprite.move(dir * speed * dt);
 }
 
 // 그리기
 void Enemy::Draw(sf::RenderWindow& window)
 {
-    window.draw(sprite);
+	window.draw(sprite);
 }
 
 // 피격 처리
 void Enemy::TakeDamage(int amount)
 {
-    hp -= amount;          // 데미지 만큼 체력 차감
+	hp -= amount;          // 데미지 만큼 체력 차감
 
-    if (hp <= 0)           // 체력 0 이하이면
-        dead = true;       // 죽음 표시
+	if (hp <= 0)           // 체력 0 이하이면
+		dead = true;       // 죽음 표시
 
 }
 
 // 사망 여부
 bool Enemy::IsDead() const
 {
-    return dead;
+	return dead;
 }
 
 Enemy::~Enemy()
 {
-    // std::cout << "  작동!" << std::endl;
+	// std::cout << "  작동!" << std::endl;
 }
 
 // 공격력 반환
 int Enemy::GetAtk() const
 {
-    return atk;
+	return atk;
 }
 
 // 충돌 영역
 sf::FloatRect Enemy::GetGlobalBounds() const
 {
-    return sprite.getGlobalBounds();
+	return sprite.getGlobalBounds();
 }
 
 
@@ -70,74 +70,75 @@ sf::FloatRect Enemy::GetGlobalBounds() const
 // 위치 반환
 sf::Vector2f Enemy::GetPosition() const
 {
-    return sprite.getPosition();
+	return sprite.getPosition();
 }
 
 // 기본적으로 발사 안 함
 bool Enemy::CanFire(float dt)
 {
-    return false;
+	return false;
 }
 
 // 기본적으로 발사 안 함
 void Enemy::TryFire(StageManager* manager, sf::Vector2f playerPos)
 {
-    // 기본 적은 아무것도 안 함
+	// 기본 적은 아무것도 안 함
 }
 
 // ======================= enemy01 ==========================
 
 // enemy01 생성자
 enemy01::enemy01(sf::Texture& texture, sf::Vector2f spawnPos)
-    : Enemy(texture, spawnPos)
+	: Enemy(texture, spawnPos)
 {
-    hp = 15;
-    atk = 5;
-    speed = 70.f;
+	hp = 15;
+	atk = 5;
+	//atk = 99; // 테스트용으로 공격력 99로 설정
+	speed = 70.f;
 
-    frameSize = { 64, 64 };
-    frameCount = 3;
-    frameDuration = 0.2f;
+	frameSize = { 64, 64 };
+	frameCount = 3;
+	frameDuration = 0.2f;
 
-    sprite.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y));
-    sprite.setOrigin(frameSize.x / 2.f, frameSize.y / 2.f);
+	sprite.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y));
+	sprite.setOrigin(frameSize.x / 2.f, frameSize.y / 2.f);
 
-    sprite.setScale(2.0f, 2.0f); // 확대 동일하게해야 이쁨
+	sprite.setScale(2.0f, 2.0f); // 확대 동일하게해야 이쁨
 }
 
 // enemy01::Update
 
 void enemy01::Update(float dt, sf::Vector2f playerPos)
 {
-    Enemy::Update(dt, playerPos);
+	Enemy::Update(dt, playerPos);
 
-    animationTimer += dt;
-    if (animationTimer >= frameDuration)
-    {
-        animationTimer = 0.f;
-        currentFrame = (currentFrame + 1) % frameCount;
+	animationTimer += dt;
+	if (animationTimer >= frameDuration)
+	{
+		animationTimer = 0.f;
+		currentFrame = (currentFrame + 1) % frameCount;
 
-        int left = currentFrame * frameSize.x;
-        sprite.setTextureRect(sf::IntRect(left, 0, frameSize.x, frameSize.y));
-    }
+		int left = currentFrame * frameSize.x;
+		sprite.setTextureRect(sf::IntRect(left, 0, frameSize.x, frameSize.y));
+	}
 }
 
 // enemy01::CanFire
 bool enemy01::CanFire(float dt)
 {
-    bulletTimer += dt;
-    if (bulletTimer >= bulletCooldown)
-    {
-        bulletTimer = 0.f;
-        return true;
-    }
-    return false;
+	bulletTimer += dt;
+	if (bulletTimer >= bulletCooldown)
+	{
+		bulletTimer = 0.f;
+		return true;
+	}
+	return false;
 }
 
 // enemy01::TryFire
 void enemy01::TryFire(StageManager* manager, sf::Vector2f playerPos)
 {
-    manager->FireBulletAtPlayer(GetPosition(), playerPos, atk);
+	manager->FireBulletAtPlayer(GetPosition(), playerPos, atk);
 }
 
 
@@ -145,51 +146,52 @@ void enemy01::TryFire(StageManager* manager, sf::Vector2f playerPos)
 
 // enemy02 생성자
 enemy02::enemy02(sf::Texture& texture, sf::Vector2f spawnPos)
-    : Enemy(texture, spawnPos)
+	: Enemy(texture, spawnPos)
 {
-    hp = 15;
-    atk = 4;
-    speed = 70.f;
+	hp = 15;
+	atk = 4;
+	//atk = 99; // 테스트용으로 공격력 99로 설정
+	speed = 70.f;
 
-    frameSize = { 64, 64 };
-    frameCount = 3;
-    frameDuration = 0.2f;
+	frameSize = { 64, 64 };
+	frameCount = 3;
+	frameDuration = 0.2f;
 
-    sprite.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y));
-    sprite.setOrigin(frameSize.x / 2.f, frameSize.y / 2.f);
-    sprite.setScale(2.0f, 2.0f); // 확대 동일하게해야 이쁨
+	sprite.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y));
+	sprite.setOrigin(frameSize.x / 2.f, frameSize.y / 2.f);
+	sprite.setScale(2.0f, 2.0f); // 확대 동일하게해야 이쁨
 }
 
 // enemy02::Update
 void enemy02::Update(float dt, sf::Vector2f playerPos)
 {
-    Enemy::Update(dt, playerPos);
+	Enemy::Update(dt, playerPos);
 
-    animationTimer += dt;
-    if (animationTimer >= frameDuration)
-    {
-        animationTimer = 0.f;
-        currentFrame = (currentFrame + 1) % frameCount;
-        sprite.setTextureRect(sf::IntRect(currentFrame * frameSize.x, 0, frameSize.x, frameSize.y));
-    }
+	animationTimer += dt;
+	if (animationTimer >= frameDuration)
+	{
+		animationTimer = 0.f;
+		currentFrame = (currentFrame + 1) % frameCount;
+		sprite.setTextureRect(sf::IntRect(currentFrame * frameSize.x, 0, frameSize.x, frameSize.y));
+	}
 }
 
 // enemy02::CanFire
 bool enemy02::CanFire(float dt)
 {
-    bulletTimer += dt;
-    if (bulletTimer >= bulletCooldown)
-    {
-        bulletTimer = 0.f;
-        return true;
-    }
-    return false;
+	bulletTimer += dt;
+	if (bulletTimer >= bulletCooldown)
+	{
+		bulletTimer = 0.f;
+		return true;
+	}
+	return false;
 }
 
 // enemy02::TryFire
 void enemy02::TryFire(StageManager* manager, sf::Vector2f playerPos)
 {
-    manager->FireBulletAtPlayer(GetPosition(), playerPos, atk);
+	manager->FireBulletAtPlayer(GetPosition(), playerPos, atk);
 }
 
 
@@ -197,50 +199,51 @@ void enemy02::TryFire(StageManager* manager, sf::Vector2f playerPos)
 
 // enemy03 생성자
 enemy03::enemy03(sf::Texture& texture, sf::Vector2f spawnPos)
-    : Enemy(texture, spawnPos)
+	: Enemy(texture, spawnPos)
 {
-    hp = 15;
-    atk = 6;
-    speed = 70.f;
+	hp = 15;
+	atk = 6;
+	// atk = 99; // 테스트용으로 공격력 99로 설정
+	speed = 70.f;
 
-    frameSize = { 64, 64 };
-    frameCount = 3;
-    frameDuration = 0.2f;
+	frameSize = { 64, 64 };
+	frameCount = 3;
+	frameDuration = 0.2f;
 
-    sprite.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y));
-    sprite.setOrigin(frameSize.x / 2.f, frameSize.y / 2.f);
-    sprite.setScale(2.0f, 2.0f); // 확대 동일하게해야 이쁨
+	sprite.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y));
+	sprite.setOrigin(frameSize.x / 2.f, frameSize.y / 2.f);
+	sprite.setScale(2.0f, 2.0f); // 확대 동일하게해야 이쁨
 }
 
 // enemy03::Update
 void enemy03::Update(float dt, sf::Vector2f playerPos)
 {
-    Enemy::Update(dt, playerPos);
+	Enemy::Update(dt, playerPos);
 
-    animationTimer += dt;
-    if (animationTimer >= frameDuration)
-    {
-        animationTimer = 0.f;
-        currentFrame = (currentFrame + 1) % frameCount;
-        sprite.setTextureRect(sf::IntRect(currentFrame * frameSize.x, 0, frameSize.x, frameSize.y));
-    }
+	animationTimer += dt;
+	if (animationTimer >= frameDuration)
+	{
+		animationTimer = 0.f;
+		currentFrame = (currentFrame + 1) % frameCount;
+		sprite.setTextureRect(sf::IntRect(currentFrame * frameSize.x, 0, frameSize.x, frameSize.y));
+	}
 }
 
 // enemy03::CanFire
 bool enemy03::CanFire(float dt)
 {
-    bulletTimer += dt;
-    if (bulletTimer >= bulletCooldown)
-    {
-        bulletTimer = 0.f;
-        return true;
-    }
-    return false;
+	bulletTimer += dt;
+	if (bulletTimer >= bulletCooldown)
+	{
+		bulletTimer = 0.f;
+		return true;
+	}
+	return false;
 }
 
 //원형투사체
 void enemy03::TryFire(StageManager* stageManager, sf::Vector2f playerPos)
 {
-    stageManager->FireBulletSpread(GetPosition()); // 6방향 뿌리기
+	stageManager->FireBulletSpread(GetPosition()); // 6방향 뿌리기
 }
 

@@ -7,6 +7,7 @@ void UIManager::Init()
     {
        cerr << "폰트 로드 실패!" << std::endl;
     }
+	InitPauseUI(); // 일시정지 UI 초기화
 
 	InitTimeText(); // 타이머 텍스트 초기화
 	InitWaveText(); // 웨이브 텍스트 초기화
@@ -17,6 +18,7 @@ void UIManager::Init()
 	InitStatLogUI(font); // 스탯 로그 UI 초기화
 	shopUI.Init(font); // 상점 UI 초기화
 
+
     // player가 Init() 전에 아직 nullptr 아니면 SetPlayer() 함수 안에서 등록하기
     if (player != nullptr)
         InitShop(*player->stats);
@@ -25,9 +27,8 @@ void UIManager::Init()
 
 void UIManager::Update(float dt)
 {
-   // option.
-   
- 
+    
+
     if (isWaveActive)
     {
 		UpdateWaveTimerText(); // 타이머 텍스트 업데이트
@@ -178,27 +179,58 @@ void UIManager::statusShadowText()
 
 void UIManager::UpdateWaveTimerText()
 {
-    float elapsed = waveClock.getElapsedTime().asSeconds();
+    float elapsed = elapsedBeforePause;
+
+    if (!isWavePaused)  // 일시정지 중이 아니면 현재 경과 시간 추가
+        elapsed += waveClock.getElapsedTime().asSeconds();
+
+    //std::cout << "Wave Timer 경과 시간 (누적): " << elapsed << std::endl;
+
     int timeLeft = 30 - static_cast<int>(elapsed);
     if (timeLeft < 0) timeLeft = 0;
 
     timerText.setString(std::to_string(timeLeft));
 
-    // 중앙 정렬 유지하려면 Origin 다시 설정
+    // 중앙 정렬
     sf::FloatRect textBounds = timerText.getLocalBounds();
     timerText.setOrigin(textBounds.width / 2.f, textBounds.height / 2.f);
-    timerText.setPosition(1920.f / 2.f, 70.f); // y값 조절
+    timerText.setPosition(1920.f / 2.f, 70.f);
 }
 
 void UIManager::ResetWaveTimer()
 {
+    elapsedBeforePause = 0.f;
     waveClock.restart();
+	isWavePaused = false;   // 일시정지 상태 해제
 	isWaveActive = true;  // 웨이브 타이머 활성화
 }
 
 float UIManager::GetWaveElapsedTime() const
 {
-    return waveClock.getElapsedTime().asSeconds(); // 실제 시간 반환
+    if (isWavePaused)
+        return elapsedBeforePause;  // 멈춰있는 동안은 이전값 유지
+
+    return elapsedBeforePause + waveClock.getElapsedTime().asSeconds();
+}
+
+void UIManager::ResumeWaveTimer()
+{
+    if (isWavePaused)
+    {
+        waveClock.restart();// 새 clock 시작  // 일시정지 해제 시, 새로운 시간 측정 시작
+        isWavePaused = false;
+        std::cout << "[UIManager] 타이머 재개됨!" << std::endl;
+    }
+}
+
+void UIManager::PauseWaveTimer()
+{
+    if (!isWavePaused)
+    {
+        elapsedBeforePause += waveClock.getElapsedTime().asSeconds();  // 누적시간 저장
+        isWavePaused = true;
+        std::cout << "[UIManager] 타이머 일시정지됨, 누적 시간: " << elapsedBeforePause << std::endl;
+    }
 }
 
 void UIManager::ShowWaveText(int wave)
@@ -209,7 +241,7 @@ void UIManager::ShowWaveText(int wave)
 
     waveText.setString("Wave " + std::to_string(wave));
 
-    // 중앙 정렬 다시 맞춰주기!
+    // 중앙 정렬 다시 맞추기
     sf::FloatRect bounds = waveText.getLocalBounds();
     waveText.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
     waveText.setPosition(1920.f / 2.f, 30.f); // 위쪽 위치
@@ -238,16 +270,6 @@ void UIManager::UpdateHPBar(int currentHp, int maxHp)
     sf::Vector2f pos(345.f, 34.f);
     hpText.setPosition(pos);
     hpTextShadow.setPosition(pos + sf::Vector2f(1.f, 1.f));
-}
-
-sf::Color UIManager::GetHPColor(float ratio)
-{
-    return sf::Color();
-}
-
-sf::Color UIManager::GetExpColor(float ratio)
-{
-    return sf::Color();
 }
 
 void UIManager::UpdateExpBar(int currentExp, int maxExp)        
@@ -380,13 +402,74 @@ void UIManager::Reset()
 
     // 스탯 로그 초기화
     statLogs.clear();
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < 3; i++)
     {
         statLogTexts[i].setString(L"");
     }
-
     // 상점 UI 닫기
     shopUI.Close();
+    //InitStatLogUI(font);
+}
+
+void UIManager::ClearStatLog()
+{
+    statLogs.clear();
+    std::cout << "[UIManager] 스탯 로그 초기화됨" << std::endl;
+}
+
+void UIManager::InitPauseUI()
+{
+    pauseBox.setSize({ 1920.f, 1080.f });
+    pauseBox.setPosition(0,0);  // 화면 중앙 기준 위치
+
+    pauseBox.setFillColor(sf::Color(0, 0, 0, 180));
+
+    resumeText.setFont(font);
+    resumeText.setCharacterSize(36);
+    resumeText.setString("Continue");
+    resumeText.setFillColor(sf::Color::White);
+    sf::FloatRect resumeBounds = resumeText.getLocalBounds();
+    resumeText.setOrigin(resumeBounds.left + resumeBounds.width / 2.f, resumeBounds.top + resumeBounds.height / 2.f);
+    resumeText.setPosition(pauseBox.getPosition().x + pauseBox.getSize().x / 2.f,
+        pauseBox.getPosition().y + pauseBox.getSize().y / 2.f - 40.f);
+
+    exitText.setFont(font);
+    exitText.setCharacterSize(36);
+    exitText.setString("Exit");
+    exitText.setFillColor(sf::Color::White);
+    sf::FloatRect exitBounds = exitText.getLocalBounds();
+    exitText.setOrigin(exitBounds.left + exitBounds.width / 2.f, exitBounds.top + exitBounds.height / 2.f);
+    exitText.setPosition(pauseBox.getPosition().x + pauseBox.getSize().x / 2.f,
+        pauseBox.getPosition().y + pauseBox.getSize().y / 2.f + 40.f);
+}
+
+void UIManager::RenderPauseUI(sf::RenderWindow& window)
+{
+    //  현재 뷰 저장
+    sf::View originalView = window.getView();
+
+    //  기본 뷰로 전환 (화면 고정용)
+    window.setView(window.getDefaultView());
+    window.draw(pauseBox);
+    window.draw(resumeText);
+    window.draw(exitText);
+
+	window.setView(originalView);   // 원래 뷰로 복원
+}
+
+bool UIManager::IsMouseOverResume(const sf::Vector2f& mousePos)
+{
+    return resumeText.getGlobalBounds().contains(mousePos);
+}
+
+bool UIManager::IsMouseOverExit(const sf::Vector2f& mousePos)
+{
+    return exitText.getGlobalBounds().contains(mousePos);
+}
+
+void UIManager::SetPaused(bool paused)
+{
+    isPaused = paused;
 }
 
 

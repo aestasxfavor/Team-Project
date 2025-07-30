@@ -45,7 +45,7 @@ void SoundManager::ToggleMute()
     }
     else
     {
-        music.setVolume(100.f); // 볼륨 원상복귀
+        music.setVolume(80.f); // 볼륨 원상복귀
         std::cout << "[SoundManager] 음소거 해제" << std::endl;
     }
 }
@@ -58,4 +58,23 @@ bool SoundManager::IsPlaying() const
 bool SoundManager::IsMuted() const
 {
     return isMuted;
+}
+
+bool SoundManager::LoadAttackSound(const std::string& filePath)
+{
+    if (!attackBuffer.loadFromFile(filePath))
+    {
+        std::cerr << "[SoundManager] 공격 효과음 로드 실패: " << filePath << std::endl;
+        return false;
+    }
+
+    attackSound.setBuffer(attackBuffer);
+    attackSound.setVolume(40.f);
+    return true;
+}
+
+void SoundManager::PlayAttackSound()
+{
+    if (!isMuted)
+        attackSound.play();
 }

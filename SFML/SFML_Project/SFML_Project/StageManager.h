@@ -65,6 +65,9 @@ public:
 
 	void Reset(); // 웨이브 초기화 및 적 제거
 
+    void SetResetting(bool value);
+    bool IsResetting() const;
+
 private:
    
     Player* player;                 // 효 추가, StageManager가 Player를 내부에 포함함(has - a 관계)
@@ -96,4 +99,6 @@ private:
 
     // 30초 웨이브 추가 
 	UIManager* uiManager; // UI 매니저 객체, UI 관련 작업을 처리하기 위한 객체
+
+	bool isResetting = false; // 게임 리셋 중인지 여부
 };

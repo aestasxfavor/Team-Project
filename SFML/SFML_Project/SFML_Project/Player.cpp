@@ -336,3 +336,8 @@ void Player::TakeDamage(int amount)		// 2025-07-26 효 추가 : 플레이어가 데미지 �
 	}
 }
 
+void Player::SetPosition(const sf::Vector2f& pos)
+{
+	spritePlayer.setPosition(pos);
+}
+

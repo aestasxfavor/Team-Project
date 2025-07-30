@@ -1,24 +1,25 @@
-#include "TitleScene.h"
+ï»¿#include "TitleScene.h"
 #include "SoundManager.h"
+#include "GameScene.h"
 
 void TitleScene::Init()
 {
     if (soundManager.LoadBGM(GetSoundPath("Main_Display_BGM.wav")))
     {
-        soundManager.PlayBGM(true);  // ¹İº¹ Àç»ı
+        soundManager.PlayBGM(true);  // ë°˜ë³µ ì¬ìƒ
     }
  
         if (!backgroundTexture.loadFromFile(GetrscPath("BackGround7.png")))
         {
-            std::cerr << "¹è°æ ÀÌ¹ÌÁö ·Îµå ½ÇÆĞ!" << std::endl;
+            std::cerr << "ë°°ê²½ ì´ë¯¸ì§€ ë¡œë“œ ì‹¤íŒ¨!" << std::endl;
         }
 
-        // ÅØ½ºÃ³ ¼³Á¤
+        // í…ìŠ¤ì²˜ ì„¤ì •
         backgroundSprite1.setTexture(backgroundTexture);
         backgroundSprite2.setTexture(backgroundTexture);
 
-        // ?? ¿©±â¼­ À©µµ¿ì »çÀÌÁî¿¡ ¸ÂÃç ½ºÄÉÀÏ Á¶Àı!
-        sf::Vector2u windowSize = {1920, 1080 };  // °íÁ¤µÈ Ã¢ »çÀÌÁî   1920x1080À¸·Î ÀüÃ¼ »çÀÌÁî ¼öÁ¤ÇÏ±â    10½Ã°£ µÚÀÇ È¿°¡ ¼öÁ¤ÇÏ°ÚÁö¤Ğ¤Ğ¤Ğ¤Ğ¤Ğ¤Ğ¤Ğ¤Ğ¤Ğ¤Ğ¤Ğ¤Ğ¤Ğ¤Ğ¤Ğ¤Ğ¤Ğ¤Ğ¤Ğ¤Ğ¤Ğ¤Ğ¤Ğ¤Ğ¤Ğ¤Ğ
+        
+        sf::Vector2u windowSize = {1920, 1080 };  
         sf::Vector2u textureSize = backgroundTexture.getSize();
 
         float scaleX = static_cast<float>(windowSize.x) / textureSize.x;
@@ -27,54 +28,54 @@ void TitleScene::Init()
         backgroundSprite1.setScale(scaleX, scaleY);
         backgroundSprite2.setScale(scaleX, scaleY);
 
-        // À§Ä¡ Á¶Á¤
+        // ìœ„ì¹˜ ì¡°ì •
         backgroundX1 = 0.f;
         backgroundX2 = static_cast<float>(backgroundTexture.getSize().x) * scaleX;
 
         backgroundSprite1.setPosition(backgroundX1, 0.f);
         backgroundSprite2.setPosition(backgroundX2, 0.f);
 
-        // ÆùÆ® & ÅØ½ºÆ®
+        // í°íŠ¸ & í…ìŠ¤íŠ¸
         font.loadFromFile(GetrscPath("Font/BMJUA_ttf.ttf"));
 
-        // Á¦¸ñ ÅØ½ºÆ® (Áß¾Ó Á¤·Ä)
+        // ì œëª© í…ìŠ¤íŠ¸ (ì¤‘ì•™ ì •ë ¬)
         titleText.setFont(font);
         titleText.setString("Meowbellion");
         titleText.setCharacterSize(80);
         titleText.setFillColor(sf::Color::Black);
 
-        // ÅØ½ºÆ®ÀÇ ¹Ù¿îµù ¹Ú½º¸¦ ±âÁØÀ¸·Î Áß½ÉÁ¡À» originÀ¸·Î ¼³Á¤
+        // í…ìŠ¤íŠ¸ì˜ ë°”ìš´ë”© ë°•ìŠ¤ë¥¼ ê¸°ì¤€ìœ¼ë¡œ ì¤‘ì‹¬ì ì„ originìœ¼ë¡œ ì„¤ì •
         sf::FloatRect titleBounds = titleText.getLocalBounds();
         titleText.setOrigin(titleBounds.left + titleBounds.width / 2.0f, titleBounds.top + titleBounds.height / 2.0f);
-        titleText.setPosition(1920.f / 2.f, 1080.f / 2.f - 30.f);  // »ìÂ¦ À§·Î
+        titleText.setPosition(1920.f / 2.f, 1080.f / 2.f - 30.f);  // ì‚´ì§ ìœ„ë¡œ
 
-        // ½ÃÀÛ ÅØ½ºÆ® (Áß¾Ó Á¤·Ä)
+        // ì‹œì‘ í…ìŠ¤íŠ¸ (ì¤‘ì•™ ì •ë ¬)
         startText.setFont(font);
         startText.setString("<Press Enter to Start>");
         startText.setCharacterSize(50);
         startText.setFillColor(sf::Color::Black);
 
-        // origin ¼³Á¤
+        // origin ì„¤ì •
         sf::FloatRect startBounds = startText.getLocalBounds();
         startText.setOrigin(startBounds.left + startBounds.width / 2.0f, startBounds.top + startBounds.height / 2.0f);
-        startText.setPosition(1920.f / 2.f, 1080.f / 2.f + 60.f);  // »ìÂ¦ ¾Æ·¡·Î
+        startText.setPosition(1920.f / 2.f, 1080.f / 2.f + 60.f);  // ì‚´ì§ ì•„ë˜ë¡œ
 
     
 }
 
-void TitleScene::Update(sf::RenderWindow& window)       // 2025-07-28 13:20 È¿ Ãß°¡ :  ¿©±â ¼ÕºÁ¾ß°Ú³× 
+void TitleScene::Update(sf::RenderWindow& window)       // 2025-07-28 13:20 íš¨ ì¶”ê°€ :  ì—¬ê¸° ì†ë´ì•¼ê² ë„¤ 
 {
     float deltaTime = clock.restart().asSeconds();
 
-    // ÅØ½ºÆ® Å©±â ¾Ö´Ï¸ŞÀÌ¼Ç
+    // í…ìŠ¤íŠ¸ í¬ê¸° ì• ë‹ˆë©”ì´ì…˜
     textAnimTimer += deltaTime;
     float scale = 1.0f + 0.1f * std::sin(textAnimTimer * 2.f);
     titleText.setScale(scale, scale);
 
-    //  ½ºÄÉÀÏ Àû¿ëµÈ ¹è°æ ³Êºñ °è»ê
+    //  ìŠ¤ì¼€ì¼ ì ìš©ëœ ë°°ê²½ ë„ˆë¹„ ê³„ì‚°
     float scaledWidth = backgroundTexture.getSize().x * backgroundSprite1.getScale().x;
 
-    // ¹è°æ ½ºÅ©·Ñ
+    // ë°°ê²½ ìŠ¤í¬ë¡¤
     backgroundX1 -= backgroundScrollSpeed * deltaTime;
     backgroundX2 -= backgroundScrollSpeed * deltaTime;
 
@@ -88,26 +89,21 @@ void TitleScene::Update(sf::RenderWindow& window)       // 2025-07-28 13:20 È¿ Ã
 
     bool enterNowPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Enter);
 
-    // ÀÔ·Â Ã³¸®
-    /*if (canStart && sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
-    {
-        canStart = false;
-        SceneManager::ChangeScene("Game");
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-    {
-        window.close();
-    }*/
-
     if(!enterPreviouslyPressed && enterNowPressed)
     {
-        soundManager.StopBGM();     // ºê±İ ¸ØÃß±â
+        soundManager.StopBGM();     // ë¸Œê¸ˆ ë©ˆì¶”ê¸°
+        GameScene* gameScene = dynamic_cast<GameScene*>(SceneManager::GetScene("Game"));
+        if (gameScene)
+        {
+            std::cout << "[ë””ë²„ê·¸] ResetGame í˜¸ì¶œ ì‹œë„" << std::endl;
+            gameScene->ResetGame();  // ğŸ”¥ ê²Œì„ ìƒíƒœ ì™„ì „ ì´ˆê¸°í™”!
+        }
         SceneManager::ChangeScene("Game");
     }
 
     enterPreviouslyPressed = enterNowPressed;
 
-    // Escape ´­·¶À» °æ¿ì Á¾·á
+    // Escape ëˆŒë €ì„ ê²½ìš° ì¢…ë£Œ
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
     {
         window.close();

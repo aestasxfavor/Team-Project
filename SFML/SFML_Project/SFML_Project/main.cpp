@@ -16,6 +16,7 @@ int main()
         SceneManager::AddScene("Title", new TitleScene());
         SceneManager::AddScene("Game", new GameScene());
         SceneManager::AddScene("GameOver", new GameOverScene()); //  µî·Ï
+        SceneManager::AddScene("TitleScene", new TitleScene());
         SceneManager::ChangeScene("Title");
 
         sf::Clock clock;
