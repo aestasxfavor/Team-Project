@@ -3,10 +3,10 @@
 #include <random>
 #include "Stage.h"
 
-std::vector<PlayerStats::StatOption> PlayerStats::GetRandomChoices(const vector<StatOption>& pool, int count)
+vector<PlayerStats::StatOption> PlayerStats::GetRandomChoices(const vector<StatOption>& pool, int count)
 {
 	vector<StatOption> temp = pool;
-	std::shuffle(temp.begin(), temp.end(), std::mt19937{ std::random_device{}() });
+	shuffle(temp.begin(), temp.end(), mt19937{ random_device{}() });
 	temp.resize(count);
 
 	// stat구조체의 정보들을 담은 자료구조를 복사해서

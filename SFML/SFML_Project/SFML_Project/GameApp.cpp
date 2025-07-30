@@ -1,0 +1,49 @@
+#include "GameApp.h"
+
+GameApp::GameApp()
+{
+}
+
+GameApp::~GameApp()
+{
+    if (window.isOpen())
+        window.close();
+	// 씬 매니저의 모든 씬을 삭제
+
+	cout << "[GameApp] 소멸자 호출됨" << endl;
+}
+
+void GameApp::Init()
+{
+    // 창 생성
+    window.create(sf::VideoMode(1920, 1080), "Meowbellion");
+
+    // 씬 등록
+    SceneManager::AddScene("Title", new TitleScene());
+    SceneManager::AddScene("Game", new GameScene());
+    SceneManager::AddScene("GameOver", new GameOverScene());
+
+    // 시작 씬 설정
+    SceneManager::ChangeScene("Title");
+}
+
+// 메인 루프
+// - 창이 열려 있는 동안 이벤트 처리 + 게임 씬 업데이트/렌더링 반복
+void GameApp::Run()
+{
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+
+        SceneManager::Update(window);
+
+        window.clear();
+        SceneManager::Render(window);
+        window.display();
+    }
+}

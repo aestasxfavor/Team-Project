@@ -17,19 +17,8 @@ public:
 	//킬카운트
 	static int killCount;
 
-	Stage()
-	{
-		player = nullptr;
-		stageManager = nullptr;
-		uiManager = nullptr;
-	}
-	~Stage()
-	{
-		delete player;
-		delete stageManager;
-		delete uiManager;
-	
-	}
+	Stage();						// 생성자
+	~Stage();						// 소멸자
 	void Init();
 	void Update(float deltaTime);
 	void Render(sf::RenderWindow& window);

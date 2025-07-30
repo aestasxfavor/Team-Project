@@ -8,7 +8,7 @@ public:
 	sf::Sprite spriteMap;
 
 
-	void Load(const std::string filename);
+	void Load(const string filename);
 	void Render(sf::RenderWindow& window);
 	bool IsWall(int x, int y)const;
 	//Ãß°¡

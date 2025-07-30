@@ -1,20 +1,39 @@
 #pragma once
 #include "Util.h"
 #include "Scene.h"
-//#include "TitleScene.h"
 
+// ==========================================================
+// SceneManager 클래스
+// - 전체 게임의 씬(Scene)을 전역적으로 관리하는 정적 클래스
+// - 씬 추가, 전환, 업데이트, 렌더링 등 씬 흐름을 제어함
+// - 모든 함수 및 변수는 static (전역에서 접근 가능)
+// ==========================================================
 
-// 2025-07-23 효 추가: 씬 매니저 클래스 정의 (스프라이트 시트 구해서 테스트 예정)
-class SceneManager 
+class SceneManager
 {
 public:
-    static void AddScene(const std::string& name, Scene* scene);
-    static void ChangeScene(const std::string& name);
+    // 새로운 씬 등록
+    // - name: 씬 이름
+    // - scene: Scene 객체 포인터
+    static void AddScene(const string& name, Scene* scene);
+
+    // 현재 씬을 변경
+    // - name: 이동할 씬 이름
+    static void ChangeScene(const string& name);
+
+    // 현재 씬 업데이트 (게임 루프에서 호출)
     static void Update(sf::RenderWindow& window);
+
+    // 현재 씬 렌더링 (게임 루프에서 호출)
     static void Render(sf::RenderWindow& window);
-    static Scene* GetScene(const std::string& name);  // 씬 이름으로 씬 가져오기
+
+    // 특정 이름의 씬 포인터를 가져옴
+    static Scene* GetScene(const string& name);
 
 private:
-    static map<std::string, Scene*> scenes;
+    // 등록된 모든 씬을 저장하는 맵 (이름 → 씬 포인터)
+    static map<string, Scene*> scenes;
+
+    // 현재 활성화된 씬
     static Scene* currentScene;
 };

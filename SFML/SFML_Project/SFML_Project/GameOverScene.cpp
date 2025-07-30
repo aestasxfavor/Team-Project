@@ -7,11 +7,13 @@ extern SceneManager sceneManager;
 
 void GameOverScene::Init()
 {
-    std::cout << "[GameOverScene] Init 호출됨" << std::endl;
+    animatedTextLetters.clear();
+
+    cout << "[GameOverScene] Init 호출됨" << endl;
 
     if (!backgroundTexture.loadFromFile(GetrscPath("background.png")))
     {
-        std::cerr << "GameOverScene 배경 이미지 로드 실패!" << std::endl;
+        cerr << "GameOverScene 배경 이미지 로드 실패!" << endl;
     }
     backgroundSprite.setTexture(backgroundTexture);
 
@@ -28,20 +30,10 @@ void GameOverScene::Init()
     // 🔹 폰트 로드
     if (!font.loadFromFile(GetrscPath("Font/BMJUA_ttf.ttf")))
     {
-        std::cerr << "폰트 로딩 실패!" << std::endl;
+        cerr << "폰트 로딩 실패!" << endl;
     }
 
-    //// 🔹 Game Over 텍스트
-    //gameOverText.setFont(font);
-    //gameOverText.setString("Game Over");
-    //gameOverText.setCharacterSize(80);
-    //gameOverText.setFillColor(sf::Color::White);
-
-    //sf::FloatRect goBounds = gameOverText.getLocalBounds();
-    //gameOverText.setOrigin(goBounds.left + goBounds.width / 2.f, goBounds.top + goBounds.height / 2.f);
-    //gameOverText.setPosition(1920.f / 2.f, 1080.f / 2.f - 30.f);
-
-    std::string textStr = "Game Over";
+    string textStr = "Game Over";
     float letterSpacing = 60.f; // 글자 간격
     float startX = 1920.f / 2.f - (textStr.size() / 2.f * letterSpacing);
     float baseY = 1080.f / 2.f - 150.f;
@@ -108,7 +100,7 @@ void GameOverScene::Render(sf::RenderWindow& window)
 
     window.clear(sf::Color::Black);
     window.draw(backgroundSprite);
-    //window.draw(gameOverText);
+ 
     // Render()에서 기존 gameOverText 대신
     for (auto& letter : animatedTextLetters)
     {

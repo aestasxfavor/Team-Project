@@ -24,7 +24,7 @@ void ShopUI::Init(sf::Font& font)
         itemTexts[i].setFont(font);
         itemTexts[i].setCharacterSize(24);
         itemTexts[i].setFillColor(sf::Color::White);
-        itemTexts[i].setString("Item " + std::to_string(i + 1));
+        itemTexts[i].setString("Item " + to_string(i + 1));
 
         float textY = panelPos.y + 40.f + i * 80.f;
         itemTexts[i].setPosition(panelPos.x + 30.f, textY);
@@ -62,7 +62,7 @@ void ShopUI::Open(PlayerStats& playerStats)
     {
         itemTexts[i].setString(selectedStatChoices[i].name);  // 스탯 이름 표시
         // 등급별 색상 적용
-        const std::wstring& grade = selectedStatChoices[i].Grade;
+        const wstring& grade = selectedStatChoices[i].Grade;
 
         if (grade == L"A")
             selectButtons[i].setFillColor(sf::Color(255, 230, 0));  // 노랑
@@ -78,7 +78,7 @@ void ShopUI::Close()
 {
 	isOpen = false;
     isButtonClicked = false; // 버튼 클릭 상태 초기화
-    std::cout << "[ShopUI] Shop Closed" << std::endl;
+    cout << "[ShopUI] Shop Closed" << endl;
 
     if (onCloseCallback)      // ← 콜백 등록되어 있으면
         onCloseCallback();    // ← 실행!
@@ -100,7 +100,7 @@ void ShopUI::Update(const sf::Vector2f& mousePos, bool isClick)
         if (isClick && selectButtons[i].getGlobalBounds().contains(mousePos))
         {
             selectedIndex = i;
-            std::cout << "Item " << i + 1 << " Selected" << std::endl;
+            cout << "Item " << i + 1 << " Selected" << endl;
             isButtonClicked = true;
 
             /*if (onSelectCallback)
@@ -112,7 +112,7 @@ void ShopUI::Update(const sf::Vector2f& mousePos, bool isClick)
     // --- Close 버튼 누름 ---
     if (isClick && closeButton.getGlobalBounds().contains(mousePos))
     {
-        std::cout << "Close button clicked" << std::endl;
+        cout << "Close button clicked" << endl;
 
         if (isButtonClicked && onSelectCallback)
         {
@@ -121,7 +121,7 @@ void ShopUI::Update(const sf::Vector2f& mousePos, bool isClick)
         }
         else
         {
-            std::cout << "[ShopUI] 먼저 스탯을 선택해주세요!" << std::endl;
+            cout << "[ShopUI] 먼저 스탯을 선택해주세요!" << endl;
         }
 
         return;
@@ -131,8 +131,6 @@ void ShopUI::Update(const sf::Vector2f& mousePos, bool isClick)
 void ShopUI::Render(sf::RenderWindow& window)
 {
     if (!isOpen) return;
-
-   // std::cout << "[ShopUI] 렌더 호출됨" << std::endl;
 
     window.draw(panel);
 
@@ -146,13 +144,13 @@ void ShopUI::Render(sf::RenderWindow& window)
     window.draw(closeButtonText);
 }
 
-void ShopUI::SetOnSelect(std::function<void(int)> cb)
+void ShopUI::SetOnSelect(function<void(int)> cb)
 {
     { onSelectCallback = cb; }
 }
 
 // 콜백 함수 호출
-void ShopUI::SetOnClose(std::function<void()> callback)
+void ShopUI::SetOnClose(function<void()> callback)
 {
     onCloseCallback = callback;
 }
@@ -162,5 +160,5 @@ void ShopUI::ClearSelectedChoices()
 {
 	selectedStatChoices.clear();
 	selectedIndex = -1;  // 선택 초기화
-	std::cout << "[ShopUI] 선택된 스탯 초기화됨" << std::endl;
+	cout << "[ShopUI] 선택된 스탯 초기화됨" << endl;
 }

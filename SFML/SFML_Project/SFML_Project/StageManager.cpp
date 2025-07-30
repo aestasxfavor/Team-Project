@@ -38,24 +38,24 @@ void StageManager::Init()
 
 
 	 // enemy01 이미지
-	std::string path01 = GetrscPath("enemy01.png");
+	string path01 = GetrscPath("enemy01.png");
 	if (!enemy01Texture.loadFromFile(path01))
 	{
-		std::cout << "enemy01.png 로딩 실패! 경로: " << path01 << std::endl;
+		cout << "enemy01.png 로딩 실패! 경로: " << path01 << endl;
 	}
 
 	// enemy02 이미지
-	std::string path02 = GetrscPath("enemy02.png");
+	string path02 = GetrscPath("enemy02.png");
 	if (!enemy02Texture.loadFromFile(path02))
 	{
-		std::cout << "enemy02.png 로딩 실패! 경로: " << path02 << std::endl;
+		cout << "enemy02.png 로딩 실패! 경로: " << path02 << endl;
 	}
 
 	// enemy03 이미지
-	std::string path03 = GetrscPath("enemy03.png");
+	string path03 = GetrscPath("enemy03.png");
 	if (!enemy03Texture.loadFromFile(path03))
 	{
-		std::cout << "enemy03.png 로딩 실패! 경로: " << path03 << std::endl;
+		cout << "enemy03.png 로딩 실패! 경로: " << path03 << endl;
 	}
 
 	// 투사체
@@ -118,7 +118,7 @@ void StageManager::Update(float dt, sf::Vector2f playerPos)
 	for (auto& bullet : bullets)
 	{
 		sf::Vector2f dir = playerPos - bullet.sprite.getPosition();
-		float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+		float len = sqrt(dir.x * dir.x + dir.y * dir.y);
 		if (len != 0) dir /= len;
 		bullet.sprite.move(bullet.velocity * dt);
 	}
@@ -138,13 +138,12 @@ void StageManager::SpawnEnemy(sf::Vector2f playerPos)
 	};
 
 
-	if (std::hypot(spawnPos.x - playerPos.x, spawnPos.y - playerPos.y) < 350.f)
+	if (hypot(spawnPos.x - playerPos.x, spawnPos.y - playerPos.y) < 350.f)
 		return;
 	Enemy* enemy = nullptr;
 
 
 	int enemyType = rand() % 3;  // 2025-07-26 효 추가 : 3가지 적을 맵에 랜덤으로 생성
-	//std::cout << "spawn type = " << enemyType << std::endl;
 
 	switch (enemyType)
 	{
@@ -214,7 +213,7 @@ void StageManager::FireBulletAtPlayer(sf::Vector2f start, sf::Vector2f playerPos
 	bullet.setTexture(bulletTexture);
 
 	sf::Vector2f dir = playerPos - start;
-	float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+	float len = sqrt(dir.x * dir.x + dir.y * dir.y);
 	if (len != 0) dir /= len;
 
 	int frame = rand() % 6;
@@ -231,7 +230,7 @@ void StageManager::FireBulletAtPlayer(sf::Vector2f start, sf::Vector2f playerPos
 
 
 
-std::vector<BulletData>& StageManager::GetBullets()
+vector<BulletData>& StageManager::GetBullets()
 {
 	return bullets;
 }
@@ -248,7 +247,7 @@ int StageManager::GetCurrentWave() const
 
 void StageManager::SpawnEnemiesForWave(int waveNumber)
 {
-	std::cout << "[StageManager] " << waveNumber << " 웨이브 적 생성!" << std::endl;
+	cout << "[StageManager] " << waveNumber << " 웨이브 적 생성!" << endl;
 
 	// 기존 적 제거
 	Clear();
@@ -288,48 +287,15 @@ bool StageManager::IsResetting() const
 void StageManager::NextWave(Player& player, UIManager& uiManager, int selectedIndex, const vector<PlayerStats::StatOption>& selectedChoices)
 {
 	currentWave++;
-	std::cout << "[StageManager] Wave " << currentWave << " 시작!" << std::endl;
+	cout << "[StageManager] Wave " << currentWave << " 시작!" << endl;
 
-	// 선택된 스탯 적용
-	//if (selectedIndex >= 0 && selectedIndex < selectedChoices.size())
-	//{
-	//	player.stats->ApplyStat(selectedChoices[selectedIndex]);
-
-
-	//	wstringstream ss;
-	//	ss << std::fixed << std::setprecision(2);
-
-	//	switch (selectedChoices[selectedIndex].type)
-	//	{
-	//	case StatType::MAXHP: ss << L"체력 + " << selectedChoices[selectedIndex].amount; break;
-	//	case StatType::DAMAGE: ss << L"공격력 + " << selectedChoices[selectedIndex].amount; break;
-	//	case StatType::DEFENSE: ss << L"방어력 + " << selectedChoices[selectedIndex].amount; break;
-	//	case StatType::ATTACKSPEED: ss << L"공격속도 + " << selectedChoices[selectedIndex].amount;  break;
-	//	case StatType::MOVESPEED:  ss << L"이동속도 + " << selectedChoices[selectedIndex].amount; break;
-	//	case StatType::CRITICAL: ss << L"크리티컬 + " << selectedChoices[selectedIndex].amount; break;
-	//	default: ss << L"기타"; break;
-
-	//	}
-
-	//	wstring statName = ss.str();
-	//	uiManager.AddStatLog(statName);
-	//}
-
-	//// 플레이어 체력 초기화
-	//if (player.stats)
-	//{
-	//	player.stats->currentHp = player.stats->maxHp;
-	//}
-
-	//// 적 생성
-	//SpawnEnemiesForWave(currentWave);
-
+	// UI 매니저에 웨이브 텍스트 갱신
 	if (!IsResetting() && selectedIndex >= 0 && selectedIndex < selectedChoices.size())
 	{
 		player.stats->ApplyStat(selectedChoices[selectedIndex]);
 
 		wstringstream ss;
-		ss << std::fixed << std::setprecision(2);
+		ss << fixed << setprecision(2);
 
 		switch (selectedChoices[selectedIndex].type)
 		{
@@ -372,7 +338,7 @@ void StageManager::FireBullet(sf::Vector2f start, sf::Vector2f target, int damag
 	bullet.setScale(2.0f, 2.0f);
 
 	sf::Vector2f dir = target - start;
-	float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+	float len = sqrt(dir.x * dir.x + dir.y * dir.y);
 	if (len != 0) dir /= len;
 
 	BulletData b;
@@ -392,7 +358,7 @@ void StageManager::FireBulletSpread(sf::Vector2f start)
 	for (int i = 0; i < numBullets; ++i)
 	{
 		float angle = angleStep * i * 3.1415926f / 180.f; // 도 -> 라디안 변환
-		sf::Vector2f dir(std::cos(angle), std::sin(angle));
+		sf::Vector2f dir(cos(angle), sin(angle));
 
 		sf::Sprite bullet;
 		bullet.setTexture(bulletTexture);

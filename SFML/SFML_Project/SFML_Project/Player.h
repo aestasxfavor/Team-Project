@@ -19,7 +19,7 @@ class Bullet;
 class Player
 {
 public:
-	float speed;
+	float speed = 0;
 	Spear* spear = nullptr;
 	float spearCoolTime = 0.f;
 
@@ -37,30 +37,24 @@ public:
 	// PlayerStat관련 함수 및 변수임
 	PlayerStats * stats;
 	float currentAttackCoolTime; // 현재 공격 쿨타임
-	std::vector<Bullet*> bullets;
+	vector<Bullet*> bullets;
 
 				// 이거 생성자 Cpp로 옮길 시 같이 옮겨 주세엽		// 2025-07-24 01:13분 효 추가 : 이거 옮길 필요가..있나? 일단 보류 내일 상의해서 하기 
-	Player(): stats(nullptr),currentAttackCoolTime(0.0f)
-	{
-	}
-	~Player()
-	{
-		delete stats;
-		// 소멸자 구현잇다가 하고 
-	}
+	Player();
+	~Player();
+	
 
 	void Init();
-	void Update(float deltaTime, const std::vector<Enemy*>& enemies);
+	void Update(float deltaTime, const vector<Enemy*>& enemies);
 	void Render(sf::RenderWindow& window);
 	void Move(float deltaTime, const sf::Vector2f& dir);
 	void PickUp();
 	void LevelUp(); // 미니 추가 : 이거 안써도 될 듯?? PlayerStat에서 하니까
 
-	void Attack();
 	
 	void Death(); // 플레이어가 죽었을 때 호출되는 함수
 
-	void Attack(const std::vector<Enemy*>& enemies);
+	void Attack(const vector<Enemy*>& enemies);
 
 	void Reset(); // 플레이어 상태 초기화 함수
 
@@ -91,7 +85,7 @@ private:
 	float frameDuration = 0.2f;   // 한 프레임당 지속 시간 (초)
 	int currentFrame = 0;
 	//추가
-	std::vector<sf::IntRect> walkFrames;
+	vector<sf::IntRect> walkFrames;
 
 	
 

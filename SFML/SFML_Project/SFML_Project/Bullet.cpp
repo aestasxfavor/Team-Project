@@ -13,12 +13,12 @@ Bullet::Bullet(const sf::Vector2f& startPos, const sf::Vector2f& dir, PlayerStat
     bulletSprite.setPosition(startPos);
     stats = _stats;
     //  방향 정규화 후 저장
-    float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+    float len = sqrt(dir.x * dir.x + dir.y * dir.y);
     direction = (len != 0.f) ? dir / len : sf::Vector2f(1.f, 0.f);
 
 }
 
-void Bullet::Update(float deltaTime , const std::vector<Enemy*>& enemies)
+void Bullet::Update(float deltaTime , const vector<Enemy*>& enemies)
 {
     if (!isActive) return;
     
@@ -28,7 +28,7 @@ void Bullet::Update(float deltaTime , const std::vector<Enemy*>& enemies)
         if (enemies.empty())
         {
             float angle = static_cast<float>(rand()) / RAND_MAX * 2 * 3.14159f;
-            direction = sf::Vector2f(std::cos(angle), std::sin(angle));
+            direction = sf::Vector2f(cos(angle), sin(angle));
         }
         hasDirectionInit = true;
     }
@@ -66,7 +66,7 @@ void Bullet::Update(float deltaTime , const std::vector<Enemy*>& enemies)
 
             damagedEnemies.insert(enemy);
             enemy->TakeDamage(stats->damage); // 필요 시 데미지 수치 조정
-            cout << "적에게 데미지 " << stats->damage << " 입힘!" << std::endl;
+            cout << "적에게 데미지 " << stats->damage << " 입힘!" << endl;
 
         }
     }

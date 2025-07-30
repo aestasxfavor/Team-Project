@@ -7,26 +7,33 @@
 #include "UIManager.h"
 
 
+Player::Player()
+{
+	stats = nullptr; 
+	currentAttackCoolTime = 0.0f;
+}
+
+Player::~Player()
+{
+	delete stats;
+}
+
 void Player::Init()
 {
-	
+
 	texture.loadFromFile(GetrscPath("Catcharacter2.png"));
-	
+
 	spritePlayer.setTexture(texture);
-	spritePlayer.setPosition(370.f,280.f);
-	spritePlayer.setTextureRect(sf::IntRect(0,40, 48, 48));
+	spritePlayer.setPosition(370.f, 280.f);
+	spritePlayer.setTextureRect(sf::IntRect(0, 40, 48, 48));
 	speed = 200.f;
 
 	stats = new PlayerStats;
-	
-	/*std::string path = GetrscPath("Catcharacter2.png");
-	std::cout << "Texture Path: " << path << std::endl;
-	if (!texture.loadFromFile(path)) {
-		std::cerr << "ÅØ½ºÃ³ ·Îµå ½ÇÆÐ: " << path << std::endl;
-	}*/
+
+
 }
 
-void Player::Update(float deltaTime,const std::vector<Enemy*>& enemies)
+void Player::Update(float deltaTime, const vector<Enemy*>& enemies)
 {
 	sf::Vector2f direction(0.f, 0.f);
 
@@ -89,7 +96,7 @@ void Player::Update(float deltaTime,const std::vector<Enemy*>& enemies)
 			if (spear->Checkcollision(e))
 			{
 				e->TakeDamage(spear->spearDamage);
-				
+
 				delete spear;
 				spear = nullptr;
 				break;
@@ -102,13 +109,13 @@ void Player::Update(float deltaTime,const std::vector<Enemy*>& enemies)
 		}
 	}
 	// ¹Ì´Ï°¡ Ãß°¡ÇÑ ÇÔ¼ö.
-	for (auto* bullet : bullets) 
+	for (auto* bullet : bullets)
 	{
-		bullet->Update(deltaTime, enemies); 
+		bullet->Update(deltaTime, enemies);
 	}
 
-	bullets.erase(std::remove_if(bullets.begin(), bullets.end(),
-		[](Bullet* b) 
+	bullets.erase(remove_if(bullets.begin(), bullets.end(),
+		[](Bullet* b)
 		{
 			if (!b->IsActive())
 			{
@@ -166,7 +173,7 @@ void Player::Move(float deltaTime, const sf::Vector2f& dir)
 	sf::Vector2f norm = dir;
 
 	// ¹æÇâ º¤ÅÍ Á¤±ÔÈ­
-	float len = std::sqrt(norm.x * norm.x + norm.y * norm.y);
+	float len = sqrt(norm.x * norm.x + norm.y * norm.y);
 
 	if (len != 0)
 	{
@@ -185,14 +192,14 @@ void Player::LevelUp()
 	stats->LevelUp();
 }
 
-void Player::Attack(const std::vector<Enemy*>& enemies)
+void Player::Attack(const vector<Enemy*>& enemies)
 {
 	Enemy* closest = nullptr;
-	float minDist = std::numeric_limits<float>::max();
+	float minDist = numeric_limits<float>::max();
 	// °¡Àå °¡±î¿î Àû Å½»ö
 	for (auto* enemy : enemies) {
-		float dist = std::hypot(enemy->GetPosition().x - GetPosition().x,
-								enemy->GetPosition().y - GetPosition().y);
+		float dist = hypot(enemy->GetPosition().x - GetPosition().x,
+			enemy->GetPosition().y - GetPosition().y);
 		if (dist < minDist) {
 			minDist = dist;
 			closest = enemy;
@@ -203,7 +210,7 @@ void Player::Attack(const std::vector<Enemy*>& enemies)
 	if (closest)
 	{
 		sf::Vector2f toTarget = closest->GetPosition() - GetPosition();
-		bullets.push_back(new Bullet(GetPosition(), toTarget ,stats));
+		bullets.push_back(new Bullet(GetPosition(), toTarget, stats));
 	}
 }
 
@@ -213,59 +220,27 @@ void Player::Reset()
 		stats->Reset();
 }
 
-//void Player::Reset()
-//{
-//	spritePlayer.setPosition(370.f, 280.f);
-//
-//	if (stats)
-//		stats->Reset();
-//
-//	isDead = false;
-//	isInvincible = false;
-//	visible = true;
-//	invincibleTimer = 0.f;
-//	blinkTimer = 0.f;
-//
-//	// ¹«±â »èÁ¦
-//	for (auto* bullet : bullets)
-//		delete bullet;
-//	bullets.clear();
-//
-//	if (spear)
-//	{
-//		delete spear;
-//		spear = nullptr;
-//	}
-//
-//	state = IDLE;
-//	animationTimer = 0.f;
-//	currentFrame = 0;
-//
-//	// ÇÊ¿ä ½Ã ÄðÅ¸ÀÓµµ ÃÊ±âÈ­
-//	spearCoolTime = 0.f;
-//}
+
 
 
 
 void Player::Death()
 {
 	isDead = true;
-	
+
 	SceneManager::ChangeScene("GameOver"); //  ¿©±â¼­ È£Ãâ
 	// °ÔÀÓ ¿À¹ö Ã³¸® µî Ãß°¡ ·ÎÁ÷ ÇÊ¿ä
 }
-
-//void Player::GainExperience(int amount)
 
 
 void Player::GainExperience()
 {
 	if (stats)
-	stats->GainExp();
+		stats->GainExp();
 }
 
 void Player::AddItemStat(const PlayerStats::StatOption itemStats)
-{	
+{
 	// ¹Ì·¡¿¡ ÀÖÀ» ±èµ¿¹ÎÀÌ ±¸ÇöÇÒ ¾ÆÀÌÅÛ ¾òÀ» ¶§ ½ºÅÈ º¯È­
 	stats->ApplyStat(itemStats);
 }
@@ -291,21 +266,6 @@ sf::FloatRect Player::GetGlobalBounds() const//Ãæµ¹°ü·Ã
 
 void Player::TakeDamage(int amount)		// 2025-07-26 È¿ Ãß°¡ : ÇÃ·¹ÀÌ¾î°¡ µ¥¹ÌÁö ÀÔ°í Á×´Â°Å±îÁö ±¸Çö¿Ï·á
 {
-	//if (isInvincible||isDead)
-	//	return;
-
-	//stats.currentHp -= amount;
-	//std::cout << " ÇöÀç Ã¼·Â : " << stats.currentHp << std::endl;
-
-	//isInvincible = true;
-	//invincibleTimer = 0.f;
-	//blinkTimer = 0.f;
-
-	//if (stats.currentHp <= 0)
-	//{
-	//	//std::cout << "ÇÃ·¹ÀÌ¾î°¡ Á×¾ú½À´Ï´Ù!" << std::endl;
-	//	Death();
-	//}
 
 	if (isInvincible || isDead)
 		return;
@@ -314,8 +274,8 @@ void Player::TakeDamage(int amount)		// 2025-07-26 È¿ Ãß°¡ : ÇÃ·¹ÀÌ¾î°¡ µ¥¹ÌÁö À
 	if (stats->currentHp < 0)
 		stats->currentHp = 0;
 
-	std::cout << "[TakeDamage] ÇöÀç Ã¼·Â: " << stats->currentHp << std::endl;
-	std::cout << "ÇÃ·¹ÀÌ¾î°¡ ¹ÞÀº ÇÇÇØ: " << amount << std::endl;
+	cout << "[TakeDamage] ÇöÀç Ã¼·Â: " << stats->currentHp << endl;
+	cout << "ÇÃ·¹ÀÌ¾î°¡ ¹ÞÀº ÇÇÇØ: " << amount << endl;
 
 	// ¿©±â¼­ UI °»½Å
 	if (uiManager)
@@ -323,7 +283,7 @@ void Player::TakeDamage(int amount)		// 2025-07-26 È¿ Ãß°¡ : ÇÃ·¹ÀÌ¾î°¡ µ¥¹ÌÁö À
 		cout << "[UIManager ¿¬°áµÊ]" << endl;
 		uiManager->UpdateHPBar(stats->currentHp, stats->maxHp);
 	}
-		
+
 
 	isInvincible = true;
 	invincibleTimer = 0.f;
@@ -331,7 +291,7 @@ void Player::TakeDamage(int amount)		// 2025-07-26 È¿ Ãß°¡ : ÇÃ·¹ÀÌ¾î°¡ µ¥¹ÌÁö À
 
 	if (stats->currentHp <= 0)
 	{
-		std::cout << "[Death È£Ãâ Á¶°Ç ÃæÁ·]" << std::endl;
+		cout << "[Death È£Ãâ Á¶°Ç ÃæÁ·]" << endl;
 		Death();
 	}
 }

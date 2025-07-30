@@ -19,7 +19,7 @@ void Enemy::Update(float dt, sf::Vector2f playerPos)
 {
 	sf::Vector2f dir = playerPos - sprite.getPosition();
 	//cout << sprite.getPosition().x << " , " << sprite.getPosition().y << endl;
-	float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+	float len = sqrt(dir.x * dir.x + dir.y * dir.y);
 	if (len != 0) dir /= len;
 
 	sprite.move(dir * speed * dt);

@@ -4,8 +4,6 @@
 #include "Util.h"
 #include <cmath>
 
-
-
 Spear::Spear(Player* owner) :owner(owner)
 {
 	
@@ -19,7 +17,7 @@ Spear::Spear(Player* owner) :owner(owner)
 	sprite.setScale(0.05f, 0.05f);
 }
 
-void Spear::Update(float deltatime, const std::vector<Enemy*>& enemies)
+void Spear::Update(float deltatime, const vector<Enemy*>& enemies)
 {
 	timer += deltatime;
 	if (!fired)
@@ -30,7 +28,7 @@ void Spear::Update(float deltatime, const std::vector<Enemy*>& enemies)
 		for (auto e : enemies)
 		{
 			if (!e || !e->isAlive) continue; // 널 또는 죽은 적이라면 pass
-			float dist = std::hypot(e->GetGlobalBounds().getPosition().x - sprite.getPosition().x,
+			float dist = hypot(e->GetGlobalBounds().getPosition().x - sprite.getPosition().x,
 				e->GetGlobalBounds().getPosition().y - sprite.getPosition().y);
 			if (dist < minDist)
 			{
@@ -42,20 +40,20 @@ void Spear::Update(float deltatime, const std::vector<Enemy*>& enemies)
 		if (target && target->isAlive) // 타겟이 유효한 상태인지 검사
 		{
 			sf::Vector2f toTarget = target->GetGlobalBounds().getPosition() - sprite.getPosition();
-			float len = std::sqrt(toTarget.x * toTarget.x + toTarget.y * toTarget.y);
+			float len = sqrt(toTarget.x * toTarget.x + toTarget.y * toTarget.y);
 			if (len != 0)
 			{
 				direction = toTarget / len;
 			}
-			float angle = std::atan2(direction.y, direction.x) * 180 / 3.14159f;
+			float angle = atan2(direction.y, direction.x) * 180 / 3.14159f;
 			sprite.setRotation(angle - 90);
 		}
 		else
 		{
 			// 적이 하나도 없으면 랜덤 방향 설정
 			float angle = static_cast<float>(rand()) / RAND_MAX * 2 * 3.14159f;
-			direction = sf::Vector2f(std::cos(angle), std::sin(angle));
-			float deg = std::atan2(direction.y, direction.x) * 180.f / 3.14159f;
+			direction = sf::Vector2f(cos(angle), sin(angle));
+			float deg = atan2(direction.y, direction.x) * 180.f / 3.14159f;
 			sprite.setRotation(deg - 90);
 		}
 		if (timer >= delay)

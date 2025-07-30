@@ -34,14 +34,14 @@ public:
     void Update(const sf::Vector2f& mousePos, bool isClick);
     void Render(sf::RenderWindow& window);
 
-    std::function<void(int)> onSelectCallback;
-    std::function<void()> onCloseCallback;  //
+    function<void(int)> onSelectCallback;
+   function<void()> onCloseCallback;  //
 
 
-    void SetOnSelect(std::function<void(int)> cb);
-    void SetOnClose(std::function<void()> callback);
+    void SetOnSelect(function<void(int)> cb);
+    void SetOnClose(function<void()> callback);
 
-    const std::vector<PlayerStats::StatOption>& GetSelectedChoices() const { return selectedStatChoices; }
+    const vector<PlayerStats::StatOption>& GetSelectedChoices() const { return selectedStatChoices; }
 
     void ClearSelectedChoices();
     

@@ -1,6 +1,6 @@
 #include "Map.h"
 
-void Map::Load(const std::string filename)
+void Map::Load(const string filename)
 {
 	texture.loadFromFile(GetrscPath(filename));
 	spriteMap.setTexture(texture);

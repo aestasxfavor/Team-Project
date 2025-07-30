@@ -20,7 +20,8 @@ struct BulletData
     sf::Sprite sprite;
     sf::Vector2f velocity;
     int damage = 0;//대미지
-    ~BulletData() {
+    ~BulletData() 
+    {
         //std::cout << "소멸자작동!]" << std::endl;
     }
 };
@@ -41,7 +42,7 @@ public:
     void Draw(sf::RenderWindow& window);
     // 모든 적을 화면에 그리기
     void Clear();                  // 적 리스트 초기화 및 동적 할당된 적 메모리 해제
-    std::vector<Enemy*>& GetEnemies();//충돌관련
+    vector<Enemy*>& GetEnemies();//충돌관련
     Player* GetPlayer();
 
 	// 효 추가 : Player 객체를 StageManager에 설정
@@ -54,7 +55,7 @@ public:
     float fireTimer = 0.f;
     float fireInterval = 1.5f; // 발사간격 초단위
 
-    std::vector<BulletData>& GetBullets();
+    vector<BulletData>& GetBullets();
 
     int currentWave = 0; // 현재 웨이브 번호
 
@@ -71,7 +72,7 @@ public:
 private:
    
     Player* player;                 // 효 추가, StageManager가 Player를 내부에 포함함(has - a 관계)
-    std::vector<Enemy*> enemies;   // 현재 게임에 존재하는 적들 포인터 리스트
+    vector<Enemy*> enemies;   // 현재 게임에 존재하는 적들 포인터 리스트
     sf::Texture enemyTexture;      // 적 텍스처 (이미지 데이터)
     float spawnInterval;           // 적 생성 간격 (초)
     float spawnTimer;              // 누적된 시간 (적 생성 시간 체크용)
@@ -88,7 +89,7 @@ private:
     sf::Texture enemy03Texture;//이거 에너미 늘릴대 마다 추가
 
     //투사체 관련 코드
-    std::vector<BulletData> bullets;
+    vector<BulletData> bullets;
     sf::Texture bulletTexture;
     float bulletSpeed = 300.f;
 

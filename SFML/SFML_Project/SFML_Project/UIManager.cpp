@@ -5,7 +5,7 @@ void UIManager::Init()
 {
     if (!font.loadFromFile(GetrscPath("Font/BMJUA_ttf.ttf")))
     {
-       cerr << "폰트 로드 실패!" << std::endl;
+       cerr << "폰트 로드 실패!" << endl;
     }
 	InitPauseUI(); // 일시정지 UI 초기화
 
@@ -44,8 +44,8 @@ void UIManager::Update(float dt)
 		UpdateExpBar(player->stats->currentExp, player->stats->exp); // 경험치 바 업데이트
 
         // 레벨 텍스트
-        levelText.setString("Lv." + std::to_string(player->stats->level));
-        levelTextShadow.setString("Lv." + std::to_string(player->stats->level));
+        levelText.setString("Lv." + to_string(player->stats->level));
+        levelTextShadow.setString("Lv." + to_string(player->stats->level));
     }
 
 }
@@ -119,7 +119,7 @@ void UIManager::InitStatusUIBar()
     // 1. 프로필 아이콘 (왼쪽 상단)
     if (!profileTexture.loadFromFile(GetrscPath("profile.png"))) 
     {
-        std::cerr << "프로필 이미지 로드 실패!" << std::endl;
+       cerr << "프로필 이미지 로드 실패!" << endl;
     }
    /* profileTexture.loadFromFile("profile.png");*/
     profileIcon.setTexture(profileTexture);
@@ -184,12 +184,10 @@ void UIManager::UpdateWaveTimerText()
     if (!isWavePaused)  // 일시정지 중이 아니면 현재 경과 시간 추가
         elapsed += waveClock.getElapsedTime().asSeconds();
 
-    //std::cout << "Wave Timer 경과 시간 (누적): " << elapsed << std::endl;
-
     int timeLeft = 30 - static_cast<int>(elapsed);
     if (timeLeft < 0) timeLeft = 0;
 
-    timerText.setString(std::to_string(timeLeft));
+    timerText.setString(to_string(timeLeft));
 
     // 중앙 정렬
     sf::FloatRect textBounds = timerText.getLocalBounds();
@@ -219,7 +217,7 @@ void UIManager::ResumeWaveTimer()
     {
         waveClock.restart();// 새 clock 시작  // 일시정지 해제 시, 새로운 시간 측정 시작
         isWavePaused = false;
-        std::cout << "[UIManager] 타이머 재개됨!" << std::endl;
+        cout << "[UIManager] 타이머 재개됨" << endl;
     }
 }
 
@@ -229,7 +227,7 @@ void UIManager::PauseWaveTimer()
     {
         elapsedBeforePause += waveClock.getElapsedTime().asSeconds();  // 누적시간 저장
         isWavePaused = true;
-        std::cout << "[UIManager] 타이머 일시정지됨, 누적 시간: " << elapsedBeforePause << std::endl;
+        cout << "[UIManager] 타이머 일시정지됨, 누적 시간: " << elapsedBeforePause << endl;
     }
 }
 
@@ -239,7 +237,7 @@ void UIManager::ShowWaveText(int wave)
     showWaveText = true;
     waveTextTimer = 2.5f;
 
-    waveText.setString("Wave " + std::to_string(wave));
+    waveText.setString("Wave " + to_string(wave));
 
     // 중앙 정렬 다시 맞추기
     sf::FloatRect bounds = waveText.getLocalBounds();
@@ -262,7 +260,7 @@ void UIManager::UpdateHPBar(int currentHp, int maxHp)
     hpBarFront.setSize({ 300.f * ratio, 20.f });
 
     // 텍스트 갱신
-    std::string hpStr = std::to_string(currentHp) + " / " + std::to_string(maxHp);
+    string hpStr = to_string(currentHp) + " / " + to_string(maxHp);
     hpText.setString(hpStr);
     hpTextShadow.setString(hpStr); // 그림자 텍스트도 같이
 
@@ -295,13 +293,13 @@ void UIManager::InitShop(PlayerStats& playerStats)
         if (index >= 0)
         {
             const auto& option = shopUI.GetSelectedChoices()[index];
-            std::wcout << L"[DEBUG] 선택된 옵션: " << option.name << L" +" << option.amount << std::endl;
+           wcout << L"[DEBUG] 선택된 옵션: " << option.name << L" +" << option.amount << endl;
 
 
             // 선택된 옵션을 플레이어에게 적용
             playerStats.ApplyStat(option);
 
-            AddStatLog(option.name + L" +" + std::to_wstring(option.amount));
+            AddStatLog(option.name + L" +" + to_wstring(option.amount));
 
         }
 
@@ -310,7 +308,7 @@ void UIManager::InitShop(PlayerStats& playerStats)
         });
 
     shopUI.SetOnClose([&]() {
-        std::cout << "[UIManager] 상점 닫힘 콜백 호출됨" << std::endl;
+        cout << "[UIManager] 상점 닫힘 콜백 호출됨" << endl;
         // 여기에 다음 웨이브 시작 트리거나 외부 함수 호출 가능
         });
 }
@@ -335,9 +333,9 @@ bool UIManager::IsShopOpen() const
     { return shopUI.IsOpen(); }
 }
 
-void UIManager::AddStatLog(const std::wstring& log)
+void UIManager::AddStatLog(const wstring& log)
 {
-    std::wcout << L"[StatLog 추가됨] " << log << std::endl;
+    wcout << L"[StatLog 추가됨] " << log << endl;
 
     statLogs.push_back(log);
     if (statLogs.size() > 3)
@@ -373,7 +371,7 @@ void UIManager::RenderStatLog(sf::RenderWindow& window)
     window.draw(statLogBox);
     for (int i = 0; i < statLogs.size(); i++)
     {
-    std::wcout << L"[렌더링 직전 텍스트] " << statLogTexts[i].getString().toWideString() << std::endl;
+    wcout << L"[렌더링 직전 텍스트] " << statLogTexts[i].getString().toWideString() << endl;
         window.draw(statLogTexts[i]);
     }
 }
@@ -414,7 +412,7 @@ void UIManager::Reset()
 void UIManager::ClearStatLog()
 {
     statLogs.clear();
-    std::cout << "[UIManager] 스탯 로그 초기화됨" << std::endl;
+    cout << "[UIManager] 스탯 로그 초기화됨" << endl;
 }
 
 void UIManager::InitPauseUI()

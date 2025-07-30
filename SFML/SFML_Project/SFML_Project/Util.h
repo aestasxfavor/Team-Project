@@ -1,21 +1,29 @@
-// 효 추가
 #pragma once
+
+// ==========================================================
+// [SFML 관련 라이브러리]
+// ==========================================================
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+
+// ==========================================================
+// [기본 시스템 헤더]
+// ==========================================================
 #include <iostream>
-#include <Windows.h>	// 이건 혹시 몰라서 
-#include <conio.h>
-#include <time.h>
-#include <utility>
-#include <chrono>
-#include <cstdlib> // rand()
-#include <cmath>	// 작아졌다 커졌다 느낌을 주기위한 애니메이션 (sin 함수 사용)
-#include <functional>
-#include <iomanip>
-#include <sstream>	// 문자열 스트림
+#include <Windows.h>     // 윈도우 전용 기능 (ex. Sleep 등)
+#include <conio.h>       // 콘솔 입력 (_kbhit, _getch 등)
+#include <time.h>        // 시간 관련 (srand, time)
+#include <chrono>        // 고정밀도 시간 측정
+#include <cstdlib>       // rand(), srand()
+#include <cmath>         // 수학 함수 (ex. sin 함수로 애니메이션)
+#include <functional>    // 함수 객체, 람다 표현식
+#include <utility>       // std::pair 등
+#include <iomanip>       // 입출력 포맷 조절
+#include <sstream>       // 문자열 스트림 (숫자 → 문자열 변환 등)
 
-
-// 자료구조 컨테이너
+// ==========================================================
+// [표준 자료구조 컨테이너]
+// ==========================================================
 #include <string>
 #include <vector>
 #include <set>
@@ -26,29 +34,39 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <algorithm>
-#include <ranges>		// 범위기반 알고리즘 헤더
+#include <ranges>        // C++20 범위 기반 알고리즘
+
+// ==========================================================
+// [기본 네임스페이스 지정]
+// ==========================================================
+// 전체 using namespace std는 피하고 필요한 것만 제한적으로 사용
 
 using namespace std;
 
-// 밑에 따로 해놓은 것도 네임스페이스 충돌 방지를 위해 필요한것만 선언(vector, queue 등 필요하면 추가예정)
 using std::cout;
 using std::cin;
 using std::endl;
 using std::string;
 
-// 효 추가: 상대경로 하는 게 나중 공동작업 들어갈 때 충돌 안나기 때문에 요렇게 했습니다
+// ==========================================================
+// [리소스 경로 유틸 함수]
+// ==========================================================
+
+// 상대경로로 통일해서 협업 시 경로 충돌 방지
+
+// 공용 리소스 폴더 경로 생성기
 inline std::string GetrscPath(const std::string& filename)
 {
 	return "../../Rjpg/" + filename;
 }
 
-// 폰트 전용 상대경로 
+// 폰트 전용 경로 생성기
 inline std::string GetscPath(const std::string& filename)
 {
 	return "../../Rjpg/Font/" + filename;
 }
 
-// 사운드 전용 상대경로
+// 사운드 전용 경로 생성기
 inline std::string GetSoundPath(const std::string& filename)
 {
 	return "../../Rjpg/Sound/" + filename;

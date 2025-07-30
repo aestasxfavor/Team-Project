@@ -17,7 +17,7 @@ private:
 	sf::Sprite sprite;
 	sf::Texture spearTexture;
 
-	const std::vector<Enemy*> enemy;
+	const vector<Enemy*> enemy;
 
 	float timer = 0.f;				// 타이머 계산용	
 	float delay = 1.f;				// 1초 기다렸다 확인 용도
@@ -29,7 +29,7 @@ private:
 public:
 	int spearDamage = 10;
 	Spear(Player* owner);
-	void Update(float deltatime, const std::vector<Enemy*>& enemies);
+	void Update(float deltatime, const vector<Enemy*>& enemies);
 	void Render(sf::RenderWindow& window);
 	bool IsFinished() const; // 창의 수명이 끝났는 지..
 	bool Checkcollision(Enemy* enemy);		//충돌 함수

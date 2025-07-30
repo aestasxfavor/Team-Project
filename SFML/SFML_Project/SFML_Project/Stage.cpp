@@ -3,6 +3,20 @@
 
 int Stage::killCount = 0;
 
+Stage::Stage()
+{
+	player = nullptr;
+	stageManager = nullptr;
+	uiManager = nullptr;
+}
+
+Stage::~Stage()
+{
+	delete player;
+	delete stageManager;
+	delete uiManager;
+}
+
 void Stage::Init()
 {
 	map.Load("background.png");
@@ -47,7 +61,7 @@ void Stage::Update(float deltaTime)
 			sf::FloatRect bulletBounds = bullets[i].sprite.getGlobalBounds();
 			if (playerBounds.intersects(bullets[i].sprite.getGlobalBounds()))
 			{
-				std::cout << "투사체 충돌! damage: " << bullets[i].damage << std::endl;
+				cout << "투사체 충돌! damage: " << bullets[i].damage << endl;
 				player->TakeDamage(bullets[i].damage); //직접 저장된 데미지를 사용
 				bullets.erase(bullets.begin() + i);    //투사체 제거
 			}

@@ -18,7 +18,7 @@ private:
 
 	sf::Clock clock; // 애니메이션 타이머용 시계
 
-	std::vector<sf::Text> animatedTextLetters;
+	vector<sf::Text> animatedTextLetters;
 	float animationTimer = 0.f;
 public:	
 	void Init() override;        // 초기화 함수

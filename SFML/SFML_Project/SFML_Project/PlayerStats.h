@@ -47,12 +47,12 @@ public:
 public:
 	struct StatOption           //선택지 옵션 구조체
 	{
-		std::wstring name;
+		wstring name;
 		StatType type = StatType::DEFAULT;
 		float amount = 0;
-		std::wstring Grade;
+		wstring Grade;
 	};
-	const std::vector<StatOption> options = {
+	const vector<StatOption> options = {
 		{L"체력 +10",StatType::MAXHP,10.f,L"C"},
 		{L"체력 +20",StatType::MAXHP,20.f,L"B"},
 		{L"체력 +30",StatType::MAXHP,30.f,L"A"},
@@ -76,7 +76,7 @@ public:
 	};  // 위 선택지 내용 담아둘 컨테이너
 
 public:
-	std::vector<StatOption> GetRandomChoices(const vector<StatOption>& pool, int count = 3);
+	vector<StatOption> GetRandomChoices(const vector<StatOption>& pool, int count = 3);
 
 	// PlayerStats.h 안에 추가
 	const vector<StatOption>& GetStatPool() const { return options; }

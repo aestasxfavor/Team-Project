@@ -59,7 +59,7 @@ private:
 
     // ---------------------- 스탯 로그 UI ----------------------
 
-    std::vector<std::wstring> statLogs;  // 최근 선택 스탯 로그
+    vector<wstring> statLogs;  // 최근 선택 스탯 로그
     sf::RectangleShape statLogBox;       // 로그 감싸는 네모 UI
     sf::Text statLogTexts[3];            // 최근 3개 스탯 로그 출력용
 
