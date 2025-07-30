@@ -255,7 +255,7 @@ void StageManager::SpawnEnemiesForWave(int waveNumber)
 	// 웨이브 수에 따라 생성할 적 수 결정 (ex: wave * 3 마리)
 	int numEnemies = waveNumber * 3;
 
-	for (int i = 0; i < numEnemies; ++i)
+	for (int i = 0; i < numEnemies; i++)
 	{
 		// 플레이어 위치 기준으로 생성할 수 있도록 좌표는 플레이어 기준으로
 		sf::Vector2f playerPos = player ? player->GetPosition() : sf::Vector2f(400.f, 300.f);
@@ -284,18 +284,19 @@ bool StageManager::IsResetting() const
 	return isResetting;
 }
 
+
 void StageManager::NextWave(Player& player, UIManager& uiManager, int selectedIndex, const vector<PlayerStats::StatOption>& selectedChoices)
 {
-	currentWave++;
+	currentWave++;			// 현재 웨이브 증가
 	cout << "[StageManager] Wave " << currentWave << " 시작!" << endl;
 
 	// UI 매니저에 웨이브 텍스트 갱신
-	if (!IsResetting() && selectedIndex >= 0 && selectedIndex < selectedChoices.size())
+	if (!IsResetting() && selectedIndex >= 0 && selectedIndex < selectedChoices.size())  // 선택된 인덱스가 유효한지 확인하기
 	{
-		player.stats->ApplyStat(selectedChoices[selectedIndex]);
+		player.stats->ApplyStat(selectedChoices[selectedIndex]);				// 선택된 스탯 적용
 
-		wstringstream ss;
-		ss << fixed << setprecision(2);
+		wstringstream ss;	// wstringstream 사용 폰트 적용을 위해 
+		ss << fixed << setprecision(2);	// 소수점 2자리까지 표시
 
 		switch (selectedChoices[selectedIndex].type)
 		{
@@ -308,19 +309,18 @@ void StageManager::NextWave(Player& player, UIManager& uiManager, int selectedIn
 		default: ss << L"기타"; break;
 		}
 
-		wstring statName = ss.str();
-		uiManager.AddStatLog(statName);
+		wstring statName = ss.str();			
+		uiManager.AddStatLog(statName);		// UI 매니저에 스탯 로그 추가
 	}
 
 	// 체력 회복
 	if (player.stats)
 	{
-		player.stats->currentHp = player.stats->maxHp;
+		player.stats->currentHp = player.stats->maxHp;			// 매 웨이브마다 체력 회복
 	}
 
-	SpawnEnemiesForWave(currentWave);
+	SpawnEnemiesForWave(currentWave);		// 웨이브가 생성될 때 마다 적 생성
 	
-
 }
 
 

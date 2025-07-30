@@ -97,6 +97,7 @@ public:
     void UpdateHPBar(int currentHp, int maxHp);
     void UpdateExpBar(int currentExp, int maxExp);
     void SetPlayer(Player* _player);
+    void UpdateStatusUI();
 
     // 체력/레벨 그림자 텍스트 초기화
     void statusShadowText();

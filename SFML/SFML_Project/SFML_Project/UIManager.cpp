@@ -250,6 +250,35 @@ void UIManager::SetPlayer(Player* _player)
     player = _player;
 }
 
+void UIManager::UpdateStatusUI()
+{
+    cout << "[expBarFront] width: " << expBarFront.getSize().x << endl;
+
+    // 방어 코드
+    if (!player || !player->stats)
+    {
+        std::cerr << "[경고] UIManager::UpdateStatusUI - player 또는 stats가 nullptr입니다!" << std::endl;
+        return;
+    }
+
+    if (player == nullptr || player->stats == nullptr)
+        return;
+
+    PlayerStats* stats = player->stats;
+
+    // 체력바 갱신
+    float hpRatio = static_cast<float>(stats->currentHp) / stats->maxHp;
+    hpBarFront.setSize({ 300.f * hpRatio, 20.f });
+    hpText.setString(to_string(stats->currentHp) + " / " + to_string(stats->maxHp));
+
+    // 경험치바 갱신
+    float expRatio = static_cast<float>(stats->currentExp) / stats->exp;
+    expBarFront.setSize({ 300.f * expRatio, 10.f });
+
+    // 레벨 텍스트 갱신
+    levelText.setString("Lv." + to_string(stats->level));
+}
+
 void UIManager::UpdateHPBar(int currentHp, int maxHp)
 {
     float ratio = static_cast<float>(currentHp) / maxHp;
