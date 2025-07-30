@@ -11,6 +11,8 @@
 #include <cstdlib> // rand()
 #include <cmath>	// 작아졌다 커졌다 느낌을 주기위한 애니메이션 (sin 함수 사용)
 #include <functional>
+#include <iomanip>
+#include <sstream>	// 문자열 스트림
 
 
 // 자료구조 컨테이너
@@ -44,4 +46,10 @@ inline std::string GetrscPath(const std::string& filename)
 inline std::string GetscPath(const std::string& filename)
 {
 	return "../../Rjpg/Font/" + filename;
+}
+
+// 사운드 전용 상대경로
+inline std::string GetSoundPath(const std::string& filename)
+{
+	return "../../Rjpg/Sound/" + filename;
 }

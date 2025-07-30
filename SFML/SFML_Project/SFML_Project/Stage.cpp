@@ -18,28 +18,14 @@ void Stage::Init()
 		stageManager->Init();  // 적 텍스처 등 초기화
 		
 	}
-
-	// charTex.loadFromFile(GetrscPath("player_cat.png"));
-	// SPplayer.setTexture(charTex);
-	// SPplayer.setTextureRect(sf::IntRect(0,40, 48, 48));
-
-
-
-	// sfml include 해서 세팅하거나 
-	// 그냥 초기화 진행 할거
-
-	//추가
-	view.setSize(800.f, 600.f);//화면으로 보여줄 뷰 크기 
+	view.setSize(1920.f, 1080.f);//화면으로 보여줄 뷰 크기 
 	
 }
 
 
 void Stage::Update(float deltaTime)
 {
-	// enemyManager.update();
-	// dropManager.update();
-	// uiManager.update();
-	// effectManager.update();
+	
 	//추가
 	if (stageManager)
 	{
@@ -54,7 +40,7 @@ void Stage::Update(float deltaTime)
 			view.getSize().x,
 			view.getSize().y
 		);
-		
+
 
 		for (int i = bullets.size() - 1; i >= 0; --i)
 		{
@@ -103,8 +89,6 @@ void Stage::HandlePlayerEnemyCollision()//충돌관련 (2025-07-21 준호님 추가)
 		{
 			player->TakeDamage(enemy->GetAtk());   // 플레이어가 받는 피해
 			//나중에 에너미 atk로 수정
-			
-			//enemy->TakeDamage(player->stats->damage);   // 플레이어가 가하는 피해
 			
 			//나중에 무기에 넣을거면 재횔용될듯
 

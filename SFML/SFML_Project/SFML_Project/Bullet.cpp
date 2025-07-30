@@ -60,9 +60,14 @@ void Bullet::Update(float deltaTime , const std::vector<Enemy*>& enemies)
         if (damagedEnemies.count(enemy)) continue; // 이미 맞은 적은 스킵
 
         if (bulletSprite.getGlobalBounds().intersects(enemy->GetGlobalBounds())) {
+
+            enemy->TakeDamage(stats->damage); // 필요 시 데미지 수치 조정
+            damagedEnemies.insert(enemy);
+
             damagedEnemies.insert(enemy);
             enemy->TakeDamage(stats->damage); // 필요 시 데미지 수치 조정
             cout << "적에게 데미지 " << stats->damage << " 입힘!" << std::endl;
+
         }
     }
 }

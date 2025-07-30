@@ -14,8 +14,6 @@ Enemy::Enemy(sf::Texture& texture, sf::Vector2f spawnPos)
     sprite.setScale(scale);  // 디폴트값
 }
 
-
-
 // 기본 이동 로직
 void Enemy::Update(float dt, sf::Vector2f playerPos)
 {
@@ -36,21 +34,10 @@ void Enemy::Draw(sf::RenderWindow& window)
 // 피격 처리
 void Enemy::TakeDamage(int amount)
 {
-
-    // 2025-07-23 데미지 코드 보류 
-  /*  if (amount <= 0)
-    {
-        cout << "음수 처리 안되게" << amount << endl;
-        return;
-    }*/
-
     hp -= amount;          // 데미지 만큼 체력 차감
 
-    //std::cout << "[슬라임 피격] 현재 HP: " << hp << std::endl;
     if (hp <= 0)           // 체력 0 이하이면
         dead = true;       // 죽음 표시
-
-    
 
 }
 
@@ -62,7 +49,7 @@ bool Enemy::IsDead() const
 
 Enemy::~Enemy()
 {
-   // std::cout << "  작동!" << std::endl;
+    // std::cout << "  작동!" << std::endl;
 }
 
 // 공격력 반환
@@ -134,10 +121,6 @@ void enemy01::Update(float dt, sf::Vector2f playerPos)
         sprite.setTextureRect(sf::IntRect(left, 0, frameSize.x, frameSize.y));
     }
 }
-
-//        sprite.setTextureRect(sf::IntRect(currentFrame * frameSize.x, 0, frameSize.x, frameSize.y));
-//    }
-//}
 
 // enemy01::CanFire
 bool enemy01::CanFire(float dt)
@@ -254,12 +237,6 @@ bool enemy03::CanFire(float dt)
     }
     return false;
 }
-
-// enemy03::TryFire
-//void enemy03::TryFire(StageManager* manager, sf::Vector2f playerPos)
-//{
-//    manager->FireBulletAtPlayer(GetPosition(), playerPos, atk);
-//}
 
 //원형투사체
 void enemy03::TryFire(StageManager* stageManager, sf::Vector2f playerPos)

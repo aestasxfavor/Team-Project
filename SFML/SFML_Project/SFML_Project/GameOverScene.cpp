@@ -1,72 +1,119 @@
-#include "GameOverScene.h"
+ï»¿#include "GameOverScene.h"
 #include "SceneManager.h"
+#include "GameScene.h"
+#include "SoundManager.h"
+
+extern SceneManager sceneManager;
 
 void GameOverScene::Init()
 {
-    std::cout << "[GameOverScene] Init È£ÃâµÊ" << std::endl;
+    std::cout << "[GameOverScene] Init í˜¸ì¶œë¨" << std::endl;
 
     if (!backgroundTexture.loadFromFile(GetrscPath("background.png")))
     {
-        std::cerr << "GameOverScene ¹è°æ ÀÌ¹ÌÁö ·Îµå ½ÇÆĞ!" << std::endl;
+        std::cerr << "GameOverScene ë°°ê²½ ì´ë¯¸ì§€ ë¡œë“œ ì‹¤íŒ¨!" << std::endl;
     }
     backgroundSprite.setTexture(backgroundTexture);
 
+    // ğŸ”¹ í•´ìƒë„ì— ë§ì¶° ë°°ê²½ ìŠ¤ì¼€ì¼ ì¡°ì •
+    sf::Vector2u windowSize = { 1920, 1080 };
+    sf::Vector2u textureSize = backgroundTexture.getSize();
+
+    float scaleX = static_cast<float>(windowSize.x) / textureSize.x;
+    float scaleY = static_cast<float>(windowSize.y) / textureSize.y;
+
+    backgroundSprite.setScale(scaleX, scaleY);
+    backgroundSprite.setPosition(0.f, 0.f); // ì¢Œì¸¡ ìƒë‹¨ ê³ ì •
+
+    // ğŸ”¹ í°íŠ¸ ë¡œë“œ
     if (!font.loadFromFile(GetrscPath("Font/BMJUA_ttf.ttf")))
     {
-        std::cerr << "ÆùÆ® ·Îµù ½ÇÆĞ!" << std::endl;
+        std::cerr << "í°íŠ¸ ë¡œë”© ì‹¤íŒ¨!" << std::endl;
     }
-    //font.loadFromFile(GetrscPath("Font/BMJUA_ttf.ttf"));
 
-    gameOverText.setFont(font);
-    gameOverText.setString("Game Over");
-    gameOverText.setCharacterSize(40);
-    gameOverText.setFillColor(sf::Color::White);
-    gameOverText.setPosition(300, 200);
+    //// ğŸ”¹ Game Over í…ìŠ¤íŠ¸
+    //gameOverText.setFont(font);
+    //gameOverText.setString("Game Over");
+    //gameOverText.setCharacterSize(80);
+    //gameOverText.setFillColor(sf::Color::White);
 
+    //sf::FloatRect goBounds = gameOverText.getLocalBounds();
+    //gameOverText.setOrigin(goBounds.left + goBounds.width / 2.f, goBounds.top + goBounds.height / 2.f);
+    //gameOverText.setPosition(1920.f / 2.f, 1080.f / 2.f - 30.f);
+
+    std::string textStr = "Game Over";
+    float letterSpacing = 60.f; // ê¸€ì ê°„ê²©
+    float startX = 1920.f / 2.f - (textStr.size() / 2.f * letterSpacing);
+    float baseY = 1080.f / 2.f - 150.f;
+
+    for (size_t i = 0; i < textStr.size(); i++)
+    {
+        sf::Text letter;
+        letter.setFont(font);
+        letter.setString(textStr[i]);
+        letter.setCharacterSize(100);         // ë” í¬ê²Œ ë³´ì—¬ë„ ê´œì°®ì„ ë“¯
+        letter.setFillColor(sf::Color::White);
+        letter.setPosition(startX + i * letterSpacing, baseY);
+        animatedTextLetters.push_back(letter);
+    }
+
+    // ğŸ”¹ Press Enter í…ìŠ¤íŠ¸
     restartText.setFont(font);
-    restartText.setString("Press Enter to Title");  //  ¾È³» ¹®±¸ ¼öÁ¤
-    restartText.setCharacterSize(36);
+    restartText.setString("Press Enter to Title");
+    restartText.setCharacterSize(50);
     restartText.setFillColor(sf::Color::White);
-    restartText.setPosition(300, 300);
 
-    //sf::View defaultView;
-    //defaultView.setSize(800, 600);            // ³ÊÈñ Ã¢ »çÀÌÁî·Î
-    //defaultView.setCenter(800 / 2, 600 / 2);  // °¡¿îµ¥ Á¤·Ä
-    //window.setView(defaultView);   // ¶Ç´Â window.setView(...) ¹æ½ÄÀ¸·Î
+    sf::FloatRect reBounds = restartText.getLocalBounds();
+    restartText.setOrigin(reBounds.left + reBounds.width / 2.f, reBounds.top + reBounds.height / 2.f);
+    restartText.setPosition(1920.f / 2.f, 1080.f / 2.f + 60.f);
 }
 
 void GameOverScene::Update(sf::RenderWindow& window)
 {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) 
+ 
+    float dt = clock.restart().asSeconds();  
+    animationTimer += dt * 2.f;  // â† ì—¬ê¸°ì„œ 2.fë¥¼ ì¤„ì´ë©´ ëŠë ¤ì§, ëŠ˜ë¦¬ë©´ ë¹¨ë¼ì§
+
+    for (size_t i = 0; i < animatedTextLetters.size(); i++)
     {
-        SceneManager::ChangeScene("Game"); // ´Ù½Ã ½ÃÀÛ
+        float offset = sin(animationTimer + i * 0.3f); // ìˆœì°¨ì  ì• ë‹ˆë©”ì´ì…˜
+        float y = 1080.f / 2.f - 150.f;
+        animatedTextLetters[i].setPosition(animatedTextLetters[i].getPosition().x, y);
+
+        // ê¹œë¹¡ì´ëŠ” ëŠë‚Œ ì¤„ ê±°ë©´ ì•ŒíŒŒê°’ ì¡°ì •
+        int alpha = static_cast<int>(128 + 127 * sin(animationTimer + i * 0.3f));
+        animatedTextLetters[i].setFillColor(sf::Color(255, 255, 255, alpha));
     }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) 
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
     {
-        SceneManager::ChangeScene("Title"); //  Å¸ÀÌÆ² È­¸éÀ¸·Î ÀüÈ¯!
+        GameScene* gameScene = dynamic_cast<GameScene*>(SceneManager::GetScene("Game"));
+        if (gameScene)
+        {
+            gameScene->ResetGame();  // ìƒíƒœ ì´ˆê¸°í™”
+        }
+		    soundManager.StopBGM();  // ë¸Œê¸ˆ ë©ˆì¶”ê¸°
+            SceneManager::ChangeScene("Title");
     }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-        window.close(); // °ÔÀÓ Á¾·á
-    }
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) 
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
     {
-        window.close(); // °ÔÀÓ Á¾·á
+        window.close();
     }
 }
 
 void GameOverScene::Render(sf::RenderWindow& window)
 {
-    window.setView(window.getDefaultView());
-    window.clear(sf::Color::Black); // ¶Ç´Â ¹è°æ»ö
+    window.setView(window.getDefaultView());  // ì¹´ë©”ë¼ ì´ˆê¸°í™” (ì¤‘ì•™ ê³ ì •)
 
-    // ¹è°æ ÀÌ¹ÌÁö°¡ ÀÖ´Ù¸é
+    window.clear(sf::Color::Black);
     window.draw(backgroundSprite);
-
-    // ÅØ½ºÆ®µé ±×¸®±â
-    window.draw(gameOverText);
+    //window.draw(gameOverText);
+    // Render()ì—ì„œ ê¸°ì¡´ gameOverText ëŒ€ì‹ 
+    for (auto& letter : animatedTextLetters)
+    {
+        window.draw(letter);
+    }
     window.draw(restartText);
-
 }
+

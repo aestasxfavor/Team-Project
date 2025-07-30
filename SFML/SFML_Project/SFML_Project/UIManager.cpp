@@ -14,9 +14,15 @@ void UIManager::Init()
 
     statusShadowText();  //  이거 추가해줘야 그림자 텍스트도 초기화됨
 
+	InitStatLogUI(font); // 스탯 로그 UI 초기화
 	shopUI.Init(font); // 상점 UI 초기화
+
+    // player가 Init() 전에 아직 nullptr 아니면 SetPlayer() 함수 안에서 등록하기
+    if (player != nullptr)
+        InitShop(*player->stats);
 	
 }
+
 void UIManager::Update(float dt)
 {
    // option.
@@ -72,6 +78,7 @@ void UIManager::Render(sf::RenderWindow& window)
 
 	// 5. 상점 UI 그리기
     RenderShop(window);
+    RenderStatLog(window);
     // 6. 원래 뷰 복원
     window.setView(originalView);
 }
@@ -80,19 +87,29 @@ void UIManager::InitTimeText()
 {
     // 타이머 텍스트 설정
     timerText.setFont(font);
-    timerText.setCharacterSize(30);
+    timerText.setCharacterSize(45);
     timerText.setFillColor(sf::Color::White);
-    timerText.setPosition(800.f / 2.f, 60.f);
+    
+    sf::FloatRect bounds = timerText.getLocalBounds();
+    timerText.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+
+    timerText.setPosition(1920.f / 2.f, 140.f);  // 조금 아래
+    //timerText.setPosition(1920.f / 2.f, 60.f);
 }
 
 void UIManager::InitWaveText()
 {
     // Wave 텍스트 설정
     waveText.setFont(font);
-    waveText.setCharacterSize(30);
+    waveText.setCharacterSize(45);
     waveText.setFillColor(sf::Color::White);
-    waveText.setString("");
-    waveText.setPosition(800.f / 2.f, 100.f); // 적절한 중앙 위치로 조정
+    waveText.setString("99");
+    // 중심 잡기
+    sf::FloatRect bounds = waveText.getLocalBounds();
+    waveText.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+
+    waveText.setPosition(1920.f / 2.f, 100.f);  // 위쪽
+    //waveText.setPosition(1920.f / 2.f, 100.f); // 적절한 중앙 위치로 조정
     waveClock.restart();
 }
 
@@ -105,38 +122,43 @@ void UIManager::InitStatusUIBar()
     }
    /* profileTexture.loadFromFile("profile.png");*/
     profileIcon.setTexture(profileTexture);
-    profileIcon.setScale(1.0f, 1.0f);
-    profileIcon.setPosition(10.f, 10.f);  // 화면 좌상단 여백 20
+    profileIcon.setScale(1.5f, 1.5f);
+    profileIcon.setPosition(30.f, 30.f);  // 화면 좌상단 여백 20
 
     // 2. 체력 바 (아이콘 오른쪽)
-    hpBarBack.setSize({ 200.f, 20.f });
+    hpBarBack.setSize({ 300.f, 20.f });
     hpBarBack.setFillColor(sf::Color(50, 50, 50));
-    hpBarBack.setPosition(80.f, 30.f);  // 아이콘보다 살짝 아래
+    hpBarBack.setPosition(130.f, 38.f);  // 아이콘보다 살짝 아래
 
-    hpBarFront.setSize({ 200.f, 20.f });
+    hpBarFront.setSize({ 300.f, 20.f });
     hpBarFront.setFillColor(sf::Color::Red);
-    hpBarFront.setPosition(80.f, 30.f);
+    hpBarFront.setPosition(130.f, 38.f);
 
     // 3. 경험치 바 (체력바 아래)
-    expBarBack.setSize({ 200.f, 10.f });
+    expBarBack.setSize({ 300.f, 10.f });
     expBarBack.setFillColor(sf::Color(30, 30, 30));
-    expBarBack.setPosition(80.f, 55.f);  // 체력바 아래쪽에 여백
+    expBarBack.setPosition(130.f, 62.f);  // 체력바 아래쪽에 여백
 
-    expBarFront.setSize({ 200.f, 10.f }); // 초기값
+    expBarFront.setSize({ 300.f, 10.f }); // 초기값
     expBarFront.setFillColor(sf::Color::Green);
-    expBarFront.setPosition(80.f, 55.f);
+    expBarFront.setPosition(130.f, 62.f);
 
     // 4. 체력 수치 텍스트 (hpBar 오른쪽 위쪽 정렬)
     hpText.setFont(font);
-    hpText.setCharacterSize(16);
+    hpText.setCharacterSize(18);
     hpText.setFillColor(sf::Color::White);
-    hpText.setPosition(290.f, 30.f);  // 체력바 오른쪽에 위치
+    hpText.setPosition(130.f + 300.f - 70.f, 38.f);  // 체력바 오른쪽에 위치
 
     // 5. 레벨 텍스트 (hp 위에 살짝)
     levelText.setFont(font);
-    levelText.setCharacterSize(16);
+    levelText.setCharacterSize(18);
     levelText.setFillColor(sf::Color::White);
-    levelText.setPosition(290.f, 10.f);  // hp 텍스트보다 위
+
+    sf::FloatRect expBounds = expBarBack.getGlobalBounds();
+    sf::FloatRect lvBounds = levelText.getLocalBounds();
+
+    // 경험치 바 오른쪽 끝 + 약간의 여백
+    levelText.setPosition(450.f, 52.f);
 
 }
 
@@ -165,7 +187,7 @@ void UIManager::UpdateWaveTimerText()
     // 중앙 정렬 유지하려면 Origin 다시 설정
     sf::FloatRect textBounds = timerText.getLocalBounds();
     timerText.setOrigin(textBounds.width / 2.f, textBounds.height / 2.f);
-    timerText.setPosition(400, 70); // y값 조절
+    timerText.setPosition(1920.f / 2.f, 70.f); // y값 조절
 }
 
 void UIManager::ResetWaveTimer()
@@ -190,7 +212,7 @@ void UIManager::ShowWaveText(int wave)
     // 중앙 정렬 다시 맞춰주기!
     sf::FloatRect bounds = waveText.getLocalBounds();
     waveText.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
-    waveText.setPosition(400, 30); // 위쪽 위치
+    waveText.setPosition(1920.f / 2.f, 30.f); // 위쪽 위치
 }
 
 void UIManager::SetPlayer(Player* _player)
@@ -205,7 +227,7 @@ void UIManager::UpdateHPBar(int currentHp, int maxHp)
     if (ratio > 1.f) ratio = 1.f;
 
     // 체력바 크기 조절
-    hpBarFront.setSize({ 200.f * ratio, 20.f });
+    hpBarFront.setSize({ 300.f * ratio, 20.f });
 
     // 텍스트 갱신
     std::string hpStr = std::to_string(currentHp) + " / " + std::to_string(maxHp);
@@ -213,7 +235,7 @@ void UIManager::UpdateHPBar(int currentHp, int maxHp)
     hpTextShadow.setString(hpStr); // 그림자 텍스트도 같이
 
     // 위치 조정 (수치 길이 달라질 수도 있으니까 고정 말고 벡터로)
-    sf::Vector2f pos(190.f, 28.f);
+    sf::Vector2f pos(345.f, 34.f);
     hpText.setPosition(pos);
     hpTextShadow.setPosition(pos + sf::Vector2f(1.f, 1.f));
 }
@@ -237,16 +259,43 @@ void UIManager::UpdateExpBar(int currentExp, int maxExp)
 
     // 경험치 바 길이 조절
     expBarFront.setOrigin(0.f, 0.f); // 왼쪽 기준
-    expBarFront.setSize({ 200.f * ratio, 10.f }); // 너비는 200 기준
-    expBarFront.setPosition(80.f, 55.f); 
+    expBarFront.setSize({ 300.f * ratio, 10.f }); // 너비는 200 기준
+    expBarFront.setPosition(130.f, 62.f); 
     
     // 수치 느낌 애니메이션용 저장
     targetExpRatio = ratio;
 }
 
-void UIManager::OpenShop()
+void UIManager::InitShop(PlayerStats& playerStats)
 {
-   shopUI.Open();
+    shopUI.SetOnSelect([&](int index) 
+        {
+        if (index >= 0)
+        {
+            const auto& option = shopUI.GetSelectedChoices()[index];
+            std::wcout << L"[DEBUG] 선택된 옵션: " << option.name << L" +" << option.amount << std::endl;
+
+
+            // 선택된 옵션을 플레이어에게 적용
+            playerStats.ApplyStat(option);
+
+            AddStatLog(option.name + L" +" + std::to_wstring(option.amount));
+
+        }
+
+        // 상점 닫기 (선택하든 말든)
+        shopUI.Close();
+        });
+
+    shopUI.SetOnClose([&]() {
+        std::cout << "[UIManager] 상점 닫힘 콜백 호출됨" << std::endl;
+        // 여기에 다음 웨이브 시작 트리거나 외부 함수 호출 가능
+        });
+}
+
+void UIManager::OpenShop(PlayerStats& playerStats)
+{
+   shopUI.Open(playerStats);
 }
 
 void UIManager::UpdateShop(const sf::Vector2f& pos, bool isClick)
@@ -262,6 +311,82 @@ void UIManager::RenderShop(sf::RenderWindow& window)
 bool UIManager::IsShopOpen() const
 {
     { return shopUI.IsOpen(); }
+}
+
+void UIManager::AddStatLog(const std::wstring& log)
+{
+    std::wcout << L"[StatLog 추가됨] " << log << std::endl;
+
+    statLogs.push_back(log);
+    if (statLogs.size() > 3)
+        statLogs.erase(statLogs.begin());
+
+    for (int i = 0; i < statLogs.size(); ++i)
+    {
+        statLogTexts[i].setString(statLogs[i]);
+    }
+}
+
+void UIManager::InitStatLogUI(sf::Font& font)
+{
+    statLogBox.setSize({ 240.f, 120.f });
+    statLogBox.setFillColor(sf::Color(30, 30, 30, 200)); // 반투명한 회색
+    statLogBox.setOutlineColor(sf::Color::White);
+    statLogBox.setOutlineThickness(2.f);
+    statLogBox.setPosition(1650.f, 20.f); // 오른쪽 상단
+
+    for (int i = 0; i < 3; ++i)
+    {
+        statLogTexts[i].setFont(font);
+        statLogTexts[i].setCharacterSize(20);
+        statLogTexts[i].setFillColor(sf::Color::White);
+        statLogTexts[i].setPosition(1700.f, 30.f + i * 24.f);
+    }
+}
+
+
+void UIManager::RenderStatLog(sf::RenderWindow& window)
+{
+
+    window.draw(statLogBox);
+    for (int i = 0; i < statLogs.size(); i++)
+    {
+    std::wcout << L"[렌더링 직전 텍스트] " << statLogTexts[i].getString().toWideString() << std::endl;
+        window.draw(statLogTexts[i]);
+    }
+}
+
+void UIManager::Reset()
+{
+    // 체력바 및 경험치바 초기화
+    hpBarFront.setSize({ 0.f, 20.f });
+    expBarFront.setSize({ 0.f, 10.f });
+
+    // 텍스트 초기화
+    hpText.setString("");
+    hpTextShadow.setString("");
+
+    levelText.setString("Lv.1");
+    levelTextShadow.setString("Lv.1");
+
+    timerText.setString("");
+    sf::FloatRect textBounds = timerText.getLocalBounds();
+    timerText.setOrigin(textBounds.width / 2.f, textBounds.height / 2.f);
+    timerText.setPosition(1920.f / 2.f, 70.f);
+
+    // 웨이브 타이머 초기화
+    waveClock.restart();
+    isWaveActive = true;
+
+    // 스탯 로그 초기화
+    statLogs.clear();
+    for (int i = 0; i < 3; ++i)
+    {
+        statLogTexts[i].setString(L"");
+    }
+
+    // 상점 UI 닫기
+    shopUI.Close();
 }
 
 

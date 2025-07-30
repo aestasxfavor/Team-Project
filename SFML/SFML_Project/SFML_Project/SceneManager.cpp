@@ -1,6 +1,6 @@
 #include "SceneManager.h"
 
-std::map<std::string, Scene*> SceneManager::scenes;
+map<string, Scene*> SceneManager::scenes;
 Scene* SceneManager::currentScene = nullptr;
 
 void SceneManager::AddScene(const std::string& name, Scene* scene)
@@ -27,4 +27,12 @@ void SceneManager::Render(sf::RenderWindow& window)
 {
     if (currentScene)
         currentScene->Render(window);
+}
+
+Scene* SceneManager::GetScene(const std::string& name)
+{
+    auto it = scenes.find(name); // scenes는 map<string, Scene*>이어야 함
+    if (it != scenes.end())
+        return it->second;
+    return nullptr;
 }

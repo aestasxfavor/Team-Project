@@ -3,6 +3,7 @@
 #include "Scene.h"
 #include "SceneManager.h"
 
+
 class Scene;
 
 // 2025-07-23 효 추가: 타이틀 씬 클래스 정의
@@ -34,8 +35,9 @@ private:
     float backgroundScrollSpeed = 15.f; // 원하면 조정 가능
 
     bool canStart = true;      // 입력 대기 상태 처리 (애니메이션용 등)
+    bool enterPreviouslyPressed = false;  // 전역 또는 멤버 변수로 선언 필요
 
-   
+	
 
 public:
     void Init() override;
