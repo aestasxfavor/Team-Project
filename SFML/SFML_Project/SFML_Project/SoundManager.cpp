@@ -58,7 +58,7 @@ void SoundManager::ToggleMute()
     }
     else
     {
-        music.setVolume(80.f); // 볼륨 복구 (필요 시 bgmVolume 변수 활용 가능)
+        music.setVolume(50.f); // 볼륨 복구 (필요 시 bgmVolume 변수 활용 가능)
         cout << "[SoundManager] 음소거 해제" << endl;
     }
 }
