@@ -39,7 +39,7 @@ public:
 
     virtual void TryFire(StageManager* manager, sf::Vector2f playerPos);
 
-    void SetScale(sf::Vector2f s); //이미지 크기 조절
+    //void SetScale(sf::Vector2f s); //이미지 크기 조절
 
 };
 

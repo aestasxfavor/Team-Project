@@ -16,13 +16,12 @@
 
 StageManager::StageManager()
 {
-	spawnInterval = 0.3f;    // 적 생성 간격을 5초로 설정
+	spawnInterval = 0.2f;    // 적 생성 간격을 5초로 설정		0.3인데 생성주기 왜이래 
 	spawnTimer = 0.f;       // 생성 타이머 초기화
 	player = nullptr;
 	uiManager = nullptr; // UI 매니저 초기화
 	soundManager.LoadAttackSound(GetSoundPath("Defensed_Vert.wav"));
 }
-
 
 StageManager::~StageManager()
 {
@@ -35,7 +34,6 @@ void StageManager::Init()
 	player->Init(); // 효 추가 : 플레이어 초기화
 	//enemyTexture.loadFromFile("enemy.png");  // 적 텍스처 파일 로드
 	//추가
-
 
 	 // enemy01 이미지
 	string path01 = GetrscPath("enemy01.png");
