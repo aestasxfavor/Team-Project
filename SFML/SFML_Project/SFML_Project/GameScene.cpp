@@ -188,6 +188,7 @@ void GameScene::ResetGame()
 
 	// 스테이지 및 플레이어 재생성
 	delete stage;
+	Stage::killCount = 0;			// 제발 이게 빠진거엿구나....
 	stage = new Stage();
 	stage->Init();
 	stage->stageManager->SetUIManager(&uiManager);

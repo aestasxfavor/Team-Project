@@ -101,18 +101,6 @@ void StageManager::Update(float dt, sf::Vector2f playerPos)
 			enemies.erase(enemies.begin() + i);  // 리스트에서 제거
 		}
 	}
-	//투사체관련
-	// 1초에 한 번 발사 (간단 테스트용)
-	//static float fireTimer = 0.f;
-	//fireTimer += dt;
-	//if (fireTimer >= 1.f && !enemies.empty())
-	//{
-	//    sf::Vector2f pos = enemies[0]->GetGlobalBounds().getPosition();
-	//    int damage = enemies[0]->GetAtk();
-	//    FireBullet(pos, playerPos, damage);  // 인자 3개로 호출
-	//    fireTimer = 0.f;
-	//}
-	//투사체를 이상한데서 발사하게 되는 관계로 주석처리
 
 	// 투사체 발사 뿅뿅
 	for (auto& bullet : bullets)

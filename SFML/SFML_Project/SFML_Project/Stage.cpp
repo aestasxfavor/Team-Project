@@ -1,7 +1,7 @@
 #include "Stage.h"
 #include "Enemy.h"
 
-int Stage::killCount = 0;
+int Stage::killCount = 0;		// 의심필요 
 
 Stage::Stage()
 {
