@@ -1,5 +1,6 @@
 #include "GameApp.h"
 
+// ¾À 2°³ ¾È¾¸ ÇÏ³ª·Î ÀÌ¾î¼­ ¾¸;;;;;;;;;;;;
 GameApp::GameApp()
 {
 }

@@ -1,6 +1,8 @@
 ﻿#include "UIManager.h"
 #include "PlayerStats.h"
 
+// 게이지 차는거 숫자 띄워서 확인하기 (여기 문제가 큰거같음)
+
 void UIManager::Init()
 {
     if (!font.loadFromFile(GetrscPath("Font/BMJUA_ttf.ttf")))
@@ -27,8 +29,6 @@ void UIManager::Init()
 
 void UIManager::Update(float dt)
 {
-    
-
     if (isWaveActive)
     {
 		UpdateWaveTimerText(); // 타이머 텍스트 업데이트
@@ -110,7 +110,7 @@ void UIManager::InitWaveText()
     waveText.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
 
     waveText.setPosition(1920.f / 2.f, 100.f);  // 위쪽
-    //waveText.setPosition(1920.f / 2.f, 100.f); // 적절한 중앙 위치로 조정
+   
     waveClock.restart();
 }
 
@@ -121,7 +121,7 @@ void UIManager::InitStatusUIBar()
     {
        cerr << "프로필 이미지 로드 실패!" << endl;
     }
-   /* profileTexture.loadFromFile("profile.png");*/
+   
     profileIcon.setTexture(profileTexture);
     profileIcon.setScale(1.5f, 1.5f);
     profileIcon.setPosition(30.f, 30.f);  // 화면 좌상단 여백 20
@@ -136,13 +136,13 @@ void UIManager::InitStatusUIBar()
     hpBarFront.setPosition(130.f, 38.f);
 
     // 3. 경험치 바 (체력바 아래)
-    expBarBack.setSize({ 300.f, 10.f });
-    expBarBack.setFillColor(sf::Color(30, 30, 30));
-    expBarBack.setPosition(130.f, 62.f);  // 체력바 아래쪽에 여백
-
-    expBarFront.setSize({ 300.f, 10.f }); // 초기값
-    expBarFront.setFillColor(sf::Color::Green);
-    expBarFront.setPosition(130.f, 62.f);
+     expBarBack.setSize({ 300.f, 10.f });
+     expBarBack.setFillColor(sf::Color(30, 30, 30));
+     expBarBack.setPosition(130.f, 62.f);  // 체력바 아래쪽에 여백
+     
+     expBarFront.setSize({ 300.f, 10.f }); // 초기값
+     expBarFront.setFillColor(sf::Color::Green);
+     expBarFront.setPosition(130.f, 62.f);
 
     // 4. 체력 수치 텍스트 (hpBar 오른쪽 위쪽 정렬)
     hpText.setFont(font);
@@ -252,7 +252,7 @@ void UIManager::SetPlayer(Player* _player)
 
 void UIManager::UpdateStatusUI()
 {
-    cout << "[expBarFront] width: " << expBarFront.getSize().x << endl;
+    cout << "[expBarFront] width: " << expBarFront.getSize().x << endl;     // 여기랑 expbar 보면될거같음 실제값이 0이 들어가야하는데 왜 180이지랄되냐고 그지같네 진짜 
 
     // 방어 코드
     if (!player || !player->stats)
@@ -272,7 +272,7 @@ void UIManager::UpdateStatusUI()
     hpText.setString(to_string(stats->currentHp) + " / " + to_string(stats->maxHp));
 
     // 경험치바 갱신
-    float expRatio = static_cast<float>(stats->currentExp) / stats->exp;
+    float expRatio = static_cast<float>(stats->currentExp) / stats->exp;        // 왜 초기화가 안될까;;;;;;;;
     expBarFront.setSize({ 300.f * expRatio, 10.f });
 
     // 레벨 텍스트 갱신
@@ -299,9 +299,10 @@ void UIManager::UpdateHPBar(int currentHp, int maxHp)
     hpTextShadow.setPosition(pos + sf::Vector2f(1.f, 1.f));
 }
 
+// 진짜이거 문젠가 
 void UIManager::UpdateExpBar(int currentExp, int maxExp)        
 {
-    // 경험치 비율 계산
+    // 경험치 비율 계산                                                // 비율계산 잘못했나 아;;;;;;;;;;;;;;;;
     float ratio = static_cast<float>(currentExp) / maxExp;
     if (ratio < 0.f) ratio = 0.f;
     if (ratio > 1.f) ratio = 1.f;
@@ -414,9 +415,11 @@ void UIManager::Reset()
     // 텍스트 초기화
     hpText.setString("");
     hpTextShadow.setString("");
-
+    
     levelText.setString("Lv.1");
     levelTextShadow.setString("Lv.1");
+
+    //expBarBack.setOrigin(0, 0);
 
     timerText.setString("");
     sf::FloatRect textBounds = timerText.getLocalBounds();

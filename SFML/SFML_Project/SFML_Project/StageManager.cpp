@@ -16,13 +16,12 @@
 
 StageManager::StageManager()
 {
-	spawnInterval = 0.3f;    // 적 생성 간격을 5초로 설정
+	spawnInterval = 0.2f;    // 적 생성 간격을 5초로 설정		0.3인데 생성주기 왜이래 
 	spawnTimer = 0.f;       // 생성 타이머 초기화
 	player = nullptr;
 	uiManager = nullptr; // UI 매니저 초기화
 	soundManager.LoadAttackSound(GetSoundPath("Defensed_Vert.wav"));
 }
-
 
 StageManager::~StageManager()
 {
@@ -35,7 +34,6 @@ void StageManager::Init()
 	player->Init(); // 효 추가 : 플레이어 초기화
 	//enemyTexture.loadFromFile("enemy.png");  // 적 텍스처 파일 로드
 	//추가
-
 
 	 // enemy01 이미지
 	string path01 = GetrscPath("enemy01.png");
@@ -101,18 +99,6 @@ void StageManager::Update(float dt, sf::Vector2f playerPos)
 			enemies.erase(enemies.begin() + i);  // 리스트에서 제거
 		}
 	}
-	//투사체관련
-	// 1초에 한 번 발사 (간단 테스트용)
-	//static float fireTimer = 0.f;
-	//fireTimer += dt;
-	//if (fireTimer >= 1.f && !enemies.empty())
-	//{
-	//    sf::Vector2f pos = enemies[0]->GetGlobalBounds().getPosition();
-	//    int damage = enemies[0]->GetAtk();
-	//    FireBullet(pos, playerPos, damage);  // 인자 3개로 호출
-	//    fireTimer = 0.f;
-	//}
-	//투사체를 이상한데서 발사하게 되는 관계로 주석처리
 
 	// 투사체 발사 뿅뿅
 	for (auto& bullet : bullets)

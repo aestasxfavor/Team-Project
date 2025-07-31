@@ -45,6 +45,7 @@ private:
 
     sf::Text hpText;            // 체력 수치 (ex. "9 / 20")
     sf::Text levelText;         // 레벨 수치 (ex. "Lv.5")
+    sf::Text expText;           // 경험치 수치 (테스트용)
 
     sf::Sprite profileIcon;     // 플레이어 프로필 이미지
     sf::Texture profileTexture; // 프로필 이미지 텍스처
