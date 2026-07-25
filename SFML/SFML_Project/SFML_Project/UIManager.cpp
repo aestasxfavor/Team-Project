@@ -299,10 +299,10 @@ void UIManager::UpdateHPBar(int currentHp, int maxHp)
     hpTextShadow.setPosition(pos + sf::Vector2f(1.f, 1.f));
 }
 
-// 진짜이거 문젠가 
+
 void UIManager::UpdateExpBar(int currentExp, int maxExp)        
 {
-    // 경험치 비율 계산                                                // 비율계산 잘못했나 아;;;;;;;;;;;;;;;;
+    // 경험치 비율 계산                                                
     float ratio = static_cast<float>(currentExp) / maxExp;
     if (ratio < 0.f) ratio = 0.f;
     if (ratio > 1.f) ratio = 1.f;

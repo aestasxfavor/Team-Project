@@ -188,14 +188,14 @@ void GameScene::ResetGame()
 
 	// 스테이지 및 플레이어 재생성
 	delete stage;
-	Stage::killCount = 0;			// 제발 이게 빠진거엿구나....
+	Stage::killCount = 0;			
 	stage = new Stage();
 	stage->Init();
 	stage->stageManager->SetUIManager(&uiManager);
 	stage->player->uiManager = &uiManager;
 
 	// 초기 스탯 선택 반영 없이 웨이브 시작 (Resetting 처리)
-	stage->stageManager->SetResetting(true);		// 이게 없으면 스탯UI가 초기화가 안돼요ㅠㅠ 내부만 리셋되고 외부가 안됨ㅠㅠㅠㅠㅠㅠ
+	stage->stageManager->SetResetting(true);		
 	stage->stageManager->NextWave(*stage->player, uiManager, -1, {});
 	stage->stageManager->SetResetting(false);
 
@@ -216,8 +216,6 @@ void GameScene::ResetGame()
 	stage->player->stats->Reset();                        // 스탯(HP/공속 등) 초기화
 	uiManager.UpdateStatusUI();  // ← 경험치 바 포함한 UI 수치 갱신
 	stage->player->SetPosition({ 960.f, 540.f });         // 화면 중앙 위치로 이동
-
-
 
 	// 상점 UI 선택 기록 초기화
 	uiManager.shopUI.ClearSelectedChoices();
